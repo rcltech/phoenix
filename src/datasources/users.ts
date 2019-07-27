@@ -1,4 +1,5 @@
 class Users {
+    private client: any;
     constructor(pgClient) {
         this.client = pgClient;
     }
@@ -17,4 +18,4 @@ class Users {
     }
 }
 
-module.exports = Users;
+export default Users;

@@ -2,11 +2,12 @@
   "name": "pheonix",
   "version": "1.0.0",
   "description": "RC Tech data server",
-  "main": "index.js",
+  "main": "src/index.ts",
   "scripts": {
-    "start": "node index.js",
+    "build": "tsc",
+    "start": "node src/index.ts",
     "test": "jest",
-    "dev": "nodemon index.js"
+    "dev": "nodemon src/index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +22,7 @@
     "apollo-server-testing": "^2.7.0",
     "jest": "^24.8.0",
     "nodemon": "^1.19.1",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "typescript": "^3.5.3"
   }
 }

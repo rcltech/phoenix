@@ -1,4 +1,4 @@
-module.exports = {
+const resolvers = {
     Query: {
         user: (parent, { id }, { dataSources }, info) =>
             dataSources.users.getUser(id),
@@ -19,3 +19,5 @@ module.exports = {
             dataSources.societies.getSocietyMembers(society, dataSources),
     },
 };
+
+export default resolvers;

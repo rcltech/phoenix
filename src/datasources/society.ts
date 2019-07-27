@@ -1,6 +1,5 @@
-const Users = require('./users');
-
-class Society{
+class Society {
+    private client: any;
     constructor(pgClient){
         this.client = pgClient;
     }
@@ -21,4 +20,5 @@ class Society{
     }
 }
 
+export default Society;
 module.exports = Society;

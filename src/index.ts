@@ -1,12 +1,12 @@
-const { ApolloServer, gql } = require('apollo-server');
-const { Client } = require('pg');
-const env = require('dotenv');
+const {ApolloServer, gql}  = require("apollo-server");
+import {Client} from "pg";
+import * as env from "dotenv";
 env.config();
 
-const typeDefs = require('./src/schema');
-const resolvers = require('./src/resolvers');
-const Users = require('./src/datasources/users');
-const Society = require('./src/datasources/society');
+import typeDefs from "./schema"
+import resolvers from "./resolvers";
+import Users from "./datasources/users";
+import  Society from "./datasources/society";
 
 const client = new Client();
 
