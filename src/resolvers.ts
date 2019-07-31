@@ -7,8 +7,16 @@ const resolvers = {
             return { society, dataSources };
         },
     },
+
+    Mutation: {
+        addUser: (parent, { newUser }, { dataSources }, info) => dataSources.users.addUser(newUser),
+    },
+
     User: {
         username: user => user.username,
+        email: user => user.email,
+        imageUrl: user => user.imageUrl,
+        phone: user => user.phone,
         firstname: user => user.firstname,
         lastname: user => user.lastname,
         roomno: user => user.roomno,

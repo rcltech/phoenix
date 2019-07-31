@@ -5,9 +5,9 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
-    "start": "node src/index.ts",
+    "start": "node dist/index.js",
     "test": "jest",
-    "dev": "nodemon src/index.ts"
+    "dev": "nodemon"
   },
   "author": "",
   "license": "ISC",
@@ -19,10 +19,25 @@
     "pg": "^7.11.0"
   },
   "devDependencies": {
+    "@types/jest": "^24.0.16",
     "apollo-server-testing": "^2.7.0",
     "jest": "^24.8.0",
     "nodemon": "^1.19.1",
     "prettier": "^1.18.2",
+    "ts-jest": "^24.0.2",
     "typescript": "^3.5.3"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "__tests__",
+      "node_modules",
+      ".git"
+    ],
+    "watch": [
+      "src",
+      "package.json"
+    ],
+    "exec": "npm run build && npm start",
+    "ext": "ts"
   }
 }

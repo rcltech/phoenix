@@ -1,5 +1,5 @@
 const {ApolloServer, gql}  = require("apollo-server");
-import {Client} from "pg";
+import {Pool} from "pg";
 import * as env from "dotenv";
 env.config();
 
@@ -8,18 +8,17 @@ import resolvers from "./resolvers";
 import Users from "./datasources/users";
 import  Society from "./datasources/society";
 
-const client = new Client();
+const pool:Pool = new Pool();
 
 const server = new ApolloServer({
     typeDefs,
     resolvers,
     dataSources: () => ({
-        users: new Users(client),
-        societies: new Society(client),
+        users: new Users(pool),
+        societies: new Society(pool)
     }),
 });
 
 server.listen().then(async ({ url }) => {
-    await client.connect();
     console.log(`${url}`);
 });
