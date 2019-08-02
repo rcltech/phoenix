@@ -1,5 +1,3 @@
-[![CircleCI](https://circleci.com/gh/rcltech/pheonix/tree/master.svg?style=svg)](https://circleci.com/gh/rcltech/pheonix/tree/master)
-
 # Pheonix
 RC Tech Club central API server for applications
 
