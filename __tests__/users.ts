@@ -8,6 +8,8 @@ import * as env from 'dotenv';
 
 env.config();
 
+const pool = new Pool();
+
 const prepareServer = async () => {
     return new ApolloServer({
         typeDefs,
@@ -50,8 +52,6 @@ const testUserInfo = {
     lastname: 'Test',
     roomno: '111A',
 };
-
-const pool = new Pool();
 
 afterAll(() => {
     pool.end();
