@@ -1,15 +1,16 @@
-# Pheonix
+# Phoenix
 RC Tech Club central API server for applications
 
-## Why?
-To provide data to all the applications that we build at RC Tech Club, we need servers. Pheonix will act as a central
-source of data for all the applications.
+#### Development setup
+1. Clone the github repository   
+`git clone https://github.com/rcltech/pheonix.git`
 
-## Runbook
+2. Phoenix requires some environment variables that can be found in  .env.sample. Create the .env file   
+`echo .env.sample >> .env`
 
-Make sure that you have `docker` and `docker-compose` installed on your computer.
+3. Put the values for the environment variables for yourself 
 
-You will also need to start a postgres docker image and setup tables as needed in order to allow
-it to connect to a database.
+4. To run in development mode, run `npm run dev`
 
-* Run `docker-compose up` to start up the server.
+
+To run tests, you need to run `npm run test`. Make sure that the tests pass.
