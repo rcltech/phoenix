@@ -6,6 +6,9 @@ const resolvers = {
             const society = await dataSources.societies.getSociety(id);
             return { society, dataSources };
         },
+        washer: async (parent, {id}, {dataSources}, info) => {
+            return await dataSources.washers.getWasher(id)
+        }
     },
 
     Mutation: {
@@ -26,6 +29,12 @@ const resolvers = {
         members: ({ society, dataSources }) =>
             dataSources.societies.getSocietyMembers(society, dataSources),
     },
+    Washer: {
+        id: washer => washer.id,
+        status: washer => washer.status,
+        timeElapsed: washer => washer.timeElapsed,
+        timeRemaining: washer => washer.timeRemaining
+    }
 };
 
 export default resolvers;

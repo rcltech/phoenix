@@ -21,4 +21,3 @@ class Society {
 }
 
 export default Society;
-module.exports = Society;
