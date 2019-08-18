@@ -217,6 +217,7 @@ export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
 export type SocietyWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
+  name?: Maybe<String>;
 }>;
 
 export interface UserWhereInput {
@@ -376,6 +377,10 @@ export interface SocietyWhereInput {
 
 export type UserWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
+  username?: Maybe<String>;
+  email?: Maybe<String>;
+  phone?: Maybe<String>;
+  room_no?: Maybe<String>;
 }>;
 
 export type WasherWhereUniqueInput = AtLeastOne<{
@@ -1262,6 +1267,7 @@ export const models: Model[] = [
 export const Prisma = makePrismaClientClass<ClientConstructor<Prisma>>({
   typeDefs,
   models,
-  endpoint: `http://localhost:4466`
+  endpoint: `http://localhost:4466`,
+  secret: `o1Wc06Fd08TKotk36DaWv2brFOzVHvb3`
 });
 export const prisma = new Prisma();

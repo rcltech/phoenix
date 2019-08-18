@@ -172,6 +172,7 @@ input SocietyWhereInput {
 
 input SocietyWhereUniqueInput {
   id: ID
+  name: String
 }
 
 type Subscription {
@@ -572,6 +573,10 @@ input UserWhereInput {
 
 input UserWhereUniqueInput {
   id: ID
+  username: String
+  email: String
+  phone: String
+  room_no: String
 }
 
 type Washer {

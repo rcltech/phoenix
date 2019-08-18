@@ -1,47 +1,48 @@
 const { gql } = require('apollo-server');
+import {prisma, User, Prisma} from './generated/prisma-client';
 
 const typeDefs = gql`
     type User {
         username: String
-        email: String
-        imageUrl: String
-        phone: String
-        firstname: String
-        lastname: String
-        roomno: String
-    }
-    
-    type Washer {
-        id: Int
-        status: String
-        timeElapsed: String
-        timeRemaining: String
-    }
-    
-    type Society {
-        name: String
-        members: [User]
+        email: String! 
+        image_url: String!
+        phone: String!
+        first_name: String!
+        last_name: String!
+        room_no: String!
     }
 
+    type Washer {
+        id: ID!
+        status: String!
+        time_elapsed: String!
+        time_remaining: String!
+    }
+
+    type Society {
+        id: ID! 
+        name: String!
+        members: [User]
+    }
+    
     type Query {
-        user(id: ID!): User
-        society(id: ID!): Society
+        user(username: String!): User
+        society(name: String!): Society
         washer(id: ID!): Washer
     }
-    
+
     type Mutation {
-        addUser(newUser: NewUser ): User
-    }
-    
-    input NewUser {
-        username: String
-        email: String
-        imageUrl: String
-        phone: String
-        firstname: String
-        lastname: String
-        roomno: String
+        createUser(  id: ID
+            username: String!
+            email: String!
+            image_url: String!
+            phone: String!
+            first_name: String!
+            last_name: String!
+            room_no: String!): User
+        createSociety(name: String, members: [String]): Society
     }
 `;
+
 
 export default typeDefs;

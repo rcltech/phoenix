@@ -1,7 +1,7 @@
 const { ApolloServer, gql } = require('apollo-server');
 const { createTestClient } = require('apollo-server-testing');
 import { Pool } from 'pg';
-import typeDefs from '../src/schema';
+import typeDefs from 'schema.ts';
 import resolvers from '../src/resolvers';
 import Users from '../src/datasources/users';
 import * as env from 'dotenv';
