@@ -12,5 +12,6 @@ RC Tech Club central API server for applications
 
 4. To run in development mode, run `npm run dev`
 
+__Note that you are required to make a local prisma configuration using Prisma CLI__
 
 To run tests, you need to run `npm run test`. Make sure that the tests pass.
