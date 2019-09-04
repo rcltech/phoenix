@@ -1,5 +1,4 @@
 const { gql } = require('apollo-server');
-import {prisma, User, Prisma} from './generated/prisma-client';
 
 const typeDefs = gql`
     type User {
