@@ -1,0 +1,23 @@
+type User {
+    id: ID! @id
+    username: String! @unique
+    email: String! @unique
+    image_url: String!
+    phone: String! @unique
+    first_name: String!
+    last_name: String!
+    room_no: String! @unique
+}
+
+type Washer {
+    id: ID! @id
+    status: String!
+    time_elapsed: String!
+    time_remaining: String!
+}
+
+type Society {
+    id: ID! @id
+    name: String! @unique
+    members: [User]
+}

@@ -1,13 +1,23 @@
 language: node_js
 node_js:
   - "10"
+services:
+  - docker
+
+before_install:
+  - npm install -g prisma
+  - npm install
+  - docker-compose -f prisma/docker-compose.yml up -d
 
 jobs:
   include:
     - stage: test
       script:
-        - npm install
+        - echo "Run Prisma Deployment"
+        - cd prisma && prisma generate && prisma deploy
+        - echo "Start installation and test"
         - npm run test
     - stage: build
       script:
+        - cd prisma && prisma generate && prisma deploy
         - npm run build
