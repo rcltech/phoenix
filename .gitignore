@@ -2,9 +2,9 @@ node_modules/
 .idea
 
 .env
+prisma/.env
 env.db
 
 dist/
-prisma/
 
 src/generated
