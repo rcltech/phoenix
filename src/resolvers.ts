@@ -3,6 +3,9 @@ const resolvers = {
         user: (parent, { username }, ctx) => ctx.prisma.user({
             username
         }),
+        washer: (parent, { id }, ctx) => ctx.prisma.washer({
+            id
+        }),
         society: (parent, {name}, ctx) => ctx.prisma.society({
             name: name,
         })
