@@ -8,22 +8,12 @@ services:
     environment:
       PRISMA_CONFIG: |
         port: 4466
-        managementApiSecret: test_api_key
+        managementApiSecret: ${PRISMA_MANAGEMENT_API_SECRET}
         databases:
           default:
             connector: postgres
-            host: postgres
-            user: prisma
-            password: prisma
+            host: ${DB_HOST}
+            user: ${DB_USER}
+            password: ${DB_PASSWORD}
             port: 5432
             migrations: true
-  postgres:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_USER: prisma
-      POSTGRES_PASSWORD: prisma
-    volumes:
-      - postgres:/var/lib/postgresql/data
-volumes:
-  postgres: ~
