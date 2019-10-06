@@ -1,12 +1,11 @@
+import * as env from 'dotenv';
+env.config();
 import { prisma } from '../src/generated/prisma-client';
 import typeDefs from '../src/schema';
 import resolvers from '../src/resolvers';
-import * as env from 'dotenv';
 
 const { ApolloServer, gql } = require('apollo-server');
 const { createTestClient } = require('apollo-server-testing');
-
-env.config();
 
 const prepareServer = async () => {
     return new ApolloServer({

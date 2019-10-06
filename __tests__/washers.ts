@@ -1,3 +1,5 @@
+import * as env from 'dotenv';
+env.config();
 import typeDefs from '../src/schema';
 import resolvers from '../src/resolvers';
 import { prisma } from '../src/generated/prisma-client';
