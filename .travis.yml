@@ -35,6 +35,9 @@ jobs:
       script:
         - cd prisma && prisma generate && prisma deploy && cd ..
         - npm run build
+        - pip install --user awscli
+        - export PATH=$PATH:$HOME/.local/bin
         - docker login --username $DOCKER_USER -p $DOCKER_PASS
         - docker build -t rctechclub/phoenix:dev .
         - docker push rctechclub/phoenix:dev
+        - aws ecs update-service --cluster phoenix-prod --service phoenix --force-new-deployment --region us-east-2
