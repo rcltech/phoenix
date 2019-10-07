@@ -1,6 +1,10 @@
 language: node_js
 node_js:
   - "10"
+
+cache:
+  npm: true
+
 services:
   - docker
 
@@ -8,6 +12,11 @@ before_install:
   - npm install -g prisma
   - npm install
   - docker-compose -f prisma/docker-compose.yml up -d
+
+stages:
+  - test
+  - build
+  - deploy
 
 jobs:
   include:
@@ -21,3 +30,14 @@ jobs:
       script:
         - cd prisma && prisma generate && prisma deploy
         - npm run build
+
+    - stage: deploy
+      script:
+        - cd prisma && prisma generate && prisma deploy && cd ..
+        - npm run build
+        - pip install --user awscli
+        - export PATH=$PATH:$HOME/.local/bin
+        - docker login --username $DOCKER_USER -p $DOCKER_PASS
+        - docker build -t rctechclub/phoenix:dev .
+        - docker push rctechclub/phoenix:dev
+        - aws ecs update-service --cluster phoenix-prod --service phoenix --force-new-deployment --region us-east-2

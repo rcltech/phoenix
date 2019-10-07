@@ -1,4 +1,7 @@
-const {ApolloServer}  = require("apollo-server");
+const {ApolloServer}  = require("apollo-server-express");
+const express = require("express");
+const app = express();
+
 import * as env from "dotenv";
 env.config();
 import typeDefs from './schema';
@@ -13,6 +16,12 @@ const server = new ApolloServer({
     },
 } as any);
 
-server.listen().then(async ({ url }) => {
-    console.log(`${url}`);
+server.applyMiddleware({app});
+
+app.get("/", (req, res) => {
+    res.send("OK").status(200);
+});
+
+app.listen({port: 4000} , () => {
+   console.log("Server started at port 4000");
 });
