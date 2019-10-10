@@ -18,15 +18,8 @@ const typeDefs = gql`
         time_remaining: String!
     }
 
-    type Society {
-        id: ID! 
-        name: String!
-        members: [User]
-    }
-    
     type Query {
         user(username: String!): User
-        society(name: String!): Society
         washer(id: ID!): Washer
     }
 
@@ -39,7 +32,6 @@ const typeDefs = gql`
             first_name: String!
             last_name: String!
             room_no: String!): User
-        createSociety(name: String, members: [String]): Society
     }
 `;
 
