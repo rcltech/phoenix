@@ -1,41 +1,15 @@
+import { createUser, deleteUser } from './mutations/user';
+import user from "./query/user";
+import washer from "./query/washer";
+
 const resolvers = {
     Query: {
-        user: (parent, { username }, ctx) =>
-            ctx.prisma.user({
-                username,
-            }),
-        washer: (parent, { id }, ctx) =>
-            ctx.prisma.washer({
-                id,
-            }),
+        user,
+        washer
     },
-
     Mutation: {
-        createUser: (
-            parent,
-            {
-                username,
-                email,
-                image_url,
-                phone,
-                first_name,
-                last_name,
-                room_no,
-            },
-            ctx
-        ) =>
-            ctx.prisma.createUser({
-                username,
-                email,
-                image_url,
-                phone,
-                first_name,
-                last_name,
-                room_no,
-            }),
-        deleteUser: (parent, { username }, ctx) => {
-            ctx.prisma.deleteUser({ username });
-        },
+        createUser,
+        deleteUser,
     },
 };
 

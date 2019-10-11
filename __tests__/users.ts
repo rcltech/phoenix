@@ -1,32 +1,16 @@
 import * as env from 'dotenv';
 env.config();
-import { prisma } from '../src/generated/prisma-client';
-import typeDefs from '../src/schema';
-import resolvers from '../src/resolvers';
 
-const { ApolloServer, gql } = require('apollo-server');
+import { prisma } from '../src/generated/prisma-client';
+import testServer from '../src/server';
 const { createTestClient } = require('apollo-server-testing');
 
-const prepareServer = async () => {
-    return new ApolloServer({
-        typeDefs,
-        resolvers,
-        context: {
-            prisma,
-        },
-    } as any);
-};
-
-const createUser = async (user) => {
+const createUser = async user => {
     await prisma.createUser(user);
 };
 
 const deleteUsers = async () => {
-    return prisma.deleteManyUsers({})
-};
-
-const findUser = async (username) => {
-    return prisma.user({username});
+    return prisma.deleteManyUsers({});
 };
 
 const testUserInfo = {
@@ -40,9 +24,8 @@ const testUserInfo = {
 };
 
 describe('User query and mutations', () => {
-    it('can query user', async (done) => {
-        const server = await prepareServer();
-        const client = createTestClient(server);
+    test('can query user', async done => {
+        const client = createTestClient(testServer);
         await deleteUsers();
         await createUser(testUserInfo);
         const userQuery = `{
@@ -63,13 +46,12 @@ describe('User query and mutations', () => {
         });
         done();
     });
-    it('can add user', async (done) => {
+    test('can add user', async done => {
         await deleteUsers();
-        const server = await prepareServer();
-        const client = createTestClient(server);
+        const client = createTestClient(testServer);
         const userMutation = `mutation addUser 
         {
-          createUser(newUser: {
+          createUser(
             username: "${testUserInfo.username}",
             email: "${testUserInfo.email}",
             image_url:"${testUserInfo.image_url}",
@@ -77,28 +59,33 @@ describe('User query and mutations', () => {
             first_name:"${testUserInfo.first_name}",
             last_name:"${testUserInfo.last_name}",
             room_no:"${testUserInfo.room_no}"
-          }){
+          ){
           username
           }
         }`;
-
         await client.mutate({ mutation: userMutation });
-        await findUser(testUserInfo.username);
+        const userQueryResult = await prisma.user({
+            username: testUserInfo.username,
+        });
+        expect(userQueryResult).toMatchObject(testUserInfo);
         await deleteUsers();
         done();
     });
-    it('can delete user', async (done) => {
+    test('can delete user', async done => {
         await deleteUsers();
-        const server = await prepareServer();
-        const client = createTestClient(server);
+        const client = createTestClient(testServer);
         await createUser(testUserInfo);
         const userDeleteMutation = `
-        mutation{
+        mutation delete{
             deleteUser(username: "${testUserInfo.username}"){
                 username
             }
         }`;
-        await client.mutate(userDeleteMutation);
-
-    })
+        await client.mutate({ mutation: userDeleteMutation });
+        const userQueryResult = await prisma.user({
+            username: testUserInfo.username,
+        });
+        expect(userQueryResult).toEqual(null);
+        done();
+    });
 });
