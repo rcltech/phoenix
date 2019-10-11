@@ -32,6 +32,7 @@ const typeDefs = gql`
             first_name: String!
             last_name: String!
             room_no: String!): User
+        deleteUser(username: String!): User
     }
 `;
 

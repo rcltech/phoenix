@@ -39,32 +39,31 @@ const testUserInfo = {
     room_no: '111A',
 };
 
-test('can query user', async (done) => {
-    const server = await prepareServer();
-    const client = createTestClient(server);
-    await deleteUsers();
-    await createUser(testUserInfo);
-    const userQuery = `{
+describe('User query and mutations', () => {
+    it('can query user', async (done) => {
+        const server = await prepareServer();
+        const client = createTestClient(server);
+        await deleteUsers();
+        await createUser(testUserInfo);
+        const userQuery = `{
         user (username: "${testUserInfo.username}") {
             username,
             first_name,
             last_name,
             room_no
         }}`;
-    const result = await client.query({ query: userQuery });
-    expect(result.data).toEqual({
-        user: {
-            username: testUserInfo.username,
-            first_name: testUserInfo.first_name,
-            last_name: testUserInfo.last_name,
-            room_no: testUserInfo.room_no,
-        },
+        const result = await client.query({ query: userQuery });
+        expect(result.data).toEqual({
+            user: {
+                username: testUserInfo.username,
+                first_name: testUserInfo.first_name,
+                last_name: testUserInfo.last_name,
+                room_no: testUserInfo.room_no,
+            },
+        });
+        done();
     });
-    done();
-});
-
-describe('User query and mutations', () => {
-    test('can add user', async (done) => {
+    it('can add user', async (done) => {
         await deleteUsers();
         const server = await prepareServer();
         const client = createTestClient(server);
@@ -88,4 +87,18 @@ describe('User query and mutations', () => {
         await deleteUsers();
         done();
     });
+    it('can delete user', async (done) => {
+        await deleteUsers();
+        const server = await prepareServer();
+        const client = createTestClient(server);
+        await createUser(testUserInfo);
+        const userDeleteMutation = `
+        mutation{
+            deleteUser(username: "${testUserInfo.username}"){
+                username
+            }
+        }`;
+        await client.mutate(userDeleteMutation);
+
+    })
 });
