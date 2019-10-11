@@ -3,7 +3,7 @@ env.config();
 
 import { prisma } from '../src/generated/prisma-client';
 import testServer from '../src/server';
-const { createTestClient } = require('apollo-server-testing');
+import {createTestClient} from "apollo-server-testing"
 
 const createUser = async user => {
     await prisma.createUser(user);

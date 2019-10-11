@@ -1,40 +1,28 @@
 import * as env from 'dotenv';
 env.config();
-import typeDefs from '../src/schema';
-import resolvers from '../src/resolvers';
-import { prisma } from '../src/generated/prisma-client';
 
-const { ApolloServer } = require('apollo-server');
-const { createTestClient } = require('apollo-server-testing');
+import { prisma } from "../src/generated/prisma-client";
+import { createTestClient } from "apollo-server-testing";
+import testServer from "../src/server";
 
-
-const testApolloServer = new ApolloServer({
-    typeDefs,
-    resolvers,
-    context: {
-        prisma,
-    },
-} as any);
-
-const createTestWasher = async (washer) => {
+const createTestWasher = async washer => {
     await prisma.createWasher(washer);
 };
 
 const deleteTestWashers = async () => {
-    return prisma.deleteManyWashers({})
+    return prisma.deleteManyWashers({});
 };
 
 const testWasher = {
     id: "1",
-    status:"IDLE",
+    status: "IDLE",
     time_elapsed: "0",
-    time_remaining:"0"
+    time_remaining: "0",
 };
 
-describe('the graphql washers api', () => {
-    it('returns the status of the washing machines', async (done) => {
-
-        const client = createTestClient(testApolloServer);
+describe("the graphql washers api", () => {
+    test("returns the status of the washing machines", async done => {
+        const client = createTestClient(testServer);
         await deleteTestWashers();
         await createTestWasher(testWasher);
         const washerQuery = `{
@@ -45,15 +33,13 @@ describe('the graphql washers api', () => {
                 time_remaining
             }
         }`;
-        const queryResponse = await client.query({query: washerQuery});
+        const queryResponse = await client.query({ query: washerQuery });
         expect(queryResponse.data).toEqual({
-            washer: testWasher
+            washer: testWasher,
         });
         await deleteTestWashers();
-        done()
+        done();
     });
 
-    it('writes status of the washing machines', () => {
-
-    });
+    it("writes status of the washing machines", () => {});
 });
