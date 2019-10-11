@@ -15,9 +15,3 @@ type Washer {
     time_elapsed: String!
     time_remaining: String!
 }
-
-type Society {
-    id: ID! @id
-    name: String! @unique
-    members: [User]
-}
