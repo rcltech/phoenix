@@ -25,7 +25,7 @@ const createUser = (
 const deleteUser = (parent, { username }, ctx) =>
   ctx.prisma.deleteUser({ username });
 
-const login = async (parent, {} , ctx) => {
+const login = async (parent, {}, ctx) => {
   try {
     await client.verifyIdToken({
       idToken: ctx.token,
@@ -63,7 +63,7 @@ const register = async (parent, { user }, ctx) => {
   });
   const payload: TokenPayload = ticket.getPayload();
   if (payload && payload.hd !== "connect.hku.hk") return null;
-   return ctx.prisma.createUser({
+  return ctx.prisma.createUser({
     username: user.username,
     email: payload.email,
     image_url: payload.picture,
@@ -73,6 +73,5 @@ const register = async (parent, { user }, ctx) => {
     room_no: user.room_no,
   });
 };
-
 
 export { createUser, deleteUser, login, register };
