@@ -9,9 +9,10 @@ import {prisma} from './generated/prisma-client';
 const server : ApolloServer = new ApolloServer({
   typeDefs,
   resolvers,
-  context: {
+  context: ({req}) => ({
     prisma,
-  },
+    token: (req && req.headers.authorization)
+  }),
 });
 
 export default server;
