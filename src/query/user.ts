@@ -4,11 +4,11 @@ import { OAuth2Client } from "google-auth-library";
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const user = (parent, { username }, ctx) =>
-    ctx.prisma.user({
-        username,
-    });
+  ctx.prisma.user({
+    username,
+  });
 
-const me = async (parent, {} , ctx) => {
+const me = async (parent, {}, ctx) => {
   try {
     await client.verifyIdToken({
       idToken: ctx.token,
@@ -23,7 +23,7 @@ const me = async (parent, {} , ctx) => {
     audience: process.env.GOOGLE_CLIENT_ID,
   });
   const payload: TokenPayload = ticket.getPayload();
-  return ctx.prisma.user({email: payload.email});
+  return ctx.prisma.user({ email: payload.email });
 };
 
-export {user, me};
+export { user, me };

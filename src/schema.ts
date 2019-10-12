@@ -40,10 +40,9 @@ const typeDefs = gql`
             last_name: String!
             room_no: String!): User
         deleteUser(username: String!): User
-        login(id_token: String!): LoginResponse
+        login: LoginResponse
         register(
             user : UserRegisterInput!
-            id_token: String!
         ) : User
     }
     
@@ -51,11 +50,6 @@ const typeDefs = gql`
         token: String
         login_status: Boolean!
         register: Boolean
-    }
-    
-    type RegisterResponse {
-        user: User
-        token: String
     }
 `;
 

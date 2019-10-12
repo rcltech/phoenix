@@ -25,17 +25,17 @@ const createUser = (
 const deleteUser = (parent, { username }, ctx) =>
   ctx.prisma.deleteUser({ username });
 
-const login = async (parent, { id_token }, ctx) => {
+const login = async (parent, {} , ctx) => {
   try {
     await client.verifyIdToken({
-      idToken: id_token,
+      idToken: ctx.token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
   } catch (e) {
     return { token: null, login_status: false, register: false };
   }
   const ticket = await client.verifyIdToken({
-    idToken: id_token,
+    idToken: ctx.token,
     audience: process.env.GOOGLE_CLIENT_ID,
   });
   const payload: TokenPayload = ticket.getPayload();
@@ -44,13 +44,13 @@ const login = async (parent, { id_token }, ctx) => {
   const user: User = await ctx.prisma.user({ email: payload.email });
   if (user === null)
     return { token: null, login_status: false, register: true };
-  return { token: id_token, login_status: true, register: false };
+  return { token: ctx.token, login_status: true, register: false };
 };
 
-const register = async (parent, { user, id_token }, ctx) => {
+const register = async (parent, { user }, ctx) => {
   try {
     await client.verifyIdToken({
-      idToken: id_token,
+      idToken: ctx.token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
   } catch (e) {
@@ -58,12 +58,12 @@ const register = async (parent, { user, id_token }, ctx) => {
     return null;
   }
   const ticket = await client.verifyIdToken({
-    idToken: id_token,
+    idToken: ctx.token,
     audience: process.env.GOOGLE_CLIENT_ID,
   });
   const payload: TokenPayload = ticket.getPayload();
   if (payload && payload.hd !== "connect.hku.hk") return null;
-  const createdUser = await ctx.prisma.createUser({
+   return ctx.prisma.createUser({
     username: user.username,
     email: payload.email,
     image_url: payload.picture,
@@ -72,7 +72,6 @@ const register = async (parent, { user, id_token }, ctx) => {
     last_name: payload.family_name,
     room_no: user.room_no,
   });
-  return { user: createdUser, token: id_token };
 };
 
 
