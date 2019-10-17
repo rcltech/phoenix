@@ -10,6 +10,8 @@ const createUser = async user => {
 };
 
 const deleteUsers = async () => {
+  await prisma.deleteManyBookings({});
+  await prisma.deleteManyRooms({});
   return prisma.deleteManyUsers({});
 };
 

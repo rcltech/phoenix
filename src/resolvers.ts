@@ -23,7 +23,7 @@ const resolvers = {
         },
         user(parent, _ , ctx){
             return ctx.prisma.booking({id: parent.id}).user()
-        }
+        },
     }
 };
 
