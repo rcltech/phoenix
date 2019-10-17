@@ -25,6 +25,8 @@ const testUserInfo = {
   room_no: "111A",
 };
 
+beforeAll(async () => await deleteUsers());
+
 describe("the authentication system", () => {
   test("can generate a token that is reliable", async done => {
     const client = createTestClient(testServer);
@@ -33,6 +35,7 @@ describe("the authentication system", () => {
     const user: User = await prisma.user({ username: testUserInfo.username });
     const token = generateToken(user);
     expect(resolveUserUsingJWT(token)).toMatchObject(user);
+    await deleteUsers();
     done();
   });
 });

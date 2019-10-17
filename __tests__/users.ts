@@ -23,6 +23,7 @@ const testUserInfo = {
   room_no: "111A",
 };
 
+beforeAll(async () => await deleteUsers());
 describe("User query and mutations", () => {
   test("can query user", async done => {
     await deleteUsers();

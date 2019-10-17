@@ -20,6 +20,10 @@ const testWasher = {
     time_remaining: "0",
 };
 
+beforeAll( async () => {
+    await deleteTestWashers();
+});
+
 describe("the graphql washers api", () => {
     test("returns the status of the washing machines", async done => {
         const client = createTestClient(testServer);
