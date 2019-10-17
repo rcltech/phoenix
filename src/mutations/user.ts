@@ -1,7 +1,8 @@
 import * as env from "dotenv";
-import { OAuth2Client, VerifyIdTokenOptions } from "google-auth-library";
+import { JWT, OAuth2Client, VerifyIdTokenOptions } from "google-auth-library";
 import { User } from "../generated/prisma-client";
 import { TokenPayload } from "google-auth-library/build/src/auth/loginticket";
+import { generateToken } from "../utils/authToken";
 
 env.config();
 
@@ -44,7 +45,8 @@ const login = async (parent, {}, ctx) => {
   const user: User = await ctx.prisma.user({ email: payload.email });
   if (user === null)
     return { token: null, login_status: false, register: true };
-  return { token: ctx.token, login_status: true, register: false };
+  const jwtToken = generateToken(user);
+  return { token: jwtToken, login_status: true, register: false };
 };
 
 const register = async (parent, { user }, ctx) => {
