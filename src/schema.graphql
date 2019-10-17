@@ -2,6 +2,8 @@
 # import Washer from "./generated/prisma.graphql"
 # import Booking from "./generated/prisma.graphql"
 # import Room from "./generated/prisma.graphql"
+# import BookingWhereInput from "./generated/prisma.graphql"
+
 
 input UserRegisterInput {
     username: String
@@ -13,7 +15,8 @@ type Query {
     user(username: String!): User
     me : User
     washer(id: ID!): Washer
-    booking: Booking
+    bookings (data: BookingWhereInput): [Booking]
+    rooms (data: RoomWhereInput) : [Room]
 }
 
 type Mutation {
