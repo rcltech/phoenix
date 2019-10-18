@@ -1,17 +1,46 @@
 # Phoenix
+
 RC Tech Club central API server for applications
 
 #### Development setup
-1. Clone the github repository   
-`git clone https://github.com/rcltech/pheonix.git`
 
-2. Phoenix requires some environment variables that can be found in  .env.sample. Create the .env file   
-`echo .env.sample >> .env`
+##### Dependencies
 
-3. Put the values for the environment variables for yourself 
+- Prisma CLI
+- npm
+- Docker and docker-compose
 
-4. To run in development mode, run `npm run dev`
+1. After you clone the repository, you will notice two `.env.sample` files, one in `root` directory and the other in `prisma` 
+directory. Make sure that you create a `.env` files in those places.
 
-__Note that you are required to make a local prisma configuration using Prisma CLI__
+Sample `.env` file in `root`:
+```
+PRISMA_SECRET=secret123
+PRISMA_HOST=http://localhost:4466/prisma
+GOOGLE_CLIENT_ID=798725565697-sfibjdadpcan9ks908dnl8p5k1dncmoq.apps.googleusercontent.com
+```
 
-To run tests, you need to run `npm run test`. Make sure that the tests pass.
+Sample `.env` file in `prisma`:
+```$xslt
+PRISMA_MANAGEMENT_API_SECRET=secret123
+PRISMA_HOST=http://localhost:4466/prisma
+PRISMA_SECRET=secret123
+DB_HOST=postgres
+DB_USER=prisma
+DB_PASSWORD=prisma
+``` 
+
+Once you have the above, you will need to deploy the `prisma` server locally:
+```$xslt
+cd prisma
+docker-compose up -d    # Runs in detached mode
+prisma deploy
+```
+
+Now that the graphql server is running and deployed, we can generate prisma client for phoenix and start phoenix
+```$xslt
+cd prisma
+prisma generate
+cd ..
+npm start
+```
