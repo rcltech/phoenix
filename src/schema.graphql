@@ -3,7 +3,7 @@
 # import Booking from "./generated/prisma.graphql"
 # import Room from "./generated/prisma.graphql"
 # import BookingWhereInput from "./generated/prisma.graphql"
-
+# import DateTimeInput from "./generated/prisma.graphql"
 
 input UserRegisterInput {
     username: String
@@ -33,6 +33,7 @@ type Mutation {
     register(
         user : UserRegisterInput!
     ) : User
+    createBooking(room_name: String!, start: String!, end: String!) : Booking!
 }
 
 type LoginResponse {

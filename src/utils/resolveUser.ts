@@ -1,10 +1,11 @@
 import { OAuth2Client } from "google-auth-library";
 import { TokenPayload } from "google-auth-library/build/src/auth/loginticket";
 import * as jwt from "jsonwebtoken";
+import { User } from "../generated/prisma-client";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-async function resolveUserUsingGoogle(ctx) {
+async function resolveUserUsingGoogle(ctx) : Promise<User> {
   try {
     await client.verifyIdToken({
       idToken: ctx.token,
@@ -22,7 +23,10 @@ async function resolveUserUsingGoogle(ctx) {
   return ctx.prisma.user({ email: payload.email });
 }
 
-function resolveUserUsingJWT(token: string) {
-  return jwt.verify(token, process.env.PRISMA_SECRET);
+async function resolveUserUsingJWT(ctx : any) : Promise<User> {
+  const user : any = jwt.verify(ctx.token, process.env.PRISMA_SECRET);
+  const username : string = user.username;
+  return ctx.prisma.user({username});
 }
+
 export { resolveUserUsingGoogle, resolveUserUsingJWT };
