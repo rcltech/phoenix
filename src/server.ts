@@ -11,7 +11,7 @@ const server : ApolloServer = new ApolloServer({
   resolvers,
   context: ({req}) => ({
     prisma,
-    token: (req && req.headers.authorization)
+    token: (req && req.headers.authorization),
   }),
 });
 

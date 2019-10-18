@@ -1,0 +1,43 @@
+# import User from "./generated/prisma.graphql"
+# import Washer from "./generated/prisma.graphql"
+# import Booking from "./generated/prisma.graphql"
+# import Room from "./generated/prisma.graphql"
+# import BookingWhereInput from "./generated/prisma.graphql"
+# import DateTimeInput from "./generated/prisma.graphql"
+
+input UserRegisterInput {
+    username: String
+    phone: String!
+    room_no: String!
+}
+
+type Query {
+    user(username: String!): User
+    me : User
+    washer(id: ID!): Washer
+    bookings (data: BookingWhereInput): [Booking]
+    rooms (data: RoomWhereInput) : [Room]
+}
+
+type Mutation {
+    createUser(  id: ID
+        username: String!
+        email: String!
+        image_url: String!
+        phone: String!
+        first_name: String!
+        last_name: String!
+        room_no: String!): User
+    deleteUser(username: String!): User
+    login: LoginResponse
+    register(
+        user : UserRegisterInput!
+    ) : User
+    createBooking(room_name: String!, start: String!, end: String!) : Booking!
+}
+
+type LoginResponse {
+    token: String
+    login_status: Boolean!
+    register: Boolean
+}

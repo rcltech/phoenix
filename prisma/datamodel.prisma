@@ -15,3 +15,17 @@ type Washer {
     time_elapsed: String!
     time_remaining: String!
 }
+
+type Room {
+    number: Int! @id
+    name: String!
+}
+
+type Booking {
+    id: ID! @id
+    user: User!
+    room: Room!
+    start: DateTime!
+    end: DateTime!
+    createdAt: DateTime! @createdAt
+}
