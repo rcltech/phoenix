@@ -33,7 +33,7 @@ type Mutation {
     register(
         user : UserRegisterInput!
     ) : User
-    createBooking(room_name: String!, start: String!, end: String!) : Booking!
+    createBooking(room_number: String!, start: String!, end: String!) : Booking!
 }
 
 type LoginResponse {
