@@ -37,10 +37,18 @@ docker-compose up -d    # Runs in detached mode
 prisma deploy
 ```
 
+Also, you have to obtain a unique prisma token.
+```$xslt
+cd prisma
+prisma token    # get token
+```
+Open the [admin console](http://localhost:4466/prisma/_admin). Copy and paste the token into the error popup to start using admin rights for database manipulation.
+
 Now that the graphql server is running and deployed, we can generate prisma client for phoenix and start phoenix
 ```$xslt
 cd prisma
 prisma generate
 cd ..
+npm run build
 npm start
 ```
