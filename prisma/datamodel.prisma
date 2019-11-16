@@ -17,7 +17,8 @@ type Washer {
 }
 
 type Room {
-    number: Int! @id
+    id: ID! @id
+    number: String! @unique
     name: String!
 }
 
