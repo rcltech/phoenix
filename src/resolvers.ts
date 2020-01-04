@@ -2,7 +2,7 @@ import { createUser, deleteUser, login, register } from './mutations/user';
 import {user, me} from "./query/user";
 import washer from "./query/washer";
 import {bookings, rooms} from "./query/bookings";
-import {createBooking} from "./mutations/bookings";
+import { createBooking, updateBooking, deleteBooking } from "./mutations/bookings";
 
 const resolvers = {
     Query: {
@@ -17,7 +17,9 @@ const resolvers = {
         deleteUser,
         login,
         register,
-        createBooking
+        createBooking,
+        updateBooking,
+        deleteBooking
     },
     Booking: {
         room(parent, _ , ctx){
