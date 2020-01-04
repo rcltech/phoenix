@@ -26,6 +26,11 @@ const resolvers = {
         user(parent, _ , ctx){
             return ctx.prisma.booking({id: parent.id}).user()
         },
+    },
+    Room: {
+        bookings(parent, _ , ctx){
+            return ctx.prisma.room({id: parent.id}).bookings()
+        }
     }
 };
 
