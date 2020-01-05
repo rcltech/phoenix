@@ -34,6 +34,8 @@ type Mutation {
         user : UserRegisterInput!
     ) : User
     createBooking(room_number: String!, start: String!, end: String!) : Booking!
+    updateBooking(id: ID!, room_number: String!, start: String!, end: String!): Booking!
+    deleteBooking(id: ID!): Booking!
 }
 
 type LoginResponse {
