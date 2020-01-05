@@ -21,6 +21,11 @@ const resolvers = {
         updateBooking,
         deleteBooking
     },
+    User: {
+        roomBookings(parent, args, ctx) {
+            return ctx.prisma.user({id: parent.id}).roomBookings()
+        }
+    },
     Booking: {
         room(parent, _ , ctx){
             return ctx.prisma.booking({id: parent.id}).room()
