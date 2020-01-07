@@ -8,6 +8,13 @@ type User {
     last_name: String!
     room_no: String! @unique
     roomBookings: [Booking] @relation(name: "UserBookings", onDelete: CASCADE)
+    sessions: [UserSessions] @relation(name: "UserLoginSessions", onDelete: CASCADE)
+}
+
+type UserSessions {
+    id: ID! @id
+    user: User! @relation(name: "UserLoginSessions")
+    createdAt: DateTime! @createdAt
 }
 
 type Washer {

@@ -24,9 +24,9 @@ async function resolveUserUsingGoogle(ctx) : Promise<User> {
 }
 
 async function resolveUserUsingJWT(ctx : any) : Promise<User> {
-  const user : any = jwt.verify(ctx.token, process.env.PRISMA_SECRET);
-  const username : string = user.username;
-  return ctx.prisma.user({username});
+  const userSession: any = jwt.verify(ctx.token, process.env.PRISMA_SECRET);
+  const sessionId = userSession.id;
+  return ctx.prisma.userSessions({ id: sessionId }).user();
 }
 
 export { resolveUserUsingGoogle, resolveUserUsingJWT };

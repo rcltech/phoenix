@@ -1,6 +1,6 @@
 const washer = (parent, { id }, ctx) =>
-    ctx.prisma.washer({
-        id,
-    });
+  ctx.prisma.washer({
+    id,
+  });
 
 export default washer;

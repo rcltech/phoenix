@@ -7,8 +7,7 @@ const user = (parent, { username }, ctx) => {
 };
 
 const me = async (parent, {}, ctx) => {
-  const user = await resolveUserUsingJWT(ctx);
-  return user;
+  return await resolveUserUsingJWT(ctx);
 };
 
 export { user, me };
