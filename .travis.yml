@@ -8,36 +8,66 @@ cache:
 services:
   - docker
 
-before_install:
-  - npm install -g prisma
-  - npm install
-  - docker-compose -f prisma/docker-compose.yml up -d
-
 stages:
   - test
   - build
   - deploy
+  - deploy:prod
+  - aws
 
 jobs:
   include:
     - stage: test
+      install:
+        - npm install -g prisma
+        - npm install
       script:
-        - echo "Run Prisma Deployment"
-        - cd prisma && prisma generate && prisma deploy
-        - echo "Start installation and test"
+        - cd prisma && prisma generate
         - npm run test
+
     - stage: build
+      install:
+        - npm install -g prisma
+        - npm install
       script:
-        - cd prisma && prisma generate && prisma deploy
+        - cd prisma && prisma generate
         - npm run build
 
     - stage: deploy
+      install:
+        - npm install -g prisma
+        - npm install
+        - docker-compose -f prisma/docker-compose.yml up -d
       script:
         - cd prisma && prisma generate && prisma deploy && cd ..
         - npm run build
-        - pip install --user awscli
-        - export PATH=$PATH:$HOME/.local/bin
         - docker login --username $DOCKER_USER -p $DOCKER_PASS
         - docker build -t rctechclub/phoenix:dev .
         - docker push rctechclub/phoenix:dev
+
+    - stage: deploy:prod
+      env:
+        - PRISMA_HOST=$PRISMA_HOST_PROD
+        - PRISMA_SECRET=$PRISMA_SECRET_PROD
+      install:
+        - npm install -g prisma
+        - npm install
+      script:
+        - cd prisma && prisma generate && prisma deploy && cd ..
+        - npm run build
+        - docker login --username $DOCKER_USER -p $DOCKER_PASS
+        - docker build -t rctechclub/phoenix:prod .
+        - docker push rctechclub/phoenix:prod
+      branches:
+        only:
+          - master
+
+    - stage: aws
+      install:
+        - pip install --user awscli
+        - export PATH=$PATH:$HOME/.local/bin
+      script:
         - aws ecs update-service --cluster phoenix-prod --service phoenix --force-new-deployment --region us-east-2
+      branches:
+        only:
+          - master
