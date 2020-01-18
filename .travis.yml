@@ -9,20 +9,22 @@ services:
   - docker
 
 stages:
-  - test
-  - build
-  - deploy
-  - deploy:prod
-  - aws
+  - name: test
+  - name: build
+  - name: deploy
+  - name: deploy:prod
+  - name: aws
+    if: branch = master
 
 jobs:
   include:
     - stage: test
       install:
         - npm install -g prisma
+        - docker-compose -f prisma/docker-compose.yml up -d
         - npm install
       script:
-        - cd prisma && prisma generate
+        - cd prisma && prisma generate && prisma deploy
         - npm run test
 
     - stage: build
@@ -35,9 +37,9 @@ jobs:
 
     - stage: deploy
       install:
+        - docker-compose -f prisma/docker-compose.yml up -d
         - npm install -g prisma
         - npm install
-        - docker-compose -f prisma/docker-compose.yml up -d
       script:
         - cd prisma && prisma generate && prisma deploy && cd ..
         - npm run build
@@ -45,10 +47,15 @@ jobs:
         - docker build -t rctechclub/phoenix:dev .
         - docker push rctechclub/phoenix:dev
 
-    - stage: deploy:prod
+    - if: branch = master
+      stage: deploy
       env:
         - PRISMA_HOST=$PRISMA_HOST_PROD
         - PRISMA_SECRET=$PRISMA_SECRET_PROD
+        - PRISMA_MANAGEMENT_API_SECRET=$PRISMA_MANAGEMENT_API_SECRET_PROD
+        - DB_HOST=$DB_HOST_PROD
+        - DB_USER=$DB_USER_PROD
+        - DB_PASSWORD=$DB_PASSWORD_PROD
       install:
         - npm install -g prisma
         - npm install
@@ -58,9 +65,6 @@ jobs:
         - docker login --username $DOCKER_USER -p $DOCKER_PASS
         - docker build -t rctechclub/phoenix:prod .
         - docker push rctechclub/phoenix:prod
-      branches:
-        only:
-          - master
 
     - stage: aws
       install:
@@ -68,6 +72,3 @@ jobs:
         - export PATH=$PATH:$HOME/.local/bin
       script:
         - aws ecs update-service --cluster phoenix-prod --service phoenix --force-new-deployment --region us-east-2
-      branches:
-        only:
-          - master
