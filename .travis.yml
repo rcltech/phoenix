@@ -12,7 +12,6 @@ stages:
   - name: test
   - name: build
   - name: deploy
-  - name: deploy:prod
   - name: aws
     if: branch = master
 
@@ -20,8 +19,8 @@ jobs:
   include:
     - stage: test
       install:
-        - npm install -g prisma
         - docker-compose -f prisma/docker-compose.yml up -d
+        - npm install -g prisma
         - npm install
       script:
         - cd prisma && prisma generate && prisma deploy

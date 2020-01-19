@@ -1,17 +1,17 @@
-import {ApolloServer} from "apollo-server-express"
+import { ApolloServer } from "apollo-server-express";
 import * as env from "dotenv";
 env.config();
 
-import typeDefs from './schema';
+import typeDefs from "./schema";
 import resolvers from "./resolvers";
-import {prisma} from './generated/prisma-client';
+import { prisma } from "./generated/prisma-client";
 
-const server : ApolloServer = new ApolloServer({
+const server: ApolloServer = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({req}) => ({
+  context: ({ req }) => ({
     prisma,
-    token: (req && req.headers.authorization),
+    token: req && req.headers.authorization,
   }),
 });
 
