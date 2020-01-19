@@ -1,4 +1,6 @@
-const bookings = async (parent, { data }, ctx) => {
+import { Booking, FragmentableArray } from "../generated/prisma-client";
+
+const bookings = (parent, { data }, ctx): FragmentableArray<Booking> => {
   return ctx.prisma.bookings({ where: data, orderBy: "start_ASC" });
 };
 

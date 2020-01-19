@@ -6,27 +6,15 @@ import { generateToken } from "../utils/authToken";
 
 env.config();
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const client: OAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-const createUser = (
-  parent,
-  { username, email, image_url, phone, first_name, last_name, room_no },
-  ctx
-) =>
-  ctx.prisma.createUser({
-    username,
-    email,
-    image_url,
-    phone,
-    first_name,
-    last_name,
-    room_no,
-  });
+type LoginResponse = {
+  login_status: boolean;
+  register: boolean;
+  token?: string;
+};
 
-const deleteUser = (parent, { username }, ctx) =>
-  ctx.prisma.deleteUser({ username });
-
-const login = async (parent, args, ctx) => {
+const login = async (parent, args, ctx): Promise<LoginResponse> => {
   try {
     const ticket = await client.verifyIdToken({
       idToken: ctx.token,
@@ -41,10 +29,10 @@ const login = async (parent, args, ctx) => {
     if (user === null)
       return { token: null, login_status: false, register: true };
     // If the user is valid, then register a user session and return a to
-    const userSession : UserSessions = await ctx.prisma.createUserSessions({
+    const userSession: UserSessions = await ctx.prisma.createUserSessions({
       user: {
         connect: {
-          id: user.id
+          id: user.id,
         },
       },
     });
@@ -57,7 +45,7 @@ const login = async (parent, args, ctx) => {
   }
 };
 
-const register = async (parent, { user }, ctx) => {
+const register = async (parent, { user }, ctx): Promise<User> | null => {
   try {
     await client.verifyIdToken({
       idToken: ctx.token,
@@ -84,4 +72,4 @@ const register = async (parent, { user }, ctx) => {
   });
 };
 
-export { createUser, deleteUser, login, register };
+export { login, register };

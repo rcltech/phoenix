@@ -2,10 +2,11 @@ import * as env from "dotenv";
 env.config();
 
 import server from "./server";
-const express = require("express");
-const app = express();
+import express from "express";
 
-const PORT = process.env.PORT || 4000;
+const app: express.Application = express();
+
+const PORT: string = process.env.PORT || "4000";
 
 server.applyMiddleware({ app });
 
