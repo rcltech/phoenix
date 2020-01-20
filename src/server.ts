@@ -15,7 +15,7 @@ import { prisma } from "./generated/prisma-client";
 const server: ApolloServer = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => ({
+  context: ({ req }): object => ({
     prisma,
     token: req && req.headers.authorization,
   }),

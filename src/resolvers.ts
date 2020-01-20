@@ -8,6 +8,7 @@ import {
   deleteBooking,
 } from "./mutations/bookings";
 import { IResolvers } from "apollo-server-express";
+import { Booking, Room, User } from "./generated/prisma-client";
 
 const resolvers: IResolvers = {
   Query: {
@@ -25,20 +26,20 @@ const resolvers: IResolvers = {
     deleteBooking,
   },
   User: {
-    roomBookings(parent, args, ctx) {
+    roomBookings(parent, args, ctx): Promise<[Booking]> {
       return ctx.prisma.user({ id: parent.id }).roomBookings();
     },
   },
   Booking: {
-    room(parent, _, ctx) {
+    room(parent, _, ctx): Promise<Room> {
       return ctx.prisma.booking({ id: parent.id }).room();
     },
-    user(parent, _, ctx) {
+    user(parent, _, ctx): Promise<User> {
       return ctx.prisma.booking({ id: parent.id }).user();
     },
   },
   Room: {
-    bookings(parent, _, ctx) {
+    bookings(parent, _, ctx): Promise<[Booking]> {
       return ctx.prisma.room({ id: parent.id }).bookings();
     },
   },

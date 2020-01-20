@@ -4,7 +4,7 @@ import { resolveUserUsingJWT } from "../utils/resolveUser";
 const createBooking = async (parent, data, ctx): Promise<Booking> => {
   const start: Date = new Date(data.start);
   const end: Date = new Date(data.end);
-  const remark: String = data.remark;
+  const remark: string = data.remark;
   const room: Room = await ctx.prisma.room({
     number: data.room_number,
   });
@@ -30,18 +30,19 @@ const updateBooking = async (parent, data, ctx): Promise<Booking> => {
   await resolveUserUsingJWT(ctx);
   const start: Date = new Date(data.start);
   const end: Date = new Date(data.end);
-  const remark: String = data.remark;
+  const remark: string = data.remark;
   const room: Room = await ctx.prisma.room({
     number: data.room_number,
   });
   const id = data.id;
+
   return ctx.prisma.updateBooking({
     data: {
       start,
       end,
       remark,
       room: {
-        connect: {
+        update: {
           number: room.number,
         },
       },
@@ -52,7 +53,7 @@ const updateBooking = async (parent, data, ctx): Promise<Booking> => {
   });
 };
 
-const deleteBooking = async (parent, { id }, ctx) => {
+const deleteBooking = async (parent, { id }, ctx): Promise<Booking> => {
   await resolveUserUsingJWT(ctx);
   return ctx.prisma.deleteBooking({ id });
 };

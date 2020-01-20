@@ -1,10 +1,15 @@
 import * as env from "dotenv";
 env.config();
 
-import { prisma, User, UserSessions } from "../src/generated/prisma-client";
+import {
+  BatchPayload,
+  prisma,
+  User,
+  UserSessions,
+} from "../src/generated/prisma-client";
 import testServer from "../src/server";
 import { createTestClient } from "apollo-server-testing";
-import { createTestServerWithToken } from "./server";
+import { createTestServerWithToken } from "./utils/server";
 import { generateToken } from "../src/utils/authToken";
 import { GraphQLResponse } from "apollo-server-types";
 
@@ -12,7 +17,7 @@ const createUser = (user): Promise<User> => {
   return prisma.createUser(user);
 };
 
-const deleteUsers = (): Promise<any> => {
+const deleteUsers = (): Promise<BatchPayload> => {
   return prisma.deleteManyUsers({});
 };
 
@@ -42,7 +47,7 @@ describe("User query and mutations", () => {
   /**
    * @author utkarsh867
    */
-  test("can query user", async done => {
+  test("can query user", async () => {
     await deleteUsers();
     await createUser(testUserInfo);
 
@@ -64,13 +69,12 @@ describe("User query and mutations", () => {
       },
     });
     await deleteUsers();
-    done();
   });
 
   /**
    * @author utkarsh867
    */
-  test("can resolve user from the session", async done => {
+  test("can resolve user from the session", async () => {
     await deleteUsers();
     // Create user in the database
     const user: User = await createUser(testUserInfo);
@@ -100,6 +104,5 @@ describe("User query and mutations", () => {
 
     // Cleanup after the test
     await deleteUsers();
-    done();
   });
 });

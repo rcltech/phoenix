@@ -1,9 +1,8 @@
-import { Booking, FragmentableArray } from "../generated/prisma-client";
+import { Booking, FragmentableArray, Room } from "../generated/prisma-client";
 
-const bookings = (parent, { data }, ctx): FragmentableArray<Booking> => {
+export const bookings = (parent, { data }, ctx): FragmentableArray<Booking> => {
   return ctx.prisma.bookings({ where: data, orderBy: "start_ASC" });
 };
 
-const rooms = (parent, { data }, ctx) => ctx.prisma.rooms(data);
-
-export { bookings, rooms };
+export const rooms = (parent, { data }, ctx): FragmentableArray<Room> =>
+  ctx.prisma.rooms(data);
