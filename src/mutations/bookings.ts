@@ -1,14 +1,17 @@
-import { Room, User } from "../generated/prisma-client";
+import { Booking, Room, User } from "../generated/prisma-client";
 import { resolveUserUsingJWT } from "../utils/resolveUser";
+import assert from "assert";
 
-const createBooking = async (parent, data, ctx) => {
+const createBooking = async (parent, data, ctx): Promise<Booking> => {
+  const user: User | null = await resolveUserUsingJWT(ctx);
+  assert.notStrictEqual(user, null, "No user login");
+
   const start: Date = new Date(data.start);
   const end: Date = new Date(data.end);
-  // TODO: Change the query for the room to unique
-  const room: Room = await ctx.prisma.rooms({
-    where: { number: data.room_number },
+  const remark: string = data.remark;
+  const room: Room = await ctx.prisma.room({
+    number: data.room_number,
   });
-  const user: User = await resolveUserUsingJWT(ctx);
   return ctx.prisma.createBooking({
     user: {
       connect: {
@@ -17,32 +20,37 @@ const createBooking = async (parent, data, ctx) => {
     },
     start,
     end,
-    id: undefined,
+    remark,
     room: {
       connect: {
-        number: room[0].number,
+        number: room.number,
       },
     },
   });
 };
 
-const updateBooking = async (parent, data, ctx) => {
-  await resolveUserUsingJWT(ctx);
+const updateBooking = async (parent, data, ctx): Promise<Booking> => {
+  const currentUser: User | null = await resolveUserUsingJWT(ctx);
+  assert.notStrictEqual(currentUser, null, "No user login");
+  const bookingUser: User = await ctx.prisma.booking({ id: data.id }).user();
+  assert.strictEqual(currentUser.id, bookingUser.id, "User is not allowed");
+
   const start: Date = new Date(data.start);
   const end: Date = new Date(data.end);
-  // TODO: Change the query for the room to unique
-  const room: Room = await ctx.prisma.rooms({
-    where: { number: data.room_number },
+  const remark: string = data.remark;
+  const room: Room = await ctx.prisma.room({
+    number: data.room_number,
   });
   const id = data.id;
-  delete data.id;
+
   return ctx.prisma.updateBooking({
     data: {
       start,
       end,
+      remark,
       room: {
-        connect: {
-          number: room[0].number,
+        update: {
+          number: room.number,
         },
       },
     },
@@ -52,8 +60,13 @@ const updateBooking = async (parent, data, ctx) => {
   });
 };
 
-const deleteBooking = async (parent, { id }, ctx) => {
-  await resolveUserUsingJWT(ctx);
+const deleteBooking = async (parent, { id }, ctx): Promise<Booking> => {
+  const currentUser: User | null = await resolveUserUsingJWT(ctx);
+  assert.notStrictEqual(currentUser.id, null, "");
+  const bookingUser: Booking = await ctx.prisma.booking({ id }).user();
+  console.log(currentUser.id, bookingUser.id);
+  assert.strictEqual(currentUser.id, bookingUser.id, "User is not allowed");
+
   return ctx.prisma.deleteBooking({ id });
 };
 

@@ -20,21 +20,12 @@ type Query {
 }
 
 type Mutation {
-    createUser(  id: ID
-        username: String!
-        email: String!
-        image_url: String!
-        phone: String!
-        first_name: String!
-        last_name: String!
-        room_no: String!): User
-    deleteUser(username: String!): User
     login: LoginResponse
     register(
         user : UserRegisterInput!
     ) : User
-    createBooking(room_number: String!, start: String!, end: String!) : Booking!
-    updateBooking(id: ID!, room_number: String!, start: String!, end: String!): Booking!
+    createBooking(room_number: String!, start: String!, end: String!, remark: String) : Booking!
+    updateBooking(id: ID!, room_number: String!, start: String!, end: String!, remark: String): Booking!
     deleteBooking(id: ID!): Booking!
 }
 

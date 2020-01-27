@@ -6,8 +6,9 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "test": "jest",
-    "dev": "nodemon"
+    "test": "jest --testPathIgnorePatterns utils",
+    "dev": "nodemon",
+    "lint": "eslint . --ext .ts"
   },
   "author": "",
   "license": "ISC",
@@ -27,7 +28,13 @@
   "devDependencies": {
     "@types/graphql": "^14.5.0",
     "@types/jest": "^24.0.18",
+    "@typescript-eslint/eslint-plugin": "^2.17.0",
+    "@typescript-eslint/parser": "^2.17.0",
     "apollo-server-testing": "^2.9.6",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-jest": "^23.6.0",
+    "eslint-plugin-prettier": "^3.1.2",
     "husky": "^4.0.10",
     "jest": "^24.9.0",
     "lint-staged": "^10.0.0",
@@ -40,13 +47,15 @@
     "ignore": [
       "__tests__",
       "node_modules",
+      "src/generated",
       ".git"
     ],
     "watch": [
       "src",
-      "package.json"
+      "package.json",
+      "prisma"
     ],
-    "exec": "npm run build && npm start",
+    "exec": "prisma generate && npm run build && npm start",
     "ext": "ts"
   },
   "husky": {
@@ -56,7 +65,8 @@
   },
   "lint-staged": {
     "*.{js,ts,css,json,md}": [
-      "prettier --write"
+      "prettier --write",
+      "npm run lint"
     ]
   }
 }
