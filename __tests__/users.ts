@@ -1,35 +1,13 @@
 import * as env from "dotenv";
-env.config();
-
-import {
-  BatchPayload,
-  prisma,
-  User,
-  UserSessions,
-} from "../src/generated/prisma-client";
+import { User } from "../src/generated/prisma-client";
 import testServer from "../src/server";
 import { createTestClient } from "apollo-server-testing";
 import { createTestServerWithToken } from "./utils/server";
 import { generateToken } from "../src/utils/authToken";
 import { GraphQLResponse } from "apollo-server-types";
+import { createUser, createUserSession, deleteUsers } from "./utils/users";
 
-const createUser = (user): Promise<User> => {
-  return prisma.createUser(user);
-};
-
-const deleteUsers = (): Promise<BatchPayload> => {
-  return prisma.deleteManyUsers({});
-};
-
-const createUserSession = (user: User): Promise<UserSessions> => {
-  return prisma.createUserSessions({
-    user: {
-      connect: {
-        id: user.id,
-      },
-    },
-  });
-};
+env.config();
 
 const testUserInfo = {
   username: "test123",

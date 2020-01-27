@@ -24,13 +24,17 @@ async function resolveUserUsingGoogle(ctx): Promise<User> {
   return ctx.prisma.user({ email: payload.email });
 }
 
-async function resolveUserUsingJWT(ctx: Context): Promise<User> {
-  const userSession: UserSessions = jwt.verify(
-    ctx.token,
-    process.env.PRISMA_SECRET
-  ) as UserSessions;
-  const sessionId = userSession.id;
-  return ctx.prisma.userSessions({ id: sessionId }).user();
+async function resolveUserUsingJWT(ctx: Context): Promise<User> | null {
+  try {
+    const userSession: UserSessions = jwt.verify(
+      ctx.token,
+      process.env.PRISMA_SECRET
+    ) as UserSessions;
+    const sessionId = userSession.id;
+    return ctx.prisma.userSessions({ id: sessionId }).user();
+  } catch (e) {
+    return null;
+  }
 }
 
 export { resolveUserUsingGoogle, resolveUserUsingJWT };
