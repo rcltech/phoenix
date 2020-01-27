@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "test": "jest --testPathIgnorePatterns utils",
+    "test": "jest --runInBand --testPathIgnorePatterns utils",
     "dev": "nodemon",
     "lint": "eslint . --ext .ts"
   },

@@ -9,7 +9,8 @@ import { GraphQLResponse } from "apollo-server-types";
 
 env.config();
 
-const testUserInfo = {
+const testUserInfo: User = {
+  id: undefined,
   username: "test123",
   email: "test@connect.hku.hk",
   image_url: "http://url",
@@ -33,12 +34,11 @@ const testBookingInfo = {
   remark: "Hello",
 };
 
+beforeAll(async () => await deleteUsers());
+
 describe("Booking queries", () => {
   test("can query all bookings", async () => {
-    // Create a sample user that will make the booking
-    await deleteUsers();
     await deleteRooms();
-    await deleteBookings();
 
     // Create user in the database
     const user: User = await createUser(testUserInfo);
@@ -79,8 +79,8 @@ describe("Booking queries", () => {
         },
       ],
     });
-    await deleteUsers();
-    await deleteRooms();
     await deleteBookings();
+    await deleteRooms();
+    await deleteUsers();
   });
 });
