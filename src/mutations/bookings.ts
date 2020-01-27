@@ -1,6 +1,6 @@
 import { Booking, Room, User } from "../generated/prisma-client";
 import { resolveUserUsingJWT } from "../utils/resolveUser";
-import { sendEmail } from "../utils/sendEmail";
+import { sendEmail } from "../utils/email/sendEmail";
 import assert from "assert";
 
 const createBooking = async (parent, data, ctx): Promise<Booking> => {
