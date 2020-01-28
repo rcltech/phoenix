@@ -36,7 +36,12 @@ export const sendEmail = ({ user, booking, room }) => {
     html: getEmailContent(emailTemplateData),
   };
 
-  transporter.sendMail(mailOptions, (err, info) => {
-    err ? console.log(err) : console.log(info);
-  });
+  transporter
+    .sendMail(mailOptions)
+    .then(info => {
+      console.log(info);
+    })
+    .catch(err => {
+      console.log(err);
+    });
 };
