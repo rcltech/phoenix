@@ -63,8 +63,13 @@ const updateBooking = async (parent, data, ctx): Promise<Booking> => {
   });
 };
 
-const deleteBooking = async (parent, { id }, ctx) => {
-  await resolveUserUsingJWT(ctx);
+const deleteBooking = async (parent, { id }, ctx): Promise<Booking> => {
+  const currentUser: User | null = await resolveUserUsingJWT(ctx);
+  assert.notStrictEqual(currentUser.id, null, "");
+  const bookingUser: Booking = await ctx.prisma.booking({ id }).user();
+  console.log(currentUser.id, bookingUser.id);
+  assert.strictEqual(currentUser.id, bookingUser.id, "User is not allowed");
+
   return ctx.prisma.deleteBooking({ id });
 };
 
