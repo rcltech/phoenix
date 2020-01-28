@@ -1,5 +1,6 @@
 import { Booking, Room, User } from "../generated/prisma-client";
 import { resolveUserUsingJWT } from "../utils/resolveUser";
+import { sendEmail } from "../utils/email/sendEmail";
 import assert from "assert";
 
 const createBooking = async (parent, data, ctx): Promise<Booking> => {
@@ -12,7 +13,7 @@ const createBooking = async (parent, data, ctx): Promise<Booking> => {
   const room: Room = await ctx.prisma.room({
     number: data.room_number,
   });
-  return ctx.prisma.createBooking({
+  const booking: Booking = await ctx.prisma.createBooking({
     user: {
       connect: {
         username: user.username,
@@ -27,6 +28,8 @@ const createBooking = async (parent, data, ctx): Promise<Booking> => {
       },
     },
   });
+  sendEmail({ user, booking, room });
+  return booking;
 };
 
 const updateBooking = async (parent, data, ctx): Promise<Booking> => {
