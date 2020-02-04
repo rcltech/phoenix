@@ -1,4 +1,5 @@
 import * as env from "dotenv";
+import moment from "moment";
 import { createTestServerWithUserLoggedIn } from "./utils/server";
 import { Room, User } from "../src/generated/prisma-client";
 import { createTestClient } from "apollo-server-testing";
@@ -29,9 +30,26 @@ const testRoomInfo: Room = {
 const testBookingInfo = {
   user: "test123",
   room: "123",
-  start: new Date(),
-  end: new Date(),
+  start: moment()
+    .startOf("hour")
+    .toDate(),
+  end: moment()
+    .startOf("hour")
+    .add(2, "hour")
+    .toDate(),
   remark: "Hello",
+};
+const testInvalidBookingVariables = {
+  room_number: "123",
+  start: moment()
+    .startOf("hour")
+    .add(1, "hour")
+    .toDate(),
+  end: moment()
+    .startOf("hour")
+    .add(2, "hour")
+    .toDate(),
+  remark: "Hi",
 };
 
 beforeAll(async () => await deleteUsers());
@@ -45,9 +63,8 @@ describe("Booking queries", () => {
     const testServer = await createTestServerWithUserLoggedIn(user);
     // Create a test client connected to the test server
     const client = createTestClient(testServer);
-    //Create the required rooms
+    // Create the required rooms
     await createRoom(testRoomInfo);
-    // Create a test client connected to the test server
     // Create a booking
     await createBooking(testBookingInfo);
     const query = `{
@@ -79,6 +96,36 @@ describe("Booking queries", () => {
         },
       ],
     });
+    await deleteBookings();
+    await deleteRooms();
+    await deleteUsers();
+  });
+});
+
+describe("Booking validation", () => {
+  test("can validate bookings", async () => {
+    // Create user in the database
+    const user: User = await createUser(testUserInfo);
+    const testServer = await createTestServerWithUserLoggedIn(user);
+    // Create a test client connected to the test server
+    const client = createTestClient(testServer);
+    // Create the required rooms
+    await createRoom(testRoomInfo);
+    // Create a booking
+    await createBooking(testBookingInfo);
+
+    // Attempt to create an invalid booking
+    const mutation = `{
+      createBooking(room_number: String!, start: String!, end: String!, remark: String) {
+        id
+      }
+    }`;
+    const result: GraphQLResponse = await client.mutate({
+      mutation,
+      variables: testInvalidBookingVariables,
+    });
+    expect(result.data).toEqual(undefined);
+
     await deleteBookings();
     await deleteRooms();
     await deleteUsers();
