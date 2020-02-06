@@ -25,3 +25,7 @@ export const createUserSession = (user: User): Promise<UserSessions> => {
     },
   });
 };
+
+export const deleteAdminUsers = (): Promise<BatchPayload> => {
+  return prisma.deleteManyAdmins({});
+};

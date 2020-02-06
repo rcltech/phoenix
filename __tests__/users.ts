@@ -6,6 +6,7 @@ import { createTestServerWithToken } from "./utils/server";
 import { generateToken } from "../src/utils/authToken";
 import { GraphQLResponse } from "apollo-server-types";
 import { createUser, createUserSession, deleteUsers } from "./utils/users";
+import { gql } from "apollo-server-express";
 
 env.config();
 
@@ -30,13 +31,14 @@ describe("User query and mutations", () => {
     await createUser(testUserInfo);
 
     const client = createTestClient(testServer);
-    const userQuery = `{
-        user (username: "${testUserInfo.username}") {
-            username,
-            first_name,
-            last_name,
-            room_no
-        }}`;
+    const userQuery = gql`{
+      user (username: "${testUserInfo.username}") {
+          username,
+          first_name,
+          last_name,
+          room_no
+      }
+    }`;
     const result: GraphQLResponse = await client.query({ query: userQuery });
     expect(result.data).toEqual({
       user: {

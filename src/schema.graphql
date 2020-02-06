@@ -8,13 +8,14 @@
 # import EventWhereInput from "./generated/prisma.graphql"
 
 input UserRegisterInput {
-    username: String
-    phone: String!
-    room_no: String!
+  username: String
+  phone: String!
+  room_no: String!
 }
 
 type Query {
     user(username: String!): User
+    adminUser(username: String!): Admin
     me : User
     washer(id: ID!): Washer
     bookings (data: BookingWhereInput): [Booking]
@@ -24,9 +25,9 @@ type Query {
 
 type Mutation {
     login: LoginResponse
-    register(
-        user : UserRegisterInput!
-    ) : User
+    adminLogin(username: String!, password: String!): LoginResponse
+    register(user: UserRegisterInput!): User
+    adminRegister(username: String!, password: String!): Admin
     createBooking(room_number: String!, start: String!, end: String!, remark: String) : Booking
     updateBooking(id: ID!, room_number: String!, start: String!, end: String!, remark: String): Booking
     deleteBooking(id: ID!): Booking

@@ -12,6 +12,12 @@ type User {
     eventsOrganised: [Event] @relation(name: "UserEvents", onDelete: CASCADE)
 }
 
+type Admin {
+    id: ID! @id
+    username: String! @unique
+    password: String!
+}
+
 type UserSessions {
     id: ID! @id
     user: User! @relation(name: "UserLoginSessions")

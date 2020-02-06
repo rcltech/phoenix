@@ -1,8 +1,10 @@
 import * as env from "dotenv";
 import { OAuth2Client } from "google-auth-library";
-import { User, UserSessions } from "../generated/prisma-client";
+import { Admin, prisma, User, UserSessions } from "../generated/prisma-client";
 import { TokenPayload } from "google-auth-library/build/src/auth/loginticket";
 import { generateToken } from "../utils/authToken";
+import { hash, compare } from "bcrypt";
+import * as assert from "assert";
 
 env.config();
 
@@ -14,7 +16,7 @@ type LoginResponse = {
   token?: string;
 };
 
-const login = async (parent, args, ctx): Promise<LoginResponse> => {
+export const login = async (parent, args, ctx): Promise<LoginResponse> => {
   try {
     const ticket = await client.verifyIdToken({
       idToken: ctx.token,
@@ -45,7 +47,7 @@ const login = async (parent, args, ctx): Promise<LoginResponse> => {
   }
 };
 
-const register = async (parent, { user }, ctx): Promise<User> | null => {
+export const register = async (parent, { user }, ctx): Promise<User> | null => {
   try {
     await client.verifyIdToken({
       idToken: ctx.token,
@@ -72,4 +74,34 @@ const register = async (parent, { user }, ctx): Promise<User> | null => {
   });
 };
 
-export { login, register };
+export const adminLogin = async (
+  parent,
+  { username, password }: { username: string; password: string },
+  ctx
+): Promise<LoginResponse> => {
+  const adminUser = await ctx.prisma.admin({
+    username,
+  });
+  const matches: boolean = await compare(password, adminUser.password);
+  if (matches) {
+    return {
+      token: "",
+      login_status: true,
+      register: false,
+    };
+  }
+  return null;
+};
+
+export const adminRegister = async (
+  parent,
+  { username, password },
+  ctx
+): Promise<Admin> => {
+  assert.strictEqual(ctx.token, process.env.PRISMA_SECRET, "Not allowed");
+  const hashedPassword = await hash(password, 10);
+  return ctx.prisma.createAdmin({
+    username,
+    password: hashedPassword,
+  });
+};

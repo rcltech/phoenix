@@ -1,5 +1,5 @@
-import { login, register } from "./mutations/user";
-import { user, me } from "./query/user";
+import { adminLogin, adminRegister, login, register } from "./mutations/user";
+import { user, me, adminUser } from "./query/user";
 import washer from "./query/washer";
 import { bookings, rooms } from "./query/bookings";
 import { events } from "./query/events";
@@ -15,6 +15,7 @@ import { Booking, Room, User, Event } from "./generated/prisma-client";
 const resolvers: IResolvers = {
   Query: {
     user,
+    adminUser,
     me,
     washer,
     bookings,
@@ -23,7 +24,9 @@ const resolvers: IResolvers = {
   },
   Mutation: {
     login,
+    adminLogin,
     register,
+    adminRegister,
     createBooking,
     updateBooking,
     deleteBooking,
