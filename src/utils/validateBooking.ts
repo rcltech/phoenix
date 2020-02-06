@@ -20,7 +20,7 @@ const getTimeSlots = (start: Date, end: Date): Date[] => {
 
 export const validateBooking = (
   booking: BookingData,
-  existingBookings: [Booking]
+  existingBookings: Booking[]
 ): boolean => {
   const bookingTimeSlots = getTimeSlots(booking.start, booking.end);
 
