@@ -33,6 +33,7 @@ export const validateBooking = (
 
   const start = moment(booking.start);
   const end = moment(booking.end);
+  if (start.isSameOrAfter(end)) return false;
 
   const index: number = bookedTimeSlots.findIndex(bookedTimeSlot => {
     const startOfTimeSlot = moment(bookedTimeSlot);
