@@ -1,5 +1,6 @@
 import moment from "moment";
 import { Booking } from "../generated/prisma-client";
+import { Context } from "prisma-client-lib/dist/types";
 
 type BookingData = {
   start: Date;
@@ -18,10 +19,25 @@ const getTimeSlots = (start: Date, end: Date): Date[] => {
   return timeSlots;
 };
 
-export const validateBooking = (
+export const validateBooking = async (
+  roomNumber: string,
   booking: BookingData,
-  existingBookings: Booking[]
-): boolean => {
+  ctx
+): Promise<boolean> => {
+  const existingBookings: Booking[] = await ctx.prisma
+    .room({ number: roomNumber })
+    .bookings({
+      where: {
+        start_gte: moment(booking.start)
+          .startOf("date")
+          .toDate(),
+        end_lte: moment(booking.end)
+          .endOf("date")
+          .toDate(),
+      },
+      orderBy: "start_ASC",
+    });
+
   const bookedTimeSlots: Date[] = [];
   for (const existingBooking of existingBookings) {
     const timeSlots = getTimeSlots(

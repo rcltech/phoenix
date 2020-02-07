@@ -3,7 +3,7 @@ import { resolveUserUsingJWT } from "../utils/resolveUser";
 import { sendEmail } from "../utils/email/sendEmail";
 import { validateBooking } from "../utils/validateBooking";
 import assert from "assert";
-import moment = require("moment");
+import { Context } from "prisma-client-lib/dist/types";
 
 const createBooking = async (parent, data, ctx): Promise<Booking> => {
   const user: User | null = await resolveUserUsingJWT(ctx);
@@ -16,20 +16,12 @@ const createBooking = async (parent, data, ctx): Promise<Booking> => {
     number: data.room_number,
   });
 
-  const existingBookings: Booking[] = await ctx.prisma
-    .room({ number: room.number })
-    .bookings({
-      where: {
-        start_gte: moment(start)
-          .startOf("date")
-          .toDate(),
-        end_lte: moment(end)
-          .endOf("date")
-          .toDate(),
-      },
-      orderBy: "start_ASC",
-    });
-  if (!validateBooking({ start, end }, existingBookings)) return null;
+  const validity: boolean = await validateBooking(
+    room.number,
+    { start, end },
+    ctx as Context
+  );
+  if (!validity) return null;
 
   const booking: Booking = await ctx.prisma.createBooking({
     user: {
