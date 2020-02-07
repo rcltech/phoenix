@@ -22,8 +22,6 @@ export const validateBooking = (
   booking: BookingData,
   existingBookings: Booking[]
 ): boolean => {
-  const bookingTimeSlots = getTimeSlots(booking.start, booking.end);
-
   const bookedTimeSlots: Date[] = [];
   for (const existingBooking of existingBookings) {
     const timeSlots = getTimeSlots(
@@ -33,11 +31,14 @@ export const validateBooking = (
     bookedTimeSlots.push(...timeSlots);
   }
 
-  let index: number = -1;
-  bookingTimeSlots.forEach(bookingTimeSlot => {
-    if (index != -1) return;
-    index = bookedTimeSlots.findIndex(bookedTimeSlot =>
-      moment(bookedTimeSlot).isSame(bookingTimeSlot)
+  const start = moment(booking.start);
+  const end = moment(booking.end);
+
+  const index: number = bookedTimeSlots.findIndex(bookedTimeSlot => {
+    const startOfTimeSlot = moment(bookedTimeSlot);
+    const endOfTimeSlot = moment(bookedTimeSlot).add(1, "hour");
+    return (
+      startOfTimeSlot.isSameOrAfter(start) && endOfTimeSlot.isSameOrBefore(end)
     );
   });
 
