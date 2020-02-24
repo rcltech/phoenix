@@ -2,6 +2,7 @@ import { login, register } from "./mutations/user";
 import { user, me } from "./query/user";
 import washer from "./query/washer";
 import { bookings, rooms } from "./query/bookings";
+import { events } from "./query/events";
 import {
   createBooking,
   updateBooking,
@@ -17,6 +18,7 @@ const resolvers: IResolvers = {
     washer,
     bookings,
     rooms,
+    events,
   },
   Mutation: {
     login,
