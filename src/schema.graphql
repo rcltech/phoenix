@@ -30,6 +30,8 @@ type Mutation {
     createBooking(room_number: String!, start: String!, end: String!, remark: String) : Booking
     updateBooking(id: ID!, room_number: String!, start: String!, end: String!, remark: String): Booking
     deleteBooking(id: ID!): Booking
+    createEvent(title: String!, start: String, end: String, venue: String!, image_url: String!, description: String): Event!
+    deleteEvent(id: ID!): Event!
 }
 
 type LoginResponse {

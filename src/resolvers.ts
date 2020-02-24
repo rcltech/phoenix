@@ -8,6 +8,7 @@ import {
   updateBooking,
   deleteBooking,
 } from "./mutations/bookings";
+import { createEvent, deleteEvent } from "./mutations/events";
 import { IResolvers } from "apollo-server-express";
 import { Booking, Room, User } from "./generated/prisma-client";
 
@@ -26,6 +27,8 @@ const resolvers: IResolvers = {
     createBooking,
     updateBooking,
     deleteBooking,
+    createEvent,
+    deleteEvent,
   },
   User: {
     roomBookings(parent, args, ctx): Promise<[Booking]> {
