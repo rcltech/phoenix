@@ -10,8 +10,12 @@ const createEvent = async (parent, data, ctx): Promise<Event> => {
   const start: Date = new Date(data.start);
   const end: Date = new Date(data.end);
   const venue: string = data.venue;
-  const image_url: string = data.image_url;
+  const image_base64: string = data.image_base64;
   const description: string = data.description;
+
+  //image_url should be a link pointing to S3
+  //a utility function to be further implemented
+  const image_url = image_base64;
 
   const event: Event = await ctx.prisma.createEvent({
     title,
@@ -20,7 +24,7 @@ const createEvent = async (parent, data, ctx): Promise<Event> => {
     venue,
     image_url,
     description,
-    user: {
+    organiser: {
       connect: {
         id: user.id,
       },
