@@ -1,8 +1,5 @@
 import moment from "moment";
 import { Booking, Prisma } from "../generated/prisma-client";
-import { Context } from "prisma-client-lib/dist/types";
-import { ContextFunction } from "apollo-server-core";
-import { ExpressContext } from "apollo-server-express/src/ApolloServer";
 
 type BookingData = {
   start: Date;

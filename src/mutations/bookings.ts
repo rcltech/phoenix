@@ -3,7 +3,6 @@ import { resolveUserUsingJWT } from "../utils/resolveUser";
 import { sendEmail } from "../utils/email/sendEmail";
 import { validateBooking } from "../utils/validateBooking";
 import assert from "assert";
-import { Context } from "prisma-client-lib/dist/types";
 
 const createBooking = async (parent, data, ctx): Promise<Booking> => {
   const user: User | null = await resolveUserUsingJWT(ctx);
@@ -19,7 +18,7 @@ const createBooking = async (parent, data, ctx): Promise<Booking> => {
   const validity: boolean = await validateBooking(
     room.number,
     { start, end },
-    ctx as Context
+    ctx
   );
   if (!validity) return null;
 
