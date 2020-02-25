@@ -1,6 +1,8 @@
 import moment from "moment";
-import { Booking } from "../generated/prisma-client";
+import { Booking, Prisma } from "../generated/prisma-client";
 import { Context } from "prisma-client-lib/dist/types";
+import { ContextFunction } from "apollo-server-core";
+import { ExpressContext } from "apollo-server-express/src/ApolloServer";
 
 type BookingData = {
   start: Date;
@@ -22,9 +24,9 @@ const getTimeSlots = (start: Date, end: Date): Date[] => {
 export const validateBooking = async (
   roomNumber: string,
   booking: BookingData,
-  ctx
+  { prisma }: { prisma: Prisma }
 ): Promise<boolean> => {
-  const existingBookings: Booking[] = await ctx.prisma
+  const existingBookings: Booking[] = await prisma
     .room({ number: roomNumber })
     .bookings({
       where: {
