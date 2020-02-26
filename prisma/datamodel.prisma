@@ -9,6 +9,7 @@ type User {
     room_no: String! @unique
     roomBookings: [Booking] @relation(name: "UserBookings", onDelete: CASCADE)
     sessions: [UserSessions] @relation(name: "UserLoginSessions", onDelete: CASCADE)
+    eventsOrganised: [Event] @relation(name: "UserEvents", onDelete: CASCADE)
 }
 
 type UserSessions {
@@ -39,4 +40,15 @@ type Booking {
     end: DateTime!
     remark: String
     createdAt: DateTime! @createdAt
+}
+
+type Event {
+    id: ID! @id
+    organiser: User! @relation(name: "UserEvents")
+    title: String!
+    start: DateTime!
+    end: DateTime!
+    venue: String!
+    image_url: String!
+    description: String
 }

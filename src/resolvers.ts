@@ -2,11 +2,13 @@ import { login, register } from "./mutations/user";
 import { user, me } from "./query/user";
 import washer from "./query/washer";
 import { bookings, rooms } from "./query/bookings";
+import { events } from "./query/events";
 import {
   createBooking,
   updateBooking,
   deleteBooking,
 } from "./mutations/bookings";
+import { createEvent, deleteEvent } from "./mutations/events";
 import { IResolvers } from "apollo-server-express";
 import { Booking, Room, User } from "./generated/prisma-client";
 
@@ -17,6 +19,7 @@ const resolvers: IResolvers = {
     washer,
     bookings,
     rooms,
+    events,
   },
   Mutation: {
     login,
@@ -24,6 +27,8 @@ const resolvers: IResolvers = {
     createBooking,
     updateBooking,
     deleteBooking,
+    createEvent,
+    deleteEvent,
   },
   User: {
     roomBookings(parent, args, ctx): Promise<[Booking]> {

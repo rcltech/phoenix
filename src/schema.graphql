@@ -4,6 +4,8 @@
 # import Room from "./generated/prisma.graphql"
 # import BookingWhereInput from "./generated/prisma.graphql"
 # import DateTimeInput from "./generated/prisma.graphql"
+# import Event from "./generated/prisma.graphql"
+# import EventWhereInput from "./generated/prisma.graphql"
 
 input UserRegisterInput {
     username: String
@@ -17,6 +19,7 @@ type Query {
     washer(id: ID!): Washer
     bookings (data: BookingWhereInput): [Booking]
     rooms (data: RoomWhereInput) : [Room]
+    events (data: EventWhereInput) : [Event]
 }
 
 type Mutation {
@@ -27,6 +30,8 @@ type Mutation {
     createBooking(room_number: String!, start: String!, end: String!, remark: String) : Booking
     updateBooking(id: ID!, room_number: String!, start: String!, end: String!, remark: String): Booking
     deleteBooking(id: ID!): Booking
+    createEvent(title: String!, start: String!, end: String!, venue: String!, image_base64: String!, description: String): Event
+    deleteEvent(id: ID!): Event
 }
 
 type LoginResponse {
