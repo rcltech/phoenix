@@ -10,7 +10,7 @@ import {
 } from "./mutations/bookings";
 import { createEvent, deleteEvent } from "./mutations/events";
 import { IResolvers } from "apollo-server-express";
-import { Booking, Room, User } from "./generated/prisma-client";
+import { Booking, Room, User, Event } from "./generated/prisma-client";
 
 const resolvers: IResolvers = {
   Query: {
@@ -34,6 +34,9 @@ const resolvers: IResolvers = {
     roomBookings(parent, args, ctx): Promise<[Booking]> {
       return ctx.prisma.user({ id: parent.id }).roomBookings();
     },
+    eventsOrganised(parent, args, ctx): Promise<[Event]> {
+      return ctx.prisma.user({ id: parent.id }).eventsOrganised();
+    },
   },
   Booking: {
     room(parent, _, ctx): Promise<Room> {
@@ -46,6 +49,11 @@ const resolvers: IResolvers = {
   Room: {
     bookings(parent, _, ctx): Promise<[Booking]> {
       return ctx.prisma.room({ id: parent.id }).bookings();
+    },
+  },
+  Event: {
+    organiser(parent, _, ctx): Promise<User> {
+      return ctx.prisma.event({ id: parent.id }).organiser();
     },
   },
 };
