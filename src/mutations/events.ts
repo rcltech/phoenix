@@ -1,8 +1,9 @@
 import { Event, User } from "../generated/prisma-client";
 import { resolveUserUsingJWT } from "../utils/resolveUser";
+import { uploadImageToS3 } from "../utils/uploadImageToS3";
 import assert from "assert";
 
-const createEvent = async (parent, data, ctx): Promise<Event> => {
+const createEvent = async (parent, data, ctx): Promise<Event> | null => {
   const user: User | null = await resolveUserUsingJWT(ctx);
   assert.notStrictEqual(user, null, "No user login");
 
@@ -13,9 +14,19 @@ const createEvent = async (parent, data, ctx): Promise<Event> => {
   const image_base64: string = data.image_base64;
   const description: string = data.description;
 
-  //image_url should be a link pointing to S3
-  //a utility function to be further implemented
-  const image_url = image_base64;
+  //Store image_base64 to S3 bucket
+  //And retrieve image_url back to be stored in the database
+  const file_name: string = title;
+  const image_url: string | null = await uploadImageToS3({
+    image_base64,
+    file_name,
+  });
+  console.log(
+    image_url ? image_url : "An error has occured while uploading image"
+  );
+
+  //return null if unable to upload image to S3
+  if (!image_url) return null;
 
   const event: Event = await ctx.prisma.createEvent({
     title,
