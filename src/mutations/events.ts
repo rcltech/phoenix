@@ -14,32 +14,34 @@ const createEvent = async (parent, data, ctx): Promise<Event> | null => {
   const image_base64: string = data.image_base64;
   const description: string = data.description;
 
-  //Store image_base64 to S3 bucket
-  //And retrieve image_url back to be stored in the database
-  const file_name: string = title;
-  const image_url: string | null = await uploadImageToS3({
-    image_base64,
-    file_name,
-  });
-  console.log(
-    image_url ? image_url : "An error has occured while uploading image"
-  );
-
-  //return null if unable to upload image to S3
-  if (!image_url) return null;
-
-  const event: Event = await ctx.prisma.createEvent({
+  let event: Event = await ctx.prisma.createEvent({
     title,
     start,
     end,
     venue,
-    image_url,
     description,
+    image_url: "",
     organiser: {
       connect: {
         id: user.id,
       },
     },
+  });
+
+  //Store image_base64 to S3 bucket with filename <event.id>
+  //And retrieve image_url back to be stored in the database
+  const { id }: { id: string } = event;
+  const image_url: string | null = await uploadImageToS3({
+    image_base64,
+    file_name: id,
+  });
+
+  //return null if unable to upload image to S3
+  if (!image_url) return null;
+
+  event = await ctx.prisma.updateEvent({
+    data: { image_url },
+    where: { id },
   });
 
   return event;
