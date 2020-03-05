@@ -1,22 +1,15 @@
 import AWS from "aws-sdk";
-import env from "dotenv";
+import { accessKeyId, secretAccessKey, bucketName } from "./config";
 
-env.config();
+const s3: AWS.S3 = new AWS.S3({
+  accessKeyId,
+  secretAccessKey,
+});
 
-export const uploadImageToS3 = async ({
+const uploadToS3 = async ({
   image_base64,
   file_name,
 }): Promise<string> | null => {
-  const accessKeyId: string = process.env.AWS_IAM_ACCESS_KEY_ID;
-  const secretAccessKey: string = process.env.AWS_IAM_SECRET_ACCESS_KEY;
-  let bucketName: string = process.env.BUCKET_NAME;
-  bucketName += process.env.NODE_ENV === "development" ? "dev" : "production";
-
-  const s3: AWS.S3 = new AWS.S3({
-    accessKeyId,
-    secretAccessKey,
-  });
-
   const params = {
     Bucket: bucketName,
     Key: file_name,
@@ -30,9 +23,7 @@ export const uploadImageToS3 = async ({
 
   const uploadImage = s3.upload(params).promise();
   const S3Response = await uploadImage
-    .then(data => {
-      return data;
-    })
+    .then(data => data)
     .catch(err => {
       console.log(err);
       return null;
@@ -43,3 +34,22 @@ export const uploadImageToS3 = async ({
   const { Location: image_url } = S3Response;
   return image_url;
 };
+
+const deleteFromS3 = async ({ event_id }): Promise<boolean> => {
+  const params = {
+    Bucket: bucketName,
+    Key: event_id,
+  };
+
+  const deleteImage = s3.deleteObject(params).promise();
+  const S3Response = await deleteImage
+    .then(data => true)
+    .catch(err => {
+      console.log(err);
+      return false;
+    });
+
+  return S3Response;
+};
+
+export { uploadToS3, deleteFromS3 };

@@ -1,6 +1,6 @@
 import { Event, User } from "../generated/prisma-client";
 import { resolveUserUsingJWT } from "../utils/resolveUser";
-import { uploadImageToS3 } from "../utils/uploadImageToS3";
+import { uploadToS3, deleteFromS3 } from "../utils/S3";
 import assert from "assert";
 
 const createEvent = async (parent, data, ctx): Promise<Event> | null => {
@@ -31,7 +31,7 @@ const createEvent = async (parent, data, ctx): Promise<Event> | null => {
   //Store image_base64 to S3 bucket with filename <event.id>
   //And retrieve image_url back to be stored in the database
   const { id }: { id: string } = event;
-  const image_url: string | null = await uploadImageToS3({
+  const image_url: string | null = await uploadToS3({
     image_base64,
     file_name: id,
   });
@@ -47,7 +47,7 @@ const createEvent = async (parent, data, ctx): Promise<Event> | null => {
   return event;
 };
 
-const deleteEvent = async (parent, data, ctx): Promise<Event> => {
+const deleteEvent = async (parent, data, ctx): Promise<Event> | null => {
   const currentUser: User | null = await resolveUserUsingJWT(ctx);
   assert.notStrictEqual(currentUser.id, null, "");
 
@@ -55,7 +55,10 @@ const deleteEvent = async (parent, data, ctx): Promise<Event> => {
   const eventOrganiser: User = await ctx.prisma.event({ id }).organiser();
   assert.strictEqual(currentUser.id, eventOrganiser.id, "User is not allowed");
 
-  return ctx.prisma.deleteEvent({ id });
+  const hasImageBeenDeleted: boolean = await deleteFromS3({ event_id: id });
+  if (!hasImageBeenDeleted) return null;
+
+  return await ctx.prisma.deleteEvent({ id });
 };
 
 export { createEvent, deleteEvent };
