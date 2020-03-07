@@ -2,11 +2,12 @@ import env from "dotenv";
 import { Event, User } from "../generated/prisma-client";
 import { resolveUserUsingJWT } from "../utils/resolveUser";
 import { uploadToS3, deleteFromS3 } from "../utils/S3";
+import { S3UploadResponse, S3DeleteResponse } from "../utils/S3/types";
 import assert from "assert";
 
 env.config();
-let bucketName = process.env.RAVEN_BUCKET_NAME;
-bucketName += process.env.NODE_ENV === "development" ? "/dev" : "/production";
+let bucket_name = process.env.RAVEN_BUCKET_NAME;
+bucket_name += process.env.NODE_ENV === "development" ? "/dev" : "/production";
 
 const createEvent = async (parent, data, ctx): Promise<Event> | null => {
   const user: User | null = await resolveUserUsingJWT(ctx);
@@ -36,14 +37,15 @@ const createEvent = async (parent, data, ctx): Promise<Event> | null => {
   //Store image_base64 to S3 bucket with filename <event.id>
   //And retrieve image_url back to be stored in the database
   const { id } = event;
-  const image_url: string | null = await uploadToS3({
+  const S3UploadResponse: S3UploadResponse = await uploadToS3({
     image_base64,
-    file_name: id,
-    bucketName,
+    file_name: id + ".jpg",
+    bucket_name,
   });
+  const { isSuccessful, image_url } = S3UploadResponse;
 
   //return null if unable to upload image to S3
-  if (!image_url) return null;
+  if (!isSuccessful) return null;
 
   event = await ctx.prisma.updateEvent({
     data: { image_url },
@@ -61,11 +63,14 @@ const deleteEvent = async (parent, data, ctx): Promise<Event> | null => {
   const eventOrganiser: User = await ctx.prisma.event({ id }).organiser();
   assert.strictEqual(currentUser.id, eventOrganiser.id, "User is not allowed");
 
-  const hasImageBeenDeleted: boolean = await deleteFromS3({
-    event_id: id,
-    bucketName,
+  const S3DeleteResponse: S3DeleteResponse = await deleteFromS3({
+    file_name: id + ".jpg",
+    bucket_name,
   });
-  if (!hasImageBeenDeleted) return null;
+  const { isSuccessful } = S3DeleteResponse;
+
+  //return null if unable to delete image from S3
+  if (!isSuccessful) return null;
 
   return await ctx.prisma.deleteEvent({ id });
 };
