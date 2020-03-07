@@ -6,19 +6,20 @@ import { S3UploadResponse, S3DeleteResponse } from "../utils/S3/types";
 import assert from "assert";
 
 env.config();
-let bucket_name = process.env.RAVEN_BUCKET_NAME;
-bucket_name += process.env.NODE_ENV === "development" ? "/dev" : "/production";
+const bucket_suffix =
+  process.env.NODE_ENV === "development" ? "dev" : "production";
+const bucket_name = `${process.env.RAVEN_BUCKET_NAME}/${bucket_suffix}`;
 
-const createEvent = async (parent, data, ctx): Promise<Event> | null => {
+const createEvent = async (
+  parent,
+  { title, start, end, venue, image_base64, description },
+  ctx
+): Promise<Event> | null => {
   const user: User | null = await resolveUserUsingJWT(ctx);
   assert.notStrictEqual(user, null, "No user login");
 
-  const title: string = data.title;
-  const start: Date = new Date(data.start);
-  const end: Date = new Date(data.end);
-  const venue: string = data.venue;
-  const image_base64: string = data.image_base64;
-  const description: string = data.description;
+  start = new Date(start);
+  end = new Date(end);
 
   let event: Event = await ctx.prisma.createEvent({
     title,
@@ -55,7 +56,7 @@ const createEvent = async (parent, data, ctx): Promise<Event> | null => {
   return event;
 };
 
-const deleteEvent = async (parent, data, ctx): Promise<Event> | null => {
+const deleteEvent = async (parent, { id }, ctx): Promise<Event> | null => {
   const currentUser: User | null = await resolveUserUsingJWT(ctx);
   assert.notStrictEqual(currentUser.id, null, "");
 
