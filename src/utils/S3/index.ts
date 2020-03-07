@@ -1,5 +1,5 @@
 import AWS from "aws-sdk";
-import { accessKeyId, secretAccessKey, bucketName } from "./config";
+import { accessKeyId, secretAccessKey } from "./config";
 
 const s3: AWS.S3 = new AWS.S3({
   accessKeyId,
@@ -9,6 +9,7 @@ const s3: AWS.S3 = new AWS.S3({
 const uploadToS3 = async ({
   image_base64,
   file_name,
+  bucketName,
 }): Promise<string> | null => {
   const params = {
     Bucket: bucketName,
@@ -35,7 +36,7 @@ const uploadToS3 = async ({
   return image_url;
 };
 
-const deleteFromS3 = async ({ event_id }): Promise<boolean> => {
+const deleteFromS3 = async ({ event_id, bucketName }): Promise<boolean> => {
   const params = {
     Bucket: bucketName,
     Key: event_id,

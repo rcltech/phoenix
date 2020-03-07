@@ -1,7 +1,12 @@
+import env from "dotenv";
 import { Event, User } from "../generated/prisma-client";
 import { resolveUserUsingJWT } from "../utils/resolveUser";
 import { uploadToS3, deleteFromS3 } from "../utils/S3";
 import assert from "assert";
+
+env.config();
+let bucketName = process.env.RAVEN_BUCKET_NAME;
+bucketName += process.env.NODE_ENV === "development" ? "/dev" : "/production";
 
 const createEvent = async (parent, data, ctx): Promise<Event> | null => {
   const user: User | null = await resolveUserUsingJWT(ctx);
@@ -30,10 +35,11 @@ const createEvent = async (parent, data, ctx): Promise<Event> | null => {
 
   //Store image_base64 to S3 bucket with filename <event.id>
   //And retrieve image_url back to be stored in the database
-  const { id }: { id: string } = event;
+  const { id } = event;
   const image_url: string | null = await uploadToS3({
     image_base64,
     file_name: id,
+    bucketName,
   });
 
   //return null if unable to upload image to S3
@@ -55,7 +61,10 @@ const deleteEvent = async (parent, data, ctx): Promise<Event> | null => {
   const eventOrganiser: User = await ctx.prisma.event({ id }).organiser();
   assert.strictEqual(currentUser.id, eventOrganiser.id, "User is not allowed");
 
-  const hasImageBeenDeleted: boolean = await deleteFromS3({ event_id: id });
+  const hasImageBeenDeleted: boolean = await deleteFromS3({
+    event_id: id,
+    bucketName,
+  });
   if (!hasImageBeenDeleted) return null;
 
   return await ctx.prisma.deleteEvent({ id });
