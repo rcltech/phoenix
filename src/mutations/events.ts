@@ -8,7 +8,7 @@ import assert from "assert";
 env.config();
 const bucket_suffix =
   process.env.NODE_ENV === "development" ? "dev" : "production";
-const bucket_name = `${process.env.RAVEN_BUCKET_NAME}/${bucket_suffix}`;
+const bucket_name = `rctechclub-raven/${bucket_suffix}`;
 
 const createEvent = async (
   parent,
