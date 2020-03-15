@@ -60,7 +60,6 @@ const deleteEvent = async (parent, { id }, ctx): Promise<Event> | null => {
   const currentUser: User | null = await resolveUserUsingJWT(ctx);
   assert.notStrictEqual(currentUser.id, null, "");
 
-  const id: string = data.id;
   const eventOrganiser: User = await ctx.prisma.event({ id }).organiser();
   assert.strictEqual(currentUser.id, eventOrganiser.id, "User is not allowed");
 
