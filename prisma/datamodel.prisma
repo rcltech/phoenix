@@ -15,6 +15,11 @@ type User {
 type Admin {
     id: ID! @id
     username: String! @unique
+    credential: Credential!
+}
+
+type Credential {
+    id: ID! @id
     password: String!
 }
 

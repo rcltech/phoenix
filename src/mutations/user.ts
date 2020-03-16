@@ -1,6 +1,12 @@
 import * as env from "dotenv";
 import { OAuth2Client } from "google-auth-library";
-import { Admin, prisma, User, UserSessions } from "../generated/prisma-client";
+import {
+  Admin,
+  Credential,
+  prisma,
+  User,
+  UserSessions,
+} from "../generated/prisma-client";
 import { TokenPayload } from "google-auth-library/build/src/auth/loginticket";
 import { generateToken } from "../utils/authToken";
 import { hash, compare } from "bcrypt";
@@ -79,10 +85,12 @@ export const adminLogin = async (
   { username, password }: { username: string; password: string },
   ctx
 ): Promise<LoginResponse> => {
-  const adminUser = await ctx.prisma.admin({
-    username,
-  });
-  const matches: boolean = await compare(password, adminUser.password);
+  const savedCredential: Credential = await ctx.prisma
+    .admin({
+      username,
+    })
+    .credential();
+  const matches: boolean = await compare(password, savedCredential.password);
   if (matches) {
     return {
       token: "",
@@ -102,6 +110,10 @@ export const adminRegister = async (
   const hashedPassword = await hash(password, 10);
   return ctx.prisma.createAdmin({
     username,
-    password: hashedPassword,
+    credential: {
+      create: {
+        password: hashedPassword,
+      },
+    },
   });
 };
