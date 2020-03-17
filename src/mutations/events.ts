@@ -40,7 +40,7 @@ const createEvent = async (
   const { id } = event;
   const S3UploadResponse: S3UploadResponse = await uploadToS3({
     image_base64,
-    file_name: id + ".jpg",
+    file_name: id,
     bucket_name,
   });
   const { isSuccessful, image_url } = S3UploadResponse;
@@ -64,7 +64,7 @@ const deleteEvent = async (parent, { id }, ctx): Promise<Event> | null => {
   assert.strictEqual(currentUser.id, eventOrganiser.id, "User is not allowed");
 
   const S3DeleteResponse: S3DeleteResponse = await deleteFromS3({
-    file_name: id + ".jpg",
+    file_name: id,
     bucket_name,
   });
   const { isSuccessful } = S3DeleteResponse;
