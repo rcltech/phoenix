@@ -13,7 +13,7 @@ const deleteFromS3 = async ({
 }: S3DeleteInput): Promise<S3DeleteResponse> => {
   const params = {
     Bucket: bucket_name,
-    Key: file_name + ".jpg",
+    Key: `${file_name}.jpeg`,
   };
 
   const deleteImage = s3.deleteObject(params).promise();

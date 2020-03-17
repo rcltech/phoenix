@@ -14,7 +14,7 @@ const uploadToS3 = async ({
 }: S3UploadInput): Promise<S3UploadResponse> => {
   const params = {
     Bucket: bucket_name,
-    Key: file_name + ".jpg",
+    Key: `${file_name}.jpeg`,
     Body: Buffer.from(
       image_base64.replace(/^data:image\/\w+;base64,/, ""),
       "base64"
