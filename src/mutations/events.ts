@@ -45,8 +45,12 @@ const createEvent = async (
   });
   const { isSuccessful, image_url } = S3UploadResponse;
 
-  //return null if unable to upload image to S3
-  if (!isSuccessful) return null;
+  //if there's an error in uploading image to S3
+  //then delete pre-created event and return null
+  if (!isSuccessful) {
+    await ctx.prisma.deleteEvent({ id });
+    return null;
+  }
 
   event = await ctx.prisma.updateEvent({
     data: { image_url },
