@@ -1,6 +1,6 @@
 import { S3 } from "aws-sdk";
 import { accessKeyId, secretAccessKey } from "./config";
-import { S3UploadResponse } from "./types";
+import { S3UploadInput, S3UploadResponse } from "./types";
 
 const s3: S3 = new S3({
   accessKeyId,
@@ -11,7 +11,7 @@ const uploadToS3 = async ({
   image_base64,
   file_name,
   bucket_name,
-}): Promise<S3UploadResponse> => {
+}: S3UploadInput): Promise<S3UploadResponse> => {
   const params = {
     Bucket: bucket_name,
     Key: file_name + ".jpg",

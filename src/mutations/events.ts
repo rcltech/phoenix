@@ -76,7 +76,7 @@ const deleteEvent = async (parent, { id }, ctx): Promise<Event> | null => {
   //return null if unable to delete image from S3
   if (!isSuccessful) return null;
 
-  return await ctx.prisma.deleteEvent({ id });
+  return ctx.prisma.deleteEvent({ id });
 };
 
 export { createEvent, deleteEvent };

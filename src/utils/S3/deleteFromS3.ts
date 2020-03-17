@@ -1,6 +1,6 @@
 import { S3 } from "aws-sdk";
 import { accessKeyId, secretAccessKey } from "./config";
-import { S3DeleteResponse } from "./types";
+import { S3DeleteInput, S3DeleteResponse } from "./types";
 
 const s3: S3 = new S3({
   accessKeyId,
@@ -10,7 +10,7 @@ const s3: S3 = new S3({
 const deleteFromS3 = async ({
   file_name,
   bucket_name,
-}): Promise<S3DeleteResponse> => {
+}: S3DeleteInput): Promise<S3DeleteResponse> => {
   const params = {
     Bucket: bucket_name,
     Key: file_name + ".jpg",
