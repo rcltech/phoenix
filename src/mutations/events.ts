@@ -4,6 +4,7 @@ import { resolveUserUsingJWT } from "../utils/resolveUser";
 import { uploadToS3, deleteFromS3 } from "../utils/S3";
 import { S3UploadResponse, S3DeleteResponse } from "../utils/S3/types";
 import assert from "assert";
+import { isImageValid } from "../utils/validateImage";
 
 env.config();
 const bucket_suffix =
@@ -34,6 +35,11 @@ const createEvent = async (
       },
     },
   });
+
+  // check if image_base64 is less than 10mb
+  const sizeLimit = 10 * 1000000;
+  const imageValidity = isImageValid(image_base64, sizeLimit);
+  if (!imageValidity) return null;
 
   //Store image_base64 to S3 bucket with filename <event.id>
   //And retrieve image_url back to be stored in the database
