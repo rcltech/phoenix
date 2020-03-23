@@ -5,6 +5,10 @@ node_modules/
 .env.prod
 prisma/.env
 env.db
+*.tfvars
+.terraform/
+*.tfstate
+*.tfstate.*
 
 dist/
 
