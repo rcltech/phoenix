@@ -8,7 +8,12 @@ const app: express.Application = express();
 
 const PORT: string = process.env.PORT || "4000";
 
-server.applyMiddleware({ app });
+server.applyMiddleware({
+  app,
+  bodyParserConfig: {
+    limit: "50mb",
+  },
+});
 
 app.get("/", (req, res) => {
   res.send("OK").status(200);
