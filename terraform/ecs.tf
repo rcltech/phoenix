@@ -12,12 +12,11 @@ data "template_file" "phoenix" {
     fargate_memory      = var.fargate_memory
     aws_region          = var.region
     google_client_id    = var.GOOGLE_CLIENT_ID
-    prisma_host         = var.PRISMA_HOST
+    prisma_host         = "http://${aws_alb.main.dns_name}:60000"
     prisma_secret       = var.PRISMA_SECRET
     nodemailer_password = var.NODEMAILER_PASSWORD
   }
 }
-
 
 resource "aws_ecs_task_definition" "phoenix" {
   family                   = "phoenix"
@@ -43,9 +42,10 @@ resource "aws_ecs_service" "phoenix" {
   }
 
   load_balancer {
-    target_group_arn = aws_alb_target_group.app.id
+    target_group_arn = aws_alb_target_group.phoenix.id
     container_name   = "phoenix"
     container_port   = var.phoenix_port
   }
-  depends_on = [aws_alb_listener.front_end, aws_iam_role_policy_attachment.ecs_task_execution_role]
+  depends_on = [aws_alb_listener.front_end_phoenix, aws_iam_role_policy_attachment.ecs_task_execution_role, aws_ecs_cluster.phoenix]
 }
+

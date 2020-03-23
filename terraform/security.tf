@@ -5,8 +5,15 @@ resource "aws_security_group" "lb" {
 
   ingress {
     protocol    = "tcp"
-    from_port   = var.phoenix_port
-    to_port     = var.phoenix_port
+    from_port   = 80
+    to_port     = 80
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    protocol    = "tcp"
+    from_port   = var.prisma_port
+    to_port     = var.prisma_port
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -27,6 +34,13 @@ resource "aws_security_group" "ecs_tasks" {
     protocol        = "tcp"
     from_port       = var.phoenix_port
     to_port         = var.phoenix_port
+    security_groups = [aws_security_group.lb.id]
+  }
+
+  ingress {
+    protocol        = "tcp"
+    from_port       = var.prisma_port
+    to_port         = var.prisma_port
     security_groups = [aws_security_group.lb.id]
   }
 

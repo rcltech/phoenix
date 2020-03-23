@@ -14,19 +14,24 @@ variable "phoenix_port" {
   default = 4000
 }
 
+variable "prisma_port" {
+  description = "Docker image PORT for phoenix"
+  default = 60000
+}
+
 variable "prisma_image" {
   description = "Docker image for prisma"
-  default = "prismagraphql/prisma:1.34"
+  default = "prismagraphql/prisma:1.34.0"
 }
 
 variable "fargate_cpu" {
   description = "Fargate instance CPU units to provision (1 vCPU = 1024 CPU units)"
-  default     = "256"
+  default     = "1024"
 }
 
 variable "fargate_memory" {
   description = "Fargate instance memory to provision (in MiB)"
-  default     = "1024"
+  default     = "2048"
 }
 
 variable "az_count" {
@@ -42,3 +47,4 @@ variable "GOOGLE_CLIENT_ID" {}
 variable "NODEMAILER_PASSWORD" {}
 variable "PRISMA_HOST" {}
 variable "PRISMA_SECRET" {}
+variable "PRISMA_CONFIG" {}
