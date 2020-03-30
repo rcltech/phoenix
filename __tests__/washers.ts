@@ -1,4 +1,5 @@
 import * as env from "dotenv";
+import gql from "graphql-tag";
 import { BatchPayload, prisma, Washer } from "../src/generated/prisma-client";
 import { GraphQLResponse } from "apollo-server-types";
 import { createTestClient } from "apollo-server-testing";
@@ -34,12 +35,14 @@ describe("the graphql washers api", () => {
     await createTestWasher(testWasher);
 
     // query and check response
-    const query = `{
-      washers {
-        id
-        in_use
+    const query = gql`
+      query {
+        washers {
+          id
+          in_use
+        }
       }
-    }`;
+    `;
     const response: GraphQLResponse = await client.query({ query });
     expect(response.data).toEqual({
       washers: [testWasher],
@@ -58,19 +61,20 @@ describe("the graphql washers api", () => {
     await createTestWasher(testWasher);
 
     // update and check response
-    const mutation = `{
-      updateWasher(id: ID!, in_use: Boolean!) {
-        id
-        in_use
+    const mutation = gql`
+      mutation($id: ID!, $in_use: Boolean!) {
+        updateWasher(id: $id, in_use: $in_use) {
+          id
+          in_use
+        }
       }
-    }`;
+    `;
     const variables = { id: "1", in_use: false };
     const response: GraphQLResponse = await client.mutate({
       mutation,
       variables,
     });
-    console.log(response);
-    expect(response.data).toEqual({ washer: { id: "1", in_use: false } });
+    expect(response.data).toEqual({ updateWasher: { id: "1", in_use: false } });
 
     await deleteTestWashers();
   });
