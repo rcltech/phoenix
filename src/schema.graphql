@@ -1,5 +1,6 @@
 # import User from "./generated/prisma.graphql"
 # import Washer from "./generated/prisma.graphql"
+# import WasherWhereInput from "./generated/prisma.graphql"
 # import Booking from "./generated/prisma.graphql"
 # import Room from "./generated/prisma.graphql"
 # import BookingWhereInput from "./generated/prisma.graphql"
@@ -16,7 +17,7 @@ input UserRegisterInput {
 type Query {
     user(username: String!): User
     me : User
-    washer(id: ID!): Washer
+    washers (data: WasherWhereInput): [Washer]
     bookings (data: BookingWhereInput): [Booking]
     rooms (data: RoomWhereInput) : [Room]
     events (data: EventWhereInput) : [Event]
