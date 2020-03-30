@@ -28,6 +28,7 @@ type Mutation {
     register(
         user : UserRegisterInput!
     ) : User
+    updateWasher(id: ID!, in_use: Boolean!): Washer
     createBooking(room_number: String!, start: String!, end: String!, remark: String) : Booking
     updateBooking(id: ID!, room_number: String!, start: String!, end: String!, remark: String): Booking
     deleteBooking(id: ID!): Booking
