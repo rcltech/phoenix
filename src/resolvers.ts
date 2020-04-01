@@ -1,8 +1,9 @@
 import { login, register } from "./mutations/user";
 import { user, me } from "./query/user";
-import washer from "./query/washer";
+import { washers } from "./query/washers";
 import { bookings, rooms } from "./query/bookings";
 import { events } from "./query/events";
+import { updateWasher } from "./mutations/washers";
 import {
   createBooking,
   updateBooking,
@@ -16,7 +17,7 @@ const resolvers: IResolvers = {
   Query: {
     user,
     me,
-    washer,
+    washers,
     bookings,
     rooms,
     events,
@@ -24,6 +25,7 @@ const resolvers: IResolvers = {
   Mutation: {
     login,
     register,
+    updateWasher,
     createBooking,
     updateBooking,
     deleteBooking,

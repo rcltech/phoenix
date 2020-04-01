@@ -20,9 +20,8 @@ type UserSessions {
 
 type Washer {
     id: ID! @id
-    status: String!
-    time_elapsed: String!
-    time_remaining: String!
+    in_use: Boolean!
+    updatedAt: DateTime! @updatedAt
 }
 
 type Room {

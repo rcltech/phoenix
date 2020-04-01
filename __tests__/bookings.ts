@@ -1,4 +1,5 @@
 import * as env from "dotenv";
+import gql from "graphql-tag";
 import moment from "moment";
 import { createTestServerWithUserLoggedIn } from "./utils/server";
 import { Room, User } from "../src/generated/prisma-client";
@@ -44,11 +45,11 @@ const testInvalidBookingVariables = {
   start: moment()
     .startOf("hour")
     .add(1, "hour")
-    .toDate(),
+    .toISOString(),
   end: moment()
     .startOf("hour")
     .add(2, "hour")
-    .toDate(),
+    .toISOString(),
   remark: "Hi",
 };
 
@@ -67,19 +68,21 @@ describe("Booking queries", () => {
     await createRoom(testRoomInfo);
     // Create a booking
     await createBooking(testBookingInfo);
-    const query = `{
-      bookings{
-        user {
-          username
+    const query = gql`
+      query {
+        bookings {
+          user {
+            username
+          }
+          room {
+            number
+          }
+          start
+          end
+          remark
         }
-        room {
-          number
-        }
-        start
-        end
-        remark
       }
-    }`;
+    `;
     const result: GraphQLResponse = await client.query({ query });
     expect(result.data).toEqual({
       bookings: [
@@ -115,16 +118,28 @@ describe("Booking validation", () => {
     await createBooking(testBookingInfo);
 
     // Attempt to create an invalid booking
-    const mutation = `{
-      createBooking(room_number: String!, start: String!, end: String!, remark: String) {
-        id
+    const mutation = gql`
+      mutation(
+        $room_number: String!
+        $start: String!
+        $end: String!
+        $remark: String
+      ) {
+        createBooking(
+          room_number: $room_number
+          start: $start
+          end: $end
+          remark: $remark
+        ) {
+          id
+        }
       }
-    }`;
+    `;
     const result: GraphQLResponse = await client.mutate({
       mutation,
       variables: testInvalidBookingVariables,
     });
-    expect(result.data).toEqual(undefined);
+    expect(result.data).toEqual({ createBooking: null });
 
     await deleteBookings();
     await deleteRooms();
