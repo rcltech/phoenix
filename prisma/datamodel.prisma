@@ -10,6 +10,7 @@ type User {
     roomBookings: [Booking] @relation(name: "UserBookings", onDelete: CASCADE)
     sessions: [UserSessions] @relation(name: "UserLoginSessions", onDelete: CASCADE)
     eventsOrganised: [Event] @relation(name: "UserEvents", onDelete: CASCADE)
+    eventsSubscribed: [Event] @relation(name: "EventSubscribers")
 }
 
 type UserSessions {
@@ -50,4 +51,5 @@ type Event {
     venue: String!
     image_url: String!
     description: String
+    subscribers: [User] @relation(name: "EventSubscribers")
 }
