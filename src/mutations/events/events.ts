@@ -1,10 +1,10 @@
 import env from "dotenv";
-import { Event, User } from "../generated/prisma-client";
-import { resolveUserUsingJWT } from "../utils/resolveUser";
-import { uploadToS3, deleteFromS3 } from "../utils/S3";
-import { S3UploadResponse, S3DeleteResponse } from "../utils/S3/types";
+import { Event, User } from "../../generated/prisma-client";
+import { resolveUserUsingJWT } from "../../utils/resolveUser";
+import { uploadToS3, deleteFromS3 } from "../../utils/S3";
+import { S3UploadResponse, S3DeleteResponse } from "../../utils/S3/types";
 import assert from "assert";
-import { isImageValid } from "../utils/validateImage";
+import { isImageValid } from "../../utils/validateImage";
 
 env.config();
 const bucket_suffix =
