@@ -22,7 +22,7 @@ const createEvent = async (
   start = new Date(start);
   end = new Date(end);
 
-  let event: Event = await ctx.prisma.createEvent({
+  const event: Event = await ctx.prisma.createEvent({
     title,
     start,
     end,
@@ -36,14 +36,24 @@ const createEvent = async (
     },
   });
 
-  // check if image_base64 is less than 10mb
+  const { id } = event;
+
+  // check if image_base64 is less than 10mb, if not, delete event and return null
   const sizeLimit = 10 * 1000000;
   const imageValidity = isImageValid(image_base64, sizeLimit);
-  if (!imageValidity) return null;
+  if (!imageValidity) {
+    await ctx.prisma.deleteEvent({ id });
+    return null;
+  }
+
+  // check if image is an empty string, then do not upload to S3, but return event
+  const isImageEmpty = image_base64 === "";
+  if (isImageEmpty) {
+    return event;
+  }
 
   //Store image_base64 to S3 bucket with filename <event.id>
   //And retrieve image_url back to be stored in the database
-  const { id } = event;
   const S3UploadResponse: S3UploadResponse = await uploadToS3({
     image_base64,
     file_name: id,
@@ -58,12 +68,10 @@ const createEvent = async (
     return null;
   }
 
-  event = await ctx.prisma.updateEvent({
+  return ctx.prisma.updateEvent({
     data: { image_url },
     where: { id },
   });
-
-  return event;
 };
 
 const deleteEvent = async (parent, { id }, ctx): Promise<Event> | null => {
