@@ -2,7 +2,7 @@ import * as env from "dotenv";
 import gql from "graphql-tag";
 import { GraphQLResponse } from "apollo-server-types";
 import { createTestServerWithUserLoggedIn } from "./utils/server";
-import { User } from "../src/generated/prisma-client";
+import { Event, User } from "../src/generated/prisma-client";
 import { createTestClient } from "apollo-server-testing";
 import { createUser, deleteUsers } from "./utils/users";
 import { createEvent, deleteEvents, TestEventInfo } from "./utils/events";
@@ -39,7 +39,7 @@ describe("event queries", () => {
     const testServer = await createTestServerWithUserLoggedIn(user);
     // Create a test client connected to the test server
     const client = createTestClient(testServer);
-    // Create the test event
+    // Create a test event
     await createEvent(testEventInfo);
 
     // query for the test event
@@ -80,7 +80,7 @@ describe("event queries", () => {
   });
 });
 
-describe("event mutation", () => {
+describe("event creation", () => {
   test("should be able to create an event", async () => {
     // Create user in the database
     const user: User = await createUser(testUserInfo);
@@ -88,7 +88,7 @@ describe("event mutation", () => {
     // Create a test client connected to the test server
     const client = createTestClient(testServer);
 
-    const createMutation = gql`
+    const mutation = gql`
       mutation(
         $title: String!
         $start: String!
@@ -117,9 +117,17 @@ describe("event mutation", () => {
         }
       }
     `;
+    const variables = {
+      title: testEventInfo.title,
+      start: testEventInfo.start.toISOString(),
+      end: testEventInfo.end.toISOString(),
+      venue: testEventInfo.venue,
+      image_base64: "",
+      description: testEventInfo.description,
+    };
     const response: GraphQLResponse = await client.mutate({
-      mutation: createMutation,
-      variables: { ...testEventInfo, image_base64: "" },
+      mutation,
+      variables,
     });
     expect(response.data).toEqual({
       createEvent: {
@@ -138,12 +146,36 @@ describe("event mutation", () => {
     await deleteEvents();
     await deleteUsers();
   });
+});
 
+describe("event deletion", () => {
   test("should be able to delete an event", async () => {
     // Create user in the database
     const user: User = await createUser(testUserInfo);
     const testServer = await createTestServerWithUserLoggedIn(user);
     // Create a test client connected to the test server
     const client = createTestClient(testServer);
+    // Create a test event
+    const event: Event = await createEvent(testEventInfo);
+
+    const mutation = gql`
+      mutation($id: ID!) {
+        deleteEvent(id: $id) {
+          id
+        }
+      }
+    `;
+    const response: GraphQLResponse = await client.mutate({
+      mutation,
+      variables: { id: event.id },
+    });
+    expect(response.data).toEqual({
+      deleteEvent: {
+        id: event.id,
+      },
+    });
+
+    await deleteEvents();
+    await deleteUsers();
   });
 });
