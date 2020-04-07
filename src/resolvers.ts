@@ -14,7 +14,7 @@ import {
   deleteEvent,
   addEventSubscriber,
   removeEventSubscriber,
-} from "./mutations/events";
+} from "./mutations/events/index";
 import { IResolvers } from "apollo-server-express";
 import { Booking, Room, User, Event } from "./generated/prisma-client";
 
