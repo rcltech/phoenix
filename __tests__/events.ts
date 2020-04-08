@@ -180,8 +180,42 @@ describe("event deletion", () => {
   });
 });
 
-describe("event subscriber addition and removal", () => {
-  test("should be able to add/remove current user to/from event subscribers list", async () => {
+describe("event subscriber addition", () => {
+  test("should be able to add current user to event subscribers list", async () => {
+    // Create user in the database
+    const testUser: User = await createUser(testUserInfo);
+    const testServer = await createTestServerWithUserLoggedIn(testUser);
+    // Create a test client connected to the test server
+    const client = createTestClient(testServer);
+    // Create a test event
+    const { id: event_id }: Event = await createEvent(testEventInfo);
+
+    const mutation = gql`
+      mutation($id: ID!) {
+        addEventSubscriber(id: $id) {
+          subscribers {
+            id
+          }
+        }
+      }
+    `;
+
+    const {
+      data: { addEventSubscriber },
+    }: GraphQLResponse = await client.mutate({
+      mutation,
+      variables: { id: event_id },
+    });
+    const { subscribers } = addEventSubscriber;
+    expect(subscribers).toEqual(expect.arrayContaining([{ id: testUser.id }]));
+
+    await deleteEvents();
+    await deleteUsers();
+  });
+});
+
+describe("event subscriber removal", () => {
+  test("should be able to remove current user from event subscribers list", async () => {
     // Create user in the database
     const testUser: User = await createUser(testUserInfo);
     const testServer = await createTestServerWithUserLoggedIn(testUser);
@@ -210,16 +244,10 @@ describe("event subscriber addition and removal", () => {
       }
     `;
 
-    const {
-      data: { addEventSubscriber },
-    }: GraphQLResponse = await client.mutate({
+    await client.mutate({
       mutation: addSubscriberMutation,
       variables: { id: event_id },
     });
-    const { subscribers: filledSubscribers } = addEventSubscriber;
-    expect(filledSubscribers).toEqual(
-      expect.arrayContaining([{ id: testUser.id }])
-    );
 
     const {
       data: { removeEventSubscriber },
@@ -227,8 +255,8 @@ describe("event subscriber addition and removal", () => {
       mutation: removeSubscriberMutation,
       variables: { id: event_id },
     });
-    const { subscribers: emptySubscribers } = removeEventSubscriber;
-    expect(emptySubscribers).toEqual([]);
+    const { subscribers } = removeEventSubscriber;
+    expect(subscribers).toEqual([]);
 
     await deleteEvents();
     await deleteUsers();
