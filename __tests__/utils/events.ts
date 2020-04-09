@@ -17,6 +17,11 @@ export type TestEventInfo = {
   description: string;
 };
 
+export type AddEventSubscriberInfo = {
+  event_id: string;
+  user_id: string;
+};
+
 export const createEvent = ({
   title,
   organiser,
@@ -43,4 +48,18 @@ export const createEvent = ({
 
 export const deleteEvents = (): BatchPayloadPromise => {
   return prisma.deleteManyEvents({});
+};
+
+export const addEventSubscriber = ({
+  event_id,
+  user_id,
+}: AddEventSubscriberInfo): Promise<Event> => {
+  return prisma.updateEvent({
+    where: { id: event_id },
+    data: {
+      subscribers: {
+        connect: { id: user_id },
+      },
+    },
+  });
 };

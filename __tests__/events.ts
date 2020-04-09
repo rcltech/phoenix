@@ -5,7 +5,13 @@ import { createTestServerWithUserLoggedIn } from "./utils/server";
 import { Event, User } from "../src/generated/prisma-client";
 import { createTestClient } from "apollo-server-testing";
 import { createUser, deleteUsers } from "./utils/users";
-import { createEvent, deleteEvents, TestEventInfo } from "./utils/events";
+import {
+  createEvent,
+  deleteEvents,
+  addEventSubscriber,
+  TestEventInfo,
+  AddEventSubscriberInfo,
+} from "./utils/events";
 
 env.config();
 
@@ -223,18 +229,14 @@ describe("event subscriber removal", () => {
     const client = createTestClient(testServer);
     // Create a test event
     const { id: event_id }: Event = await createEvent(testEventInfo);
+    // Add current user to event's subscribers list
+    const addEventSubscriberInfo: AddEventSubscriberInfo = {
+      event_id,
+      user_id: testUser.id,
+    };
+    await addEventSubscriber(addEventSubscriberInfo);
 
-    const addSubscriberMutation = gql`
-      mutation($id: ID!) {
-        addEventSubscriber(id: $id) {
-          subscribers {
-            id
-          }
-        }
-      }
-    `;
-
-    const removeSubscriberMutation = gql`
+    const mutation = gql`
       mutation($id: ID!) {
         removeEventSubscriber(id: $id) {
           subscribers {
@@ -244,15 +246,10 @@ describe("event subscriber removal", () => {
       }
     `;
 
-    await client.mutate({
-      mutation: addSubscriberMutation,
-      variables: { id: event_id },
-    });
-
     const {
       data: { removeEventSubscriber },
     }: GraphQLResponse = await client.mutate({
-      mutation: removeSubscriberMutation,
+      mutation,
       variables: { id: event_id },
     });
     const { subscribers } = removeEventSubscriber;
