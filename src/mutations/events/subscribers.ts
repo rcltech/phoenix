@@ -26,16 +26,23 @@ const removeEventSubscriber = async (parent, { id }, ctx): Promise<Event> => {
 
   const { id: user_id } = currentUser;
 
-  return ctx.prisma.updateEvent({
-    data: {
-      subscribers: {
-        disconnect: { id: user_id },
+  const subscribers: [User] = await ctx.prisma.event({ id }).subscribers();
+  const subscribersID: string[] = subscribers.map(({ id }) => id);
+
+  if (subscribersID.includes(user_id)) {
+    return ctx.prisma.updateEvent({
+      data: {
+        subscribers: {
+          disconnect: { id: user_id },
+        },
       },
-    },
-    where: {
-      id,
-    },
-  });
+      where: {
+        id,
+      },
+    });
+  }
+
+  return ctx.prisma.event({ id });
 };
 
 export { addEventSubscriber, removeEventSubscriber };
