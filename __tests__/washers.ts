@@ -1,5 +1,6 @@
 import * as env from "dotenv";
 import gql from "graphql-tag";
+import jwt from "jsonwebtoken";
 import { BatchPayload, prisma, Washer } from "../src/generated/prisma-client";
 import { GraphQLResponse } from "apollo-server-types";
 import { createTestClient } from "apollo-server-testing";
@@ -52,8 +53,10 @@ describe("the graphql washers api", () => {
   });
 
   test("updates the status of a machine", async () => {
+    // generate a token
+    const token = jwt.sign("sls to phoenix", process.env.SLS_SECRET);
     // create a test server with token
-    const testServer = createTestServerWithToken("some_token");
+    const testServer = createTestServerWithToken(token);
     // create a test client connected to the test server
     const client = createTestClient(testServer);
 
