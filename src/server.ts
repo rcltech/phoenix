@@ -5,6 +5,7 @@ env.config();
 import typeDefs from "./schema";
 import resolvers from "./resolvers";
 import { prisma } from "./generated/prisma-client";
+import Cookies from "universal-cookie";
 
 /**
  * @author utkarsh867
@@ -15,10 +16,16 @@ import { prisma } from "./generated/prisma-client";
 const server: ApolloServer = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }): object => ({
-    prisma,
-    token: req && req.headers.authorization,
-  }),
+  context: ({ req }): object => {
+    // to get token from cookies
+    const cookies = new Cookies(req.headers.cookie);
+    const token = cookies.get("RCTC_USER");
+
+    return {
+      prisma,
+      token,
+    };
+  },
 });
 
 export default server;
