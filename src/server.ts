@@ -19,11 +19,13 @@ const server: ApolloServer = new ApolloServer({
   context: ({ req }): object => {
     // to get token from cookies
     const cookies = new Cookies(req.headers.cookie);
-    const token = cookies.get("RCTC_USER");
+    const cookieToken = cookies.get("RCTC_USER");
+    // token for backwards compatibility
+    const fallbackToken = req && req.headers.authorization;
 
     return {
       prisma,
-      token,
+      token: cookieToken ? cookieToken : fallbackToken,
     };
   },
 });
