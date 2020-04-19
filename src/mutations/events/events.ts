@@ -54,12 +54,12 @@ const createEvent = async (
 
   //Store image_base64 to S3 bucket with filename <event.id>
   //And retrieve image_url back to be stored in the database
-  const S3UploadResponse: S3UploadResponse = await uploadToS3({
+  const s3UploadResponse: S3UploadResponse = await uploadToS3({
     image_base64,
     file_name: id,
     bucket_name,
   });
-  const { isSuccessful, image_url } = S3UploadResponse;
+  const { isSuccessful, image_url } = s3UploadResponse;
 
   //if there's an error in uploading image to S3
   //then delete pre-created event and return null
@@ -81,11 +81,11 @@ const deleteEvent = async (parent, { id }, ctx): Promise<Event> | null => {
   const eventOrganiser: User = await ctx.prisma.event({ id }).organiser();
   assert.strictEqual(currentUser.id, eventOrganiser.id, "User is not allowed");
 
-  const S3DeleteResponse: S3DeleteResponse = await deleteFromS3({
+  const s3DeleteResponse: S3DeleteResponse = await deleteFromS3({
     file_name: id,
     bucket_name,
   });
-  const { isSuccessful } = S3DeleteResponse;
+  const { isSuccessful } = s3DeleteResponse;
 
   //return null if unable to delete image from S3
   if (!isSuccessful) return null;

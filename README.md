@@ -30,7 +30,7 @@ DB_USER=prisma
 DB_PASSWORD=prisma
 ``` 
 
-Once you have the above, you will need to deploy the `prisma` server locally:
+2. Once you have the above, you will need to deploy the `prisma` server locally:
 ```$xslt
 cd prisma
 docker-compose up -d    # Runs in detached mode
@@ -44,7 +44,7 @@ prisma token    # get token
 ```
 Open the [admin console](http://localhost:4466/prisma/_admin). Copy and paste the token into the error popup to start using admin rights for database manipulation.
 
-Now that the graphql server is running and deployed, we can generate prisma client for phoenix and start phoenix
+3. Now that the graphql server is running and deployed, we can generate prisma client for phoenix and start phoenix.
 ```$xslt
 cd prisma
 prisma generate
@@ -52,3 +52,11 @@ cd ..
 npm run build
 npm start
 ```
+
+4. To test your graphql resolvers with the [graphql playground](http://localhost:4000/graphql), spin up the server with `npm start`, and initiate a local instance of [ladybird](https://github.com/rcltech/ladybird). Login with ladybird, so that your auth token is stored in cookies. To verify if your token is present, open your browser's developer console, and look into `application cookies`; our token is stored as `RCTC_USER`.
+
+Open the graphql playground, and change your settings for `request-credentials` from the default `omit` to `same-origin`.
+
+![graphql_playground_settings](./docs/graphql_playground_settings.png)
+
+Make sure to save your settings.

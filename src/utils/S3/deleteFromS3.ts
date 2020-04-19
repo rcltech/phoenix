@@ -17,14 +17,12 @@ const deleteFromS3 = async ({
   };
 
   const deleteImage = s3.deleteObject(params).promise();
-  const S3DeleteResponse: S3DeleteResponse = await deleteImage
-    .then(data => ({ isSuccessful: true }))
+  return await deleteImage
+    .then(() => ({ isSuccessful: true }))
     .catch(err => {
       console.log(err);
       return { isSuccessful: false };
     });
-
-  return S3DeleteResponse;
 };
 
 export { deleteFromS3 };

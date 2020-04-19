@@ -6,7 +6,11 @@ import { Room, User } from "../src/generated/prisma-client";
 import { createTestClient } from "apollo-server-testing";
 import { createUser, deleteUsers } from "./utils/users";
 import { createRoom, deleteRooms } from "./utils/rooms";
-import { createBooking, deleteBookings } from "./utils/bookings";
+import {
+  createBooking,
+  deleteBookings,
+  TestBookingInfo,
+} from "./utils/bookings";
 import { GraphQLResponse } from "apollo-server-types";
 
 env.config();
@@ -28,7 +32,7 @@ const testRoomInfo: Room = {
   name: "test",
 };
 
-const testBookingInfo = {
+const testBookingInfo: TestBookingInfo = {
   user: "test123",
   room: "123",
   start: moment()

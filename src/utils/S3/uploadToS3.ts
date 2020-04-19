@@ -25,14 +25,12 @@ const uploadToS3 = async ({
   };
 
   const uploadImage = s3.upload(params).promise();
-  const S3UploadResponse: S3UploadResponse = await uploadImage
+  return await uploadImage
     .then(data => ({ isSuccessful: true, image_url: data.Location }))
     .catch(err => {
       console.log(err);
       return { isSuccessful: false, image_url: "" };
     });
-
-  return S3UploadResponse;
 };
 
 export { uploadToS3 };

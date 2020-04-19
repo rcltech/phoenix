@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendEmail = ({ user, booking, room }) => {
+export const sendEmail = ({ user, booking, room }): void => {
   const { email, first_name } = user;
   const { start, end } = booking;
   const { number, name } = room;

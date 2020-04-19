@@ -3,9 +3,9 @@ env.config();
 
 import server from "./server";
 import express from "express";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 
-const corsOptions = {
+const corsOptions: CorsOptions = {
   origin: [
     "https://ladybird.rctech.club",
     "https://owl.rctech.club",

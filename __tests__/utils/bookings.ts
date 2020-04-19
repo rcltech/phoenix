@@ -7,7 +7,17 @@ import {
 
 env.config();
 
-export const createBooking = (testBookingInfo: any): Promise<Booking> => {
+export interface TestBookingInfo {
+  user: string;
+  start: Date;
+  end: Date;
+  room: string;
+  remark: string | undefined;
+}
+
+export const createBooking = (
+  testBookingInfo: TestBookingInfo
+): Promise<Booking> => {
   return prisma.createBooking({
     start: testBookingInfo.start,
     end: testBookingInfo.end,
