@@ -19,7 +19,6 @@ const server: ApolloServer = new ApolloServer({
   context: ({ req }): object => {
     // to get token from cookies
     const cookies = new Cookies(req && req.headers.cookie);
-    console.log(cookies);
     const cookieToken = cookies.get("RCTC_USER");
     // token for backwards compatibility
     const fallbackToken = req && req.headers.authorization;
