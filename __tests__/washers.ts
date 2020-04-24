@@ -33,6 +33,7 @@ describe("the graphql washers api", () => {
     const client = createTestClient(testServer);
 
     await deleteTestWashers();
+    console.log(client);
     await createTestWasher(testWasher);
 
     // query and check response

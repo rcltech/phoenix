@@ -16,7 +16,7 @@ const createEvent = async (
   { title, start, end, venue, image_base64, description },
   ctx
 ): Promise<Event> | null => {
-  const user: User | null = await resolveUserUsingJWT(ctx);
+  const user: User | null = ctx.auth.user;
   assert.notStrictEqual(user, null, "No user login");
 
   start = new Date(start);
@@ -75,7 +75,7 @@ const createEvent = async (
 };
 
 const deleteEvent = async (parent, { id }, ctx): Promise<Event> | null => {
-  const currentUser: User | null = await resolveUserUsingJWT(ctx);
+  const currentUser: User | null = ctx.auth.user;
   assert.notStrictEqual(currentUser.id, null, "");
 
   const eventOrganiser: User = await ctx.prisma.event({ id }).organiser();

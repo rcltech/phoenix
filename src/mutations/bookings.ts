@@ -1,11 +1,10 @@
 import { Booking, Room, User } from "../generated/prisma-client";
-import { resolveUserUsingJWT } from "../utils/resolveUser";
 import { sendEmail } from "../utils/email/sendEmail";
 import { validateBooking } from "../utils/validateBooking";
 import assert from "assert";
 
 const createBooking = async (parent, data, ctx): Promise<Booking> => {
-  const user: User | null = await resolveUserUsingJWT(ctx);
+  const user: User | null = ctx.auth.user;
   assert.notStrictEqual(user, null, "No user login");
 
   const start: Date = new Date(data.start);
@@ -42,7 +41,7 @@ const createBooking = async (parent, data, ctx): Promise<Booking> => {
 };
 
 const updateBooking = async (parent, data, ctx): Promise<Booking> => {
-  const currentUser: User | null = await resolveUserUsingJWT(ctx);
+  const currentUser: User | null = ctx.auth.user;
   assert.notStrictEqual(currentUser, null, "No user login");
   const bookingUser: User = await ctx.prisma.booking({ id: data.id }).user();
   assert.strictEqual(currentUser.id, bookingUser.id, "User is not allowed");
@@ -73,7 +72,7 @@ const updateBooking = async (parent, data, ctx): Promise<Booking> => {
 };
 
 const deleteBooking = async (parent, { id }, ctx): Promise<Booking> => {
-  const currentUser: User | null = await resolveUserUsingJWT(ctx);
+  const currentUser: User | null = ctx.auth.user;
   assert.notStrictEqual(currentUser.id, null, "");
   const bookingUser: Booking = await ctx.prisma.booking({ id }).user();
   console.log(currentUser.id, bookingUser.id);

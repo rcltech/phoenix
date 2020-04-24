@@ -3,7 +3,7 @@ import { Event, User } from "../../generated/prisma-client";
 import { resolveUserUsingJWT } from "../../utils/resolveUser";
 
 const addEventSubscriber = async (parent, { id }, ctx): Promise<Event> => {
-  const currentUser: User | null = await resolveUserUsingJWT(ctx);
+  const currentUser: User | null = ctx.auth.user;
   assert.notStrictEqual(currentUser, null, "No user login");
 
   const { id: user_id } = currentUser;
@@ -21,7 +21,7 @@ const addEventSubscriber = async (parent, { id }, ctx): Promise<Event> => {
 };
 
 const removeEventSubscriber = async (parent, { id }, ctx): Promise<Event> => {
-  const currentUser: User | null = await resolveUserUsingJWT(ctx);
+  const currentUser: User | null = ctx.auth.user;
   assert.notStrictEqual(currentUser, null, "No user login");
 
   const { id: user_id } = currentUser;

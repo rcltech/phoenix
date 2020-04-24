@@ -2,20 +2,29 @@ import { ApolloServer } from "apollo-server-express";
 import * as env from "dotenv";
 import typeDefs from "../../src/schema";
 import resolvers from "../../src/resolvers";
-import { prisma } from "../../src/generated/prisma-client";
+import { prisma, User } from "../../src/generated/prisma-client";
 import { createUserSession } from "./users";
 import { generateToken } from "../../src/utils/authToken";
+import { resolveUserUsingJWT } from "../../src/utils/resolveUser";
 
 env.config();
 
-export const createTestServerWithToken = (token): ApolloServer => {
+export const createTestServerWithToken = (token: string): ApolloServer => {
   return new ApolloServer({
     typeDefs,
     resolvers,
-    context: (): object => ({
-      prisma,
-      token,
-    }),
+    context: async ({ req, ...rest }): Promise<object> => {
+      const user: User = await resolveUserUsingJWT(prisma, token);
+      return {
+        prisma,
+        token,
+        auth: {
+          user: user,
+          isAuthenticated: user !== null,
+        },
+        ...rest,
+      };
+    },
   });
 };
 
