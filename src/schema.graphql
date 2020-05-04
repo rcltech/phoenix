@@ -37,8 +37,8 @@ type Mutation {
     deleteEvent(id: ID!): Event
     addEventSubscriber(id: ID!): Event
     removeEventSubscriber(id: ID!): Event
-    addEventComment(id: ID!, content: String!): Event
-    removeEventComment(id: ID!): Comment
+    createEventComment(id: ID!, content: String!): Comment
+    deleteEventComment(id: ID!): Comment
 }
 
 type LoginResponse {

@@ -2,7 +2,7 @@ import assert from "assert";
 import { User, Event, Comment } from "../../generated/prisma-client";
 import { resolveUserUsingJWT } from "../../utils/resolveUser";
 
-const addEventComment = async (parent, data, ctx): Promise<Event> => {
+const createEventComment = async (parent, data, ctx): Promise<Comment> => {
   const currentUser: User | null = await resolveUserUsingJWT(ctx);
   assert.notStrictEqual(currentUser, null, "No user login");
 
@@ -10,24 +10,22 @@ const addEventComment = async (parent, data, ctx): Promise<Event> => {
   const eventId: string = data.id;
   const content: string = data.content;
 
-  return ctx.prisma.updateEvent({
-    data: {
-      comments: {
-        create: {
-          content,
-          user: {
-            connect: { id: userId },
-          },
-        },
+  return ctx.prisma.createComment({
+    content,
+    user: {
+      connect: {
+        id: userId,
       },
     },
-    where: {
-      id: eventId,
+    event: {
+      connect: {
+        id: eventId,
+      },
     },
   });
 };
 
-const removeEventComment = async (parent, { id }, ctx): Promise<Comment> => {
+const deleteEventComment = async (parent, { id }, ctx): Promise<Comment> => {
   const currentUser: User | null = await resolveUserUsingJWT(ctx);
   assert.notStrictEqual(currentUser, null, "No user login");
 
@@ -39,4 +37,4 @@ const removeEventComment = async (parent, { id }, ctx): Promise<Comment> => {
   });
 };
 
-export { addEventComment, removeEventComment };
+export { createEventComment, deleteEventComment };
