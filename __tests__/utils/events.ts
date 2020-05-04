@@ -2,6 +2,8 @@ import * as env from "dotenv";
 import {
   BatchPayloadPromise,
   Event,
+  Comment,
+  FragmentableArray,
   prisma,
 } from "../../src/generated/prisma-client";
 
@@ -20,6 +22,16 @@ export type TestEventInfo = {
 export type AddEventSubscriberInfo = {
   event_id: string;
   user_id: string;
+};
+
+export type CreateEventCommentInfo = {
+  event_id: string;
+  user_id: string;
+  content: string;
+};
+
+export type RetrieveEventCommentsInfo = {
+  event_id: string;
 };
 
 export const createEvent = ({
@@ -62,4 +74,26 @@ export const addEventSubscriber = ({
       },
     },
   });
+};
+
+export const createEventComment = ({
+  event_id,
+  user_id,
+  content,
+}: CreateEventCommentInfo): Promise<Comment> => {
+  return prisma.createComment({
+    content,
+    user: {
+      connect: { id: user_id },
+    },
+    event: {
+      connect: { id: event_id },
+    },
+  });
+};
+
+export const retrieveEventComments = ({
+  event_id,
+}: RetrieveEventCommentsInfo): Promise<FragmentableArray<Comment>> => {
+  return prisma.event({ id: event_id }).comments();
 };
