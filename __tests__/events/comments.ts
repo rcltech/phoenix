@@ -41,7 +41,7 @@ const testEventInfo: TestEventInfo = {
 beforeAll(async () => await deleteUsers());
 
 describe("event comment creation", () => {
-  test("should be able to create a new comment", async () => {
+  test("should be able to create a new comment for an event", async () => {
     const testUser: User = await createUser(testUserInfo);
     const testServer = await createTestServerWithUserLoggedIn(testUser);
     // Create a test client connected to the test server
@@ -50,8 +50,8 @@ describe("event comment creation", () => {
     const testEvent: Event = await createEvent(testEventInfo);
 
     const mutation = gql`
-      mutation($id: ID!, $content: String!) {
-        createEventComment(id: $id, content: $content) {
+      mutation($eventId: ID!, $content: String!) {
+        createComment(eventId: $eventId, content: $content) {
           content
           user {
             id
@@ -64,13 +64,13 @@ describe("event comment creation", () => {
     `;
 
     const {
-      data: { createEventComment },
+      data: { createComment },
     }: GraphQLResponse = await client.mutate({
       mutation,
-      variables: { id: testEvent.id, content: "hello world" },
+      variables: { eventId: testEvent.id, content: "hello world" },
     });
 
-    expect(createEventComment).toEqual({
+    expect(createComment).toEqual({
       content: "hello world",
       user: { id: testUser.id },
       event: { id: testEvent.id },
@@ -98,20 +98,18 @@ describe("event comment deletion", () => {
     const testComment: Comment = await createEventComment(eventCommentInfo);
 
     const mutation = gql`
-      mutation($id: ID!) {
-        deleteEventComment(id: $id) {
+      mutation($commentId: ID!) {
+        deleteComment(commentId: $commentId) {
           id
         }
       }
     `;
 
     const {
-      data: {
-        deleteEventComment: { id },
-      },
+      data: { deleteComment },
     }: GraphQLResponse = await client.mutate({
       mutation,
-      variables: { id: testComment.id },
+      variables: { commentId: testComment.id },
     });
 
     const eventInfo: RetrieveEventCommentsInfo = { event_id: testEvent.id };
