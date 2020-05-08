@@ -60,6 +60,6 @@ type Comment {
     id: ID! @id
     content: String!
     user: User! @relation(name: "UserComments")
-    event: Event! @relation(name: "EventComments")
+    event: Event @relation(name: "EventComments")
     createdAt: DateTime! @createdAt
 }
