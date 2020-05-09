@@ -14,6 +14,8 @@ type LoginResponse = {
   token?: string;
 };
 
+// TODO: Deprecate this function in the GraphQL API.
+// User login will be handled in the future using REST API in express.
 const login = async (parent, args, ctx): Promise<LoginResponse> => {
   try {
     const ticket = await client.verifyIdToken({
