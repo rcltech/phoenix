@@ -1,4 +1,6 @@
 import * as env from "dotenv";
+env.config();
+
 import gql from "graphql-tag";
 import moment from "moment";
 import { createTestServerWithUserLoggedIn } from "./utils/server";
@@ -12,8 +14,6 @@ import {
   TestBookingInfo,
 } from "./utils/bookings";
 import { GraphQLResponse } from "apollo-server-types";
-
-env.config();
 
 const testUserInfo: User = {
   id: undefined,

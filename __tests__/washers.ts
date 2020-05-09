@@ -1,12 +1,12 @@
 import * as env from "dotenv";
+env.config();
+
 import gql from "graphql-tag";
 import jwt from "jsonwebtoken";
 import { BatchPayload, prisma, Washer } from "../src/generated/prisma-client";
 import { GraphQLResponse } from "apollo-server-types";
 import { createTestClient } from "apollo-server-testing";
 import { createTestServerWithToken } from "./utils/server";
-
-env.config();
 
 const createTestWasher = (washer: {
   id: string;

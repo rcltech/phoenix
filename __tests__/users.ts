@@ -1,4 +1,6 @@
 import * as env from "dotenv";
+env.config();
+
 import { User } from "../src/generated/prisma-client";
 import testServer from "../src/server";
 import { createTestClient } from "apollo-server-testing";
@@ -6,8 +8,6 @@ import { createTestServerWithToken } from "./utils/server";
 import { generateToken } from "../src/utils/authToken";
 import { GraphQLResponse } from "apollo-server-types";
 import { createUser, createUserSession, deleteUsers } from "./utils/users";
-
-env.config();
 
 const testUserInfo = {
   username: "test123",

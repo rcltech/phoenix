@@ -1,4 +1,6 @@
 import * as env from "dotenv";
+env.config();
+
 import gql from "graphql-tag";
 import { GraphQLResponse } from "apollo-server-types";
 import { createTestServerWithUserLoggedIn } from "../utils/server";
@@ -6,8 +8,6 @@ import { Event, User } from "../../src/generated/prisma-client";
 import { createTestClient } from "apollo-server-testing";
 import { createUser, deleteUsers } from "../utils/users";
 import { createEvent, deleteEvents, TestEventInfo } from "../utils/events";
-
-env.config();
 
 const testUserInfo: User = {
   id: undefined,
