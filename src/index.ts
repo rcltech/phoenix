@@ -4,7 +4,7 @@ env.config();
 import server from "./server";
 import express from "express";
 import cors, { CorsOptions } from "cors";
-import { auth } from "./auth";
+import { auth, adminAuth } from "./auth";
 
 const corsOptions: CorsOptions = {
   origin: [
@@ -36,6 +36,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/oauth", auth);
+app.use("/oauth/admin", adminAuth);
 
 app.listen({ port: PORT }, () => {
   console.log(`Server started at port ${PORT}`);
