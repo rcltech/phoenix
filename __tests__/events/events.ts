@@ -1,13 +1,27 @@
 import * as env from "dotenv";
 env.config();
+<<<<<<< HEAD:__tests__/events/events.ts
 
+=======
+>>>>>>> adds admin auth code:__tests__/events.ts
 import gql from "graphql-tag";
 import { GraphQLResponse } from "apollo-server-types";
 import { createTestServerWithUserLoggedIn } from "../utils/server";
 import { Event, User } from "../../src/generated/prisma-client";
 import { createTestClient } from "apollo-server-testing";
+<<<<<<< HEAD:__tests__/events/events.ts
 import { createUser, deleteUsers } from "../utils/users";
 import { createEvent, deleteEvents, TestEventInfo } from "../utils/events";
+=======
+import { createUser, deleteUsers } from "./utils/users";
+import {
+  createEvent,
+  deleteEvents,
+  addEventSubscriber,
+  TestEventInfo,
+  AddEventSubscriberInfo,
+} from "./utils/events";
+>>>>>>> adds admin auth code:__tests__/events.ts
 
 const testUserInfo: User = {
   id: undefined,
@@ -129,6 +143,7 @@ describe("event creation", () => {
       mutation,
       variables,
     });
+
     expect(response.data).toEqual({
       createEvent: {
         title: testEventInfo.title,

@@ -1,12 +1,12 @@
 import env from "dotenv";
+env.config();
+
 import { Event, User } from "../../generated/prisma-client";
-import { resolveUserUsingJWT } from "../../utils/resolveUser";
 import { uploadToS3, deleteFromS3 } from "../../utils/S3";
 import { S3UploadResponse, S3DeleteResponse } from "../../utils/S3/types";
 import assert from "assert";
 import { isImageValid } from "../../utils/validateImage";
 
-env.config();
 const bucket_suffix =
   process.env.NODE_ENV === "development" ? "dev" : "production";
 const bucket_name = `rctechclub-raven/${bucket_suffix}`;
@@ -31,11 +31,12 @@ const createEvent = async (
     image_url: "",
     organiser: {
       connect: {
-        id: user.id,
+        username: user.username,
       },
     },
   });
 
+  console.log(event);
   const { id } = event;
 
   // check if image_base64 is less than 10mb, if not, delete event and return null

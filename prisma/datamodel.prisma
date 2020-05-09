@@ -14,6 +14,18 @@ type User {
     userComments: [Comment] @relation(name: "UserComments", onDelete: CASCADE)
 }
 
+type Admin {
+    id: ID! @id
+    username: String! @unique
+    password: String!
+    sessions: [AdminUserSession] @relation(name: "AdminLoginSession", onDelete: CASCADE)
+}
+
+type AdminUserSession {
+    id: ID! @id
+    user: Admin! @relation(name: "AdminLoginSession")
+}
+
 type UserSessions {
     id: ID! @id
     user: User! @relation(name: "UserLoginSessions")

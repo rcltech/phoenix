@@ -4,7 +4,7 @@ env.config();
 
 import typeDefs from "./schema";
 import resolvers from "./resolvers";
-import { prisma } from "./generated/prisma-client";
+import { prisma, Admin } from "./generated/prisma-client";
 import Cookies from "universal-cookie";
 import { resolveUserUsingJWT } from "./utils/resolveUser";
 import { User } from "./generated/prisma-client";
@@ -23,13 +23,19 @@ const server: ApolloServer = new ApolloServer({
     const cookieToken: string = cookies.get("RCTC_USER");
     const fallbackToken = req && req.headers.authorization;
     const token: string = cookieToken ? cookieToken : fallbackToken;
-    const user: User = await resolveUserUsingJWT(prisma, token);
+    const { user, priviledge } =
+      (await resolveUserUsingJWT(prisma, token)) || {};
+    console.log(user);
     return {
       prisma,
       token,
       auth: {
-        user: user,
-        isAuthenticated: user !== null,
+        user: priviledge === "user" ? user : null,
+        isAuthenticated: priviledge === "user" && user !== null,
+        isAdmin: priviledge === "admin",
+        admin: priviledge === "admin" ? user : null,
+        isAdminAuthenticated:
+          priviledge === "admin" && user !== null ? user : null,
       },
     };
   },

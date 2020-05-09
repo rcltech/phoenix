@@ -5,6 +5,7 @@ import server from "./server";
 import express from "express";
 import cors, { CorsOptions } from "cors";
 import { auth, adminAuth } from "./auth";
+import * as bodyParser from "body-parser";
 
 const corsOptions: CorsOptions = {
   origin: [
@@ -34,6 +35,8 @@ server.applyMiddleware({
 app.get("/", (req, res) => {
   res.send("OK").status(200);
 });
+
+app.use(bodyParser.json({ type: "application/json" }));
 
 app.use("/oauth", auth);
 app.use("/oauth/admin", adminAuth);

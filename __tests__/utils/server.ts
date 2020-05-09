@@ -13,16 +13,20 @@ export const createTestServerWithToken = (token: string): ApolloServer => {
   return new ApolloServer({
     typeDefs,
     resolvers,
-    context: async ({ req, ...rest }): Promise<object> => {
-      const user: User = await resolveUserUsingJWT(prisma, token);
+    context: async ({ req }): Promise<object> => {
+      const { user, priviledge } =
+        (await resolveUserUsingJWT(prisma, token)) || {};
       return {
         prisma,
         token,
         auth: {
-          user: user,
-          isAuthenticated: user !== null,
+          user: priviledge === "user" ? user : null,
+          isAuthenticated: priviledge === "user" && user !== null,
+          isAdmin: priviledge === "admin",
+          admin: priviledge === "admin" ? user : null,
+          isAdminAuthenticated:
+            priviledge === "admin" && user !== null ? user : null,
         },
-        ...rest,
       };
     },
   });
