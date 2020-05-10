@@ -3,7 +3,7 @@ import { User, Event, Comment } from "../generated/prisma-client";
 import { resolveUserUsingJWT } from "../utils/resolveUser";
 
 const createComment = async (parent, data, ctx): Promise<Comment> => {
-  const currentUser: User | null = await resolveUserUsingJWT(ctx);
+  const currentUser: User | null = ctx.auth.user;
   assert.notStrictEqual(currentUser, null, "No user login");
 
   const userId: string = currentUser.id;
@@ -28,7 +28,7 @@ const createComment = async (parent, data, ctx): Promise<Comment> => {
 };
 
 const deleteComment = async (parent, { commentId }, ctx): Promise<Comment> => {
-  const currentUser: User | null = await resolveUserUsingJWT(ctx);
+  const currentUser: User | null = ctx.auth.user;
   assert.notStrictEqual(currentUser, null, "No user login");
 
   const commentUser: User = await ctx.prisma.comment({ id: commentId }).user();
