@@ -16,22 +16,25 @@ router.post("/login", async (req, res) => {
   }
   const username: string = req.body.username;
   const password: string = req.body.password;
-
-  const adminUser = await prisma.admin({ username: username });
-  const hashedPassword = adminUser.password;
-  if (await bcrypt.compare(password, hashedPassword)) {
-    const adminSession = await prisma.createAdminUserSession({
-      user: {
-        connect: {
-          id: adminUser.id,
+  const adminUser = await prisma.user({ username: username });
+  if (adminUser.role === "ADMIN") {
+    const hashedPassword = adminUser.password;
+    if (await bcrypt.compare(password, hashedPassword)) {
+      const adminSession = await prisma.createUserSession({
+        user: {
+          connect: {
+            id: adminUser.id,
+          },
         },
-      },
-    });
-    const token = jwt.sign(adminSession, process.env.PRISMA_SECRET);
-    res.status(200).send(token);
-    return;
+      });
+      const token = jwt.sign(adminSession, process.env.PRISMA_SECRET);
+      res.status(200).send(token);
+      return;
+    } else {
+      res.status(401).send("Incorrect password");
+    }
   } else {
-    res.status(401).send("Incorrect password");
+    res.status(401).send("User with the username is not ADMIN");
   }
 });
 
@@ -42,11 +45,17 @@ router.post("/register", async (req, res) => {
   }
   const username: string = req.body.username;
   const password: string = req.body.password;
-
   bcrypt.hash(password, saltRounds).then(async hash => {
-    await prisma.createAdmin({
+    await prisma.createUser({
       username: username,
       password: hash,
+      email: username,
+      first_name: "Admin",
+      last_name: "Admin",
+      room_no: "ADMIN",
+      image_url: "",
+      phone: "",
+      role: "ADMIN",
     });
     res.status(200).send(`User: ${username} is registered`);
   });

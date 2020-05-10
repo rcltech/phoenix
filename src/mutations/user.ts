@@ -1,6 +1,6 @@
 import * as env from "dotenv";
 import { OAuth2Client } from "google-auth-library";
-import { User, UserSessions } from "../generated/prisma-client";
+import { User, UserSession } from "../generated/prisma-client";
 import { TokenPayload } from "google-auth-library/build/src/auth/loginticket";
 import { generateToken } from "../utils/authToken";
 
@@ -31,7 +31,7 @@ const login = async (parent, args, ctx): Promise<LoginResponse> => {
     if (user === null)
       return { token: null, login_status: false, register: true };
     // If the user is valid, then register a user session and return a to
-    const userSession: UserSessions = await ctx.prisma.createUserSessions({
+    const userSession: UserSession = await ctx.prisma.createUserSessions({
       user: {
         connect: {
           id: user.id,
@@ -71,6 +71,7 @@ const register = async (parent, { user }, ctx): Promise<User> | null => {
     first_name: payload.given_name,
     last_name: payload.family_name,
     room_no: user.room_no,
+    role: "USER",
   });
 };
 

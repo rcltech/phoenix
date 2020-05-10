@@ -1,4 +1,4 @@
-import { FragmentableArray, User, Admin } from "../generated/prisma-client";
+import { FragmentableArray, User } from "../generated/prisma-client";
 
 export const user = (parent, { username }, ctx): FragmentableArray<User> => {
   return ctx.prisma.user({

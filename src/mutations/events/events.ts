@@ -31,7 +31,7 @@ const createEvent = async (
     image_url: "",
     organiser: {
       connect: {
-        username: user.username,
+        id: user.id,
       },
     },
   });

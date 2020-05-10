@@ -1,10 +1,10 @@
 import * as env from "dotenv";
 import * as jwt from "jsonwebtoken";
-import { UserSessions } from "../generated/prisma-client";
+import { UserSession } from "../generated/prisma-client";
 
 env.config();
 
-const generateToken = (session: UserSessions): string => {
+const generateToken = (session: UserSession): string => {
   return jwt.sign(session, process.env.PRISMA_SECRET);
 };
 

@@ -1,6 +1,7 @@
 type User {
     id: ID! @id
     username: String! @unique
+    password: String
     email: String! @unique
     image_url: String!
     phone: String! @unique
@@ -8,25 +9,14 @@ type User {
     last_name: String!
     room_no: String! @unique
     roomBookings: [Booking] @relation(name: "UserBookings", onDelete: CASCADE)
-    sessions: [UserSessions] @relation(name: "UserLoginSessions", onDelete: CASCADE)
+    sessions: [UserSession] @relation(name: "UserLoginSessions", onDelete: CASCADE)
     eventsOrganised: [Event] @relation(name: "UserEvents", onDelete: CASCADE)
     eventsSubscribed: [Event] @relation(name: "EventSubscribers")
     userComments: [Comment] @relation(name: "UserComments", onDelete: CASCADE)
+    role: Role! @default(value: USER)
 }
 
-type Admin {
-    id: ID! @id
-    username: String! @unique
-    password: String!
-    sessions: [AdminUserSession] @relation(name: "AdminLoginSession", onDelete: CASCADE)
-}
-
-type AdminUserSession {
-    id: ID! @id
-    user: Admin! @relation(name: "AdminLoginSession")
-}
-
-type UserSessions {
+type UserSession {
     id: ID! @id
     user: User! @relation(name: "UserLoginSessions")
     createdAt: DateTime! @createdAt
@@ -74,4 +64,9 @@ type Comment {
     user: User! @relation(name: "UserComments")
     event: Event @relation(name: "EventComments")
     createdAt: DateTime! @createdAt
+}
+
+enum Role{
+    ADMIN,
+    USER
 }

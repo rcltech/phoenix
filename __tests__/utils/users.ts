@@ -3,7 +3,7 @@ import {
   BatchPayload,
   prisma,
   User,
-  UserSessions,
+  UserSession,
 } from "../../src/generated/prisma-client";
 
 env.config();
@@ -16,8 +16,8 @@ export const deleteUsers = (): Promise<BatchPayload> => {
   return prisma.deleteManyUsers({});
 };
 
-export const createUserSession = (user: User): Promise<UserSessions> => {
-  return prisma.createUserSessions({
+export const createUserSession = (user: User): Promise<UserSession> => {
+  return prisma.createUserSession({
     user: {
       connect: {
         id: user.id,
