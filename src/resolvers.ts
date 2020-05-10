@@ -52,6 +52,9 @@ const resolvers: IResolvers = {
     eventsSubscribed(parent, args, ctx): Promise<[Event]> {
       return ctx.prisma.user({ id: parent.id }).eventsSubscribed();
     },
+    password: (parent, args, ctx) => {
+      return null;
+    },
   },
   Booking: {
     room(parent, _, ctx): Promise<Room> {
