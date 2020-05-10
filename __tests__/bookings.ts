@@ -24,6 +24,7 @@ const testUserInfo: User = {
   first_name: "Test",
   last_name: "Test",
   room_no: "111A",
+  role: "USER",
 };
 
 const testRoomInfo: Room = {

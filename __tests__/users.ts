@@ -17,6 +17,7 @@ const testUserInfo = {
   first_name: "Test",
   last_name: "Test",
   room_no: "111A",
+  role: "USER",
 };
 
 beforeAll(async () => await deleteUsers());
