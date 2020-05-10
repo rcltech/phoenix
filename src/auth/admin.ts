@@ -45,16 +45,22 @@ router.post("/register", async (req, res) => {
   }
   const username: string = req.body.username;
   const password: string = req.body.password;
+  const first_name = req.body.first_name || "Admin";
+  const last_name = req.body.last_name || "Admin";
+  const room_no = req.body.room_no || username;
+  const image_url = req.body.image_url || "";
+  const phone = req.body.phone;
+
   bcrypt.hash(password, saltRounds).then(async hash => {
     await prisma.createUser({
       username: username,
       password: hash,
       email: username,
-      first_name: "Admin",
-      last_name: "Admin",
-      room_no: "ADMIN",
-      image_url: "",
-      phone: "",
+      first_name: first_name,
+      last_name: last_name,
+      room_no: room_no,
+      image_url: image_url,
+      phone: phone,
       role: "ADMIN",
     });
     res.status(200).send(`User: ${username} is registered`);
