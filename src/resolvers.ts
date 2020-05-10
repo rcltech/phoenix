@@ -15,8 +15,9 @@ import {
   addEventSubscriber,
   removeEventSubscriber,
 } from "./mutations/events/index";
+import { createComment, deleteComment } from "./mutations/comments";
 import { IResolvers } from "apollo-server-express";
-import { Booking, Room, User, Event } from "./generated/prisma-client";
+import { Booking, Room, User, Event, Comment } from "./generated/prisma-client";
 
 const resolvers: IResolvers = {
   Query: {
@@ -38,6 +39,8 @@ const resolvers: IResolvers = {
     deleteEvent,
     addEventSubscriber,
     removeEventSubscriber,
+    createComment,
+    deleteComment,
   },
   User: {
     roomBookings(parent, args, ctx): Promise<[Booking]> {
@@ -69,6 +72,17 @@ const resolvers: IResolvers = {
     },
     subscribers(parent, _, ctx): Promise<[User]> {
       return ctx.prisma.event({ id: parent.id }).subscribers();
+    },
+    comments(parent, _, ctx): Promise<[Comment]> {
+      return ctx.prisma.event({ id: parent.id }).comments();
+    },
+  },
+  Comment: {
+    event(parent, _, ctx): Promise<Event> {
+      return ctx.prisma.comment({ id: parent.id }).event();
+    },
+    user(parent, _, ctx): Promise<User> {
+      return ctx.prisma.comment({ id: parent.id }).user();
     },
   },
 };

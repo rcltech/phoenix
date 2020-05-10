@@ -7,6 +7,7 @@
 # import DateTimeInput from "./generated/prisma.graphql"
 # import Event from "./generated/prisma.graphql"
 # import EventWhereInput from "./generated/prisma.graphql"
+# import Comment from "./generated/prisma.graphql"
 
 input UserRegisterInput {
     username: String
@@ -36,6 +37,8 @@ type Mutation {
     deleteEvent(id: ID!): Event
     addEventSubscriber(id: ID!): Event
     removeEventSubscriber(id: ID!): Event
+    createComment(eventId: ID, content: String!): Comment
+    deleteComment(commentId: ID!): Comment
 }
 
 type LoginResponse {

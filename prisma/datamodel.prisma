@@ -11,6 +11,7 @@ type User {
     sessions: [UserSessions] @relation(name: "UserLoginSessions", onDelete: CASCADE)
     eventsOrganised: [Event] @relation(name: "UserEvents", onDelete: CASCADE)
     eventsSubscribed: [Event] @relation(name: "EventSubscribers")
+    userComments: [Comment] @relation(name: "UserComments", onDelete: CASCADE)
 }
 
 type UserSessions {
@@ -52,4 +53,13 @@ type Event {
     image_url: String!
     description: String
     subscribers: [User] @relation(name: "EventSubscribers")
+    comments: [Comment] @relation(name: "EventComments", onDelete: CASCADE)
+}
+
+type Comment {
+    id: ID! @id
+    content: String!
+    user: User! @relation(name: "UserComments")
+    event: Event @relation(name: "EventComments")
+    createdAt: DateTime! @createdAt
 }
