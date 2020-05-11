@@ -3,6 +3,7 @@ import { OAuth2Client } from "google-auth-library";
 import { User, UserSession } from "../generated/prisma-client";
 import { TokenPayload } from "google-auth-library/build/src/auth/loginticket";
 import { generateToken } from "../utils/authToken";
+import { AppContext } from "../server";
 
 env.config();
 
@@ -16,7 +17,7 @@ type LoginResponse = {
 
 // TODO: Deprecate this function in the GraphQL API.
 // User login will be handled in the future using REST API in express.
-const login = async (parent, args, ctx): Promise<LoginResponse> => {
+const login = async (parent, args, ctx: AppContext): Promise<LoginResponse> => {
   try {
     const ticket = await client.verifyIdToken({
       idToken: ctx.token,
@@ -31,7 +32,7 @@ const login = async (parent, args, ctx): Promise<LoginResponse> => {
     if (user === null)
       return { token: null, login_status: false, register: true };
     // If the user is valid, then register a user session and return a to
-    const userSession: UserSession = await ctx.prisma.createUserSessions({
+    const userSession: UserSession = await ctx.prisma.createUserSession({
       user: {
         connect: {
           id: user.id,

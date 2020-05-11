@@ -7,7 +7,5 @@ export const user = (parent, { username }, ctx): FragmentableArray<User> => {
 };
 
 export const me = async (parent, args, ctx): Promise<User> => {
-  if (ctx.auth.isAuthenticated) {
-    return ctx.auth.user;
-  }
+  return ctx.auth.user;
 };
