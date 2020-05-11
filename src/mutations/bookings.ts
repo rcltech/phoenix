@@ -1,10 +1,13 @@
 import { Booking, Room, User } from "../generated/prisma-client";
 import { sendEmail } from "../utils/email/sendEmail";
 import { validateBooking } from "../utils/validateBooking";
-import assert from "assert";
 import { AppContext } from "../server";
 
-const createBooking = async (parent, data, ctx): Promise<Booking> => {
+const createBooking = async (
+  parent,
+  data,
+  ctx: AppContext
+): Promise<Booking> => {
   const user: User = ctx.auth.user;
   const start: Date = new Date(data.start);
   const end: Date = new Date(data.end);
@@ -39,9 +42,11 @@ const createBooking = async (parent, data, ctx): Promise<Booking> => {
   return booking;
 };
 
-const updateBooking = async (parent, data, ctx): Promise<Booking> => {
-  const currentUser: User = ctx.auth.user;
-
+const updateBooking = async (
+  parent,
+  data,
+  ctx: AppContext
+): Promise<Booking> => {
   const start: Date = new Date(data.start);
   const end: Date = new Date(data.end);
   const remark: string = data.remark;
