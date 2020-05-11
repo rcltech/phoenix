@@ -1,5 +1,5 @@
 import { shield, and } from "graphql-shield";
-import { isAuthenticated, isAdmin } from "./rules";
+import { isAuthenticated, isAdmin, isBookingCreator } from "./rules";
 
 export const permissions = shield({
   Query: {
@@ -8,8 +8,8 @@ export const permissions = shield({
   },
   Mutation: {
     createBooking: isAuthenticated,
-    updateBooking: isAuthenticated,
-    deleteBooking: isAuthenticated,
+    updateBooking: and(isAuthenticated, isBookingCreator),
+    deleteBooking: and(isAuthenticated, isBookingCreator),
     createEvent: isAuthenticated,
     deleteEvent: isAuthenticated,
     addEventSubscriber: isAuthenticated,
