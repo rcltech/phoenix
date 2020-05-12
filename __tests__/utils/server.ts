@@ -1,15 +1,10 @@
-import { ApolloServer, makeExecutableSchema } from "apollo-server-express";
+import { ApolloServer } from "apollo-server-express";
 import * as env from "dotenv";
-import typeDefs from "../../src/schema";
-import resolvers from "../../src/resolvers";
-import { prisma, User } from "../../src/generated/prisma-client";
 import { createUserSession } from "./users";
 import { generateToken } from "../../src/utils/authToken";
-import { resolveUserUsingJWT } from "../../src/utils/resolveUser";
-import { applyMiddleware } from "graphql-middleware";
-import { permissions } from "../../src/shield/permissions";
 import server from "../../src/server";
 import { context, AppContext } from "../../src/context";
+import { User } from "../../src/generated/prisma-client";
 env.config();
 
 export const createTestServerWithToken = (token: string): ApolloServer => {
@@ -28,7 +23,7 @@ export const createTestServerWithToken = (token: string): ApolloServer => {
 };
 
 export const createTestServerWithUserLoggedIn = async (
-  user
+  user: User
 ): Promise<ApolloServer> => {
   const userSession = await createUserSession(user);
   // Generate a token for the session
