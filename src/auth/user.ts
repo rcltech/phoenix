@@ -29,7 +29,10 @@ async function getPayloadFromGoogle(
 router.post("/login", async (req, res) => {
   const token: string = req.headers.authorization;
   const payload = await getPayloadFromGoogle(token);
-  if (payload === null) {
+  if (
+    payload === null ||
+    payload.hd !== (process.env.ORG_DOMAIN || "connect.hku.hk")
+  ) {
     res
       .status(401)
       .send(
