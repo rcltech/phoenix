@@ -16,6 +16,12 @@ export const deleteUsers = (): Promise<BatchPayload> => {
   return prisma.deleteManyUsers({});
 };
 
+export const deleteUser = (user: User) => {
+  return prisma.deleteUser({
+    id: user.id,
+  });
+};
+
 export const createUserSession = (user: User): Promise<UserSession> => {
   return prisma.createUserSession({
     user: {
