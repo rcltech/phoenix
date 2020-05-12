@@ -4,6 +4,7 @@ import {
   Booking,
   prisma,
 } from "../../src/generated/prisma-client";
+import { bookings } from "../../src/query/bookings";
 
 env.config();
 
@@ -37,4 +38,10 @@ export const createBooking = (
 
 export const deleteBookings = (): BatchPayloadPromise => {
   return prisma.deleteManyBookings({});
+};
+
+export const deleteBooking = booking => {
+  return prisma.deleteBooking({
+    id: booking.id,
+  });
 };

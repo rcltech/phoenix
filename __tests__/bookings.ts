@@ -6,11 +6,11 @@ import moment from "moment";
 import { createTestServerWithUserLoggedIn } from "./utils/server";
 import { Room, User } from "../src/generated/prisma-client";
 import { createTestClient } from "apollo-server-testing";
-import { createUser, deleteUsers } from "./utils/users";
-import { createRoom, deleteRooms } from "./utils/rooms";
+import { createUser, deleteUser, deleteUsers } from "./utils/users";
+import { createRoom, deleteRoom } from "./utils/rooms";
 import {
   createBooking,
-  deleteBookings,
+  deleteBooking,
   TestBookingInfo,
 } from "./utils/bookings";
 import { GraphQLResponse } from "apollo-server-types";
@@ -71,21 +71,19 @@ const testInvalidBookingVariables = {
   remark: "Hi",
 };
 
-beforeAll(async () => await deleteUsers());
-
 describe("Booking queries", () => {
   test("can query all bookings", async () => {
-    await deleteRooms();
-
     // Create user in the database
     const user: User = await createUser(testUserInfo);
     const testServer = await createTestServerWithUserLoggedIn(user);
     // Create a test client connected to the test server
     const client = createTestClient(testServer);
+
     // Create the required rooms
-    await createRoom(testRoomInfo);
+    const room = await createRoom(testRoomInfo);
     // Create a booking
-    await createBooking(testBookingInfo);
+    const booking = await createBooking(testBookingInfo);
+
     const query = gql`
       query {
         bookings {
@@ -101,8 +99,8 @@ describe("Booking queries", () => {
         }
       }
     `;
-    const result: GraphQLResponse = await client.query({ query });
-    expect(result.data).toEqual({
+    const response: GraphQLResponse = await client.query({ query });
+    expect(response.data).toEqual({
       bookings: [
         {
           user: {
@@ -117,9 +115,11 @@ describe("Booking queries", () => {
         },
       ],
     });
-    await deleteBookings();
-    await deleteRooms();
-    await deleteUsers();
+
+    // Cleanup after test
+    await deleteBooking(booking);
+    await deleteRoom(room);
+    await deleteUser(user);
   });
 });
 
@@ -131,9 +131,9 @@ describe("Booking validation", () => {
     // Create a test client connected to the test server
     const client = createTestClient(testServer);
     // Create the required rooms
-    await createRoom(testRoomInfo);
+    const room = await createRoom(testRoomInfo);
     // Create a booking
-    await createBooking(testBookingInfo);
+    const booking = await createBooking(testBookingInfo);
 
     // Attempt to create an invalid booking
     const mutation = gql`
@@ -153,15 +153,16 @@ describe("Booking validation", () => {
         }
       }
     `;
-    const result: GraphQLResponse = await client.mutate({
+    const response: GraphQLResponse = await client.mutate({
       mutation,
       variables: testInvalidBookingVariables,
     });
-    expect(result.data).toEqual({ createBooking: null });
 
-    await deleteBookings();
-    await deleteRooms();
-    await deleteUsers();
+    expect(response.data).toEqual({ createBooking: null });
+
+    await deleteBooking(booking);
+    await deleteRoom(room);
+    await deleteUser(user);
   });
 });
 
@@ -171,7 +172,7 @@ describe("Booking mutations", () => {
     const testServer = await createTestServerWithUserLoggedIn(user);
     // Create a test client connected to the test server
     const client = createTestClient(testServer);
-    await createRoom(testRoomInfo);
+    const room = await createRoom(testRoomInfo);
     const booking = await createBooking(testBookingInfo);
     const mutation = gql`
       mutation(
@@ -211,17 +212,16 @@ describe("Booking mutations", () => {
         remark: testUpdatedBookingInfo.remark,
       },
     });
-    await deleteBookings();
-    await deleteRooms();
-    await deleteUsers();
+
+    await deleteBooking(booking);
+    await deleteRoom(room);
+    await deleteUser(user);
   });
 
   test("do not allow to change other user's bookings", async () => {
     const user: User = await createUser(testUserInfo);
-    const testServer = await createTestServerWithUserLoggedIn(user);
     // Create a test client connected to the test server
-    const client = createTestClient(testServer);
-    await createRoom(testRoomInfo);
+    const room = await createRoom(testRoomInfo);
     const booking = await createBooking(testBookingInfo);
     const user1: User = await createUser(testUserInfo1);
     const testServer1 = await createTestServerWithUserLoggedIn(user1);
@@ -260,9 +260,9 @@ describe("Booking mutations", () => {
       variables: testUpdatedBookingInfo,
     });
     expect(result.errors[0].message).toEqual("Not Authorised!");
-    await deleteBookings();
-    await deleteRooms();
-    await deleteUsers();
+    await deleteBooking(booking);
+    await deleteRoom(room);
+    await deleteUsers(user, user1);
   });
 
   test("allow users to delete their own bookings", async () => {
@@ -270,7 +270,7 @@ describe("Booking mutations", () => {
     const testServer = await createTestServerWithUserLoggedIn(user);
     // Create a test client connected to the test server
     const client = createTestClient(testServer);
-    await createRoom(testRoomInfo);
+    const room = await createRoom(testRoomInfo);
     const booking = await createBooking(testBookingInfo);
     const mutation = gql`
       mutation($id: ID!) {
@@ -288,17 +288,13 @@ describe("Booking mutations", () => {
         id: booking.id,
       },
     });
-    await deleteBookings();
-    await deleteRooms();
-    await deleteUsers();
+    await deleteRoom(room);
+    await deleteUser(user);
   });
 
   test("do not allow users to delete other user's own bookings", async () => {
     const user: User = await createUser(testUserInfo);
-    const testServer = await createTestServerWithUserLoggedIn(user);
-    // Create a test client connected to the test server
-    const client = createTestClient(testServer);
-    await createRoom(testRoomInfo);
+    const room = await createRoom(testRoomInfo);
     const booking = await createBooking(testBookingInfo);
     const user1: User = await createUser(testUserInfo1);
     const testServer1 = await createTestServerWithUserLoggedIn(user1);
@@ -316,8 +312,8 @@ describe("Booking mutations", () => {
       variables: { id: booking.id },
     });
     expect(result.errors[0].message).toEqual("Not Authorised!");
-    await deleteBookings();
-    await deleteRooms();
-    await deleteUsers();
+    await deleteBooking(booking);
+    await deleteRoom(room);
+    await deleteUsers(user, user1);
   });
 });

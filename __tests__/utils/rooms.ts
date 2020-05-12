@@ -4,6 +4,7 @@ import {
   prisma,
   Room,
 } from "../../src/generated/prisma-client";
+
 env.config();
 export const createRoom = (room: Room): Promise<Room> => {
   return prisma.createRoom({
@@ -14,4 +15,10 @@ export const createRoom = (room: Room): Promise<Room> => {
 
 export const deleteRooms = (): BatchPayloadPromise => {
   return prisma.deleteManyRooms({});
+};
+
+export const deleteRoom = (room: Room) => {
+  return prisma.deleteRoom({
+    number: room.number,
+  });
 };

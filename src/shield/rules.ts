@@ -1,4 +1,4 @@
-import { rule, shield, and, or, not } from "graphql-shield";
+import { rule } from "graphql-shield";
 import { AppContext } from "../context";
 import { User } from "../generated/prisma-client";
 

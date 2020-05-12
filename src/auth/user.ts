@@ -2,7 +2,7 @@ import * as env from "dotenv";
 env.config();
 
 import express from "express";
-import { prisma, User, UserSession } from "../generated/prisma-client";
+import { prisma } from "../generated/prisma-client";
 import { OAuth2Client } from "google-auth-library";
 import { generateToken } from "../utils/authToken";
 import { TokenPayload } from "google-auth-library/build/src/auth/loginticket";
