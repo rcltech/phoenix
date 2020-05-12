@@ -1,5 +1,5 @@
 import { rule, shield, and, or, not } from "graphql-shield";
-import { AppContext } from "../server";
+import { AppContext } from "../context";
 import { User } from "../generated/prisma-client";
 
 export const isAuthenticated = rule({ cache: "contextual" })(

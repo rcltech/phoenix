@@ -8,29 +8,23 @@ import { generateToken } from "../../src/utils/authToken";
 import { resolveUserUsingJWT } from "../../src/utils/resolveUser";
 import { applyMiddleware } from "graphql-middleware";
 import { permissions } from "../../src/shield/permissions";
+import server from "../../src/server";
+import { context, AppContext } from "../../src/context";
 env.config();
 
 export const createTestServerWithToken = (token: string): ApolloServer => {
-  return new ApolloServer({
-    schema: applyMiddleware(
-      makeExecutableSchema({
-        typeDefs,
-        resolvers,
-      }),
-      permissions
-    ),
-    context: async ({ req }): Promise<object> => {
-      const user = await resolveUserUsingJWT(prisma, token);
-      return {
-        prisma,
-        token,
-        auth: {
-          user: user,
-          isAuthenticated: user !== null,
-        },
-      };
+  const testReq = {
+    headers: {
+      authorization: token,
     },
-  });
+  };
+  const testServerContext = async ({ req }): Promise<AppContext> => {
+    const appContext: AppContext = await context({ req: testReq });
+    return appContext;
+  };
+
+  const testServer = server(testServerContext);
+  return testServer;
 };
 
 export const createTestServerWithUserLoggedIn = async (

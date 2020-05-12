@@ -6,6 +6,7 @@ import express from "express";
 import cors, { CorsOptions } from "cors";
 import { auth, adminAuth } from "./auth";
 import * as bodyParser from "body-parser";
+import { context } from "./context";
 
 const corsOptions: CorsOptions = {
   origin: [
@@ -24,7 +25,9 @@ app.use(cors(corsOptions));
 
 const PORT: string = process.env.PORT || "4000";
 
-server.applyMiddleware({
+const apolloServer = server(context);
+
+apolloServer.applyMiddleware({
   app,
   cors: corsOptions,
   bodyParserConfig: {

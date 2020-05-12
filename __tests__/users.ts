@@ -2,7 +2,6 @@ import * as env from "dotenv";
 env.config();
 
 import { User } from "../src/generated/prisma-client";
-import testServer from "../src/server";
 import { createTestClient } from "apollo-server-testing";
 import { createTestServerWithToken } from "./utils/server";
 import { generateToken } from "../src/utils/authToken";
@@ -64,7 +63,7 @@ describe("User query and mutations", () => {
   test("cannot query user when not authorised", async () => {
     await deleteUsers();
     await createUser(testUserInfo);
-
+    const testServer = createTestServerWithToken("");
     const client = createTestClient(testServer);
     const userQuery = `{
         user (username: "${testUserInfo.username}") {
@@ -116,6 +115,7 @@ describe("User query and mutations", () => {
   test("rejects the 'me' query when no user is logged in", async () => {
     await deleteUsers();
     // Create a test client connected to the test server
+    const testServer = createTestServerWithToken("");
     const client = createTestClient(testServer);
 
     // Make a request to resolve the user

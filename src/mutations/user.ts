@@ -3,7 +3,7 @@ import { OAuth2Client } from "google-auth-library";
 import { User, UserSession } from "../generated/prisma-client";
 import { TokenPayload } from "google-auth-library/build/src/auth/loginticket";
 import { generateToken } from "../utils/authToken";
-import { AppContext } from "../server";
+import { AppContext } from "../context";
 
 env.config();
 
@@ -39,7 +39,6 @@ const login = async (parent, args, ctx: AppContext): Promise<LoginResponse> => {
         },
       },
     });
-    console.log(userSession);
     const jwtToken = generateToken(userSession);
     return { token: jwtToken, login_status: true, register: false };
   } catch (e) {

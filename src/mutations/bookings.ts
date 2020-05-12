@@ -1,7 +1,7 @@
 import { Booking, Room, User } from "../generated/prisma-client";
 import { sendEmail } from "../utils/email/sendEmail";
 import { validateBooking } from "../utils/validateBooking";
-import { AppContext } from "../server";
+import { AppContext } from "../context";
 
 const createBooking = async (
   parent,
