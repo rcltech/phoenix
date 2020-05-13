@@ -36,7 +36,6 @@ const createEvent = async (
     },
   });
 
-  console.log(event);
   const { id } = event;
 
   // check if image_base64 is less than 10mb, if not, delete event and return null

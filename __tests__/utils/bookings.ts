@@ -4,7 +4,6 @@ import {
   Booking,
   prisma,
 } from "../../src/generated/prisma-client";
-import { bookings } from "../../src/query/bookings";
 
 env.config();
 

@@ -196,8 +196,7 @@ describe("Booking mutations", () => {
     `;
     const testUpdatedBookingInfo = {
       id: booking.id,
-      user: "test123",
-      room: "123",
+      room: testBookingInfo.room,
       start: booking.start,
       end: booking.end,
       remark: "HelloWorld",
@@ -248,7 +247,6 @@ describe("Booking mutations", () => {
     `;
     const testUpdatedBookingInfo = {
       id: booking.id,
-      user: "test123",
       room: "123",
       start: booking.start,
       end: booking.end,
