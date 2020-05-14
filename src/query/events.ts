@@ -3,14 +3,14 @@ import moment from "moment";
 
 export const events = (
   parent,
-  { data, start },
+  { data, start_time },
   ctx
 ): FragmentableArray<Event> => {
-  if (moment(start, moment.defaultFormat).isValid()) {
-    const start_gte: Date = new Date(start);
-    return ctx.prisma.events({
-      where: { ...data, start_gte },
-      orderBy: "start_ASC",
-    });
-  } else return ctx.prisma.events({ where: data, orderBy: "start_ASC" });
+  const start_gte: Date = moment(start_time, moment.defaultFormat).isValid()
+    ? new Date(start_time)
+    : new Date();
+  return ctx.prisma.events({
+    where: { ...data, start_gte },
+    orderBy: "start_ASC",
+  });
 };
