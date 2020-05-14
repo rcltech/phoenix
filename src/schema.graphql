@@ -1,5 +1,5 @@
 # import User from "./prisma.graphql"
-# import Admin from "./generated/prisma.graphql"
+# import Admin from "./prisma.graphql"
 # import Washer from "./prisma.graphql"
 # import WasherWhereInput from "./prisma.graphql"
 # import Booking from "./prisma.graphql"
