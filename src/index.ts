@@ -41,7 +41,7 @@ app.get("/", (req, res) => {
 
 app.use(bodyParser.json({ type: "application/json" }));
 
-app.use("/oauth", auth);
+app.use("/oauth/user", auth);
 app.use("/oauth/admin", adminAuth);
 
 app.listen({ port: PORT }, () => {
