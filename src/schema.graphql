@@ -17,21 +17,12 @@ input UserRegisterInput {
 }
 
 type Query {
-<<<<<<< HEAD
   user(username: String!): User
   me: User
   washers(data: WasherWhereInput): [Washer]
   bookings(data: BookingWhereInput, start: String): [Booking]
   rooms(data: RoomWhereInput): [Room]
-  events(data: EventWhereInput): [Event]
-=======
-    user(username: String!): User
-    me : User
-    washers (data: WasherWhereInput): [Washer]
-    bookings (data: BookingWhereInput, start: String): [Booking]
-    rooms (data: RoomWhereInput) : [Room]
-    events (data: EventWhereInput, start: String) : [Event]
->>>>>>> Add start option for events query
+  events(data: EventWhereInput, start: String): [Event]
 }
 
 type Mutation {
