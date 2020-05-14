@@ -50,10 +50,11 @@ const testBookingInfo: TestBookingInfo = {
   room: "123",
   start: moment()
     .startOf("hour")
+    .add(1, "hour")
     .toDate(),
   end: moment()
     .startOf("hour")
-    .add(2, "hour")
+    .add(3, "hour")
     .toDate(),
   remark: "Hello",
 };
@@ -62,11 +63,11 @@ const testInvalidBookingVariables = {
   room_number: "123",
   start: moment()
     .startOf("hour")
-    .add(1, "hour")
+    .add(2, "hour")
     .toISOString(),
   end: moment()
     .startOf("hour")
-    .add(2, "hour")
+    .add(3, "hour")
     .toISOString(),
   remark: "Hi",
 };

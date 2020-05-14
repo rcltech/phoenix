@@ -1,6 +1,7 @@
 import * as env from "dotenv";
 env.config();
 import gql from "graphql-tag";
+import moment from "moment";
 import { GraphQLResponse } from "apollo-server-types";
 import { createTestServerWithUserLoggedIn } from "../utils/server";
 import { Event, User } from "../../src/generated/prisma-client";
@@ -23,8 +24,14 @@ const testUserInfo: User = {
 const testEventInfo: TestEventInfo = {
   title: "test event",
   organiser: testUserInfo.username,
-  start: new Date(),
-  end: new Date(),
+  start: moment()
+    .startOf("hour")
+    .add(1, "hour")
+    .toDate(),
+  end: moment()
+    .startOf("hour")
+    .add(2, "hour")
+    .toDate(),
   venue: "test venue",
   image_url: "http://url",
   description: "test description",
