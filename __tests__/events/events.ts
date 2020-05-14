@@ -1,6 +1,5 @@
 import * as env from "dotenv";
 env.config();
-
 import gql from "graphql-tag";
 import { GraphQLResponse } from "apollo-server-types";
 import { createTestServerWithUserLoggedIn } from "../utils/server";
@@ -18,6 +17,7 @@ const testUserInfo: User = {
   first_name: "Test",
   last_name: "Test",
   room_no: "111A",
+  role: "USER",
 };
 
 const testEventInfo: TestEventInfo = {
@@ -129,6 +129,7 @@ describe("event creation", () => {
       mutation,
       variables,
     });
+
     expect(response.data).toEqual({
       createEvent: {
         title: testEventInfo.title,

@@ -4,6 +4,9 @@ env.config();
 import server from "./server";
 import express from "express";
 import cors, { CorsOptions } from "cors";
+import { auth, adminAuth } from "./auth";
+import * as bodyParser from "body-parser";
+import { context } from "./context";
 
 const corsOptions: CorsOptions = {
   origin: [
@@ -22,7 +25,9 @@ app.use(cors(corsOptions));
 
 const PORT: string = process.env.PORT || "4000";
 
-server.applyMiddleware({
+const apolloServer = server(context);
+
+apolloServer.applyMiddleware({
   app,
   cors: corsOptions,
   bodyParserConfig: {
@@ -33,6 +38,11 @@ server.applyMiddleware({
 app.get("/", (req, res) => {
   res.send("OK").status(200);
 });
+
+app.use(bodyParser.json({ type: "application/json" }));
+
+app.use("/oauth/user", auth);
+app.use("/oauth/admin", adminAuth);
 
 app.listen({ port: PORT }, () => {
   console.log(`Server started at port ${PORT}`);

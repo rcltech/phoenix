@@ -1,4 +1,5 @@
 # import User from "./generated/prisma.graphql"
+# import Admin from "./generated/prisma.graphql"
 # import Washer from "./generated/prisma.graphql"
 # import WasherWhereInput from "./generated/prisma.graphql"
 # import Booking from "./generated/prisma.graphql"
@@ -10,39 +11,55 @@
 # import Comment from "./generated/prisma.graphql"
 
 input UserRegisterInput {
-    username: String
-    phone: String!
-    room_no: String!
+  username: String
+  phone: String!
+  room_no: String!
 }
 
 type Query {
-    user(username: String!): User
-    me : User
-    washers (data: WasherWhereInput): [Washer]
-    bookings (data: BookingWhereInput): [Booking]
-    rooms (data: RoomWhereInput) : [Room]
-    events (data: EventWhereInput) : [Event]
+  user(username: String!): User
+  me: User
+  washers(data: WasherWhereInput): [Washer]
+  bookings(data: BookingWhereInput): [Booking]
+  rooms(data: RoomWhereInput): [Room]
+  events(data: EventWhereInput): [Event]
 }
 
 type Mutation {
-    login: LoginResponse
-    register(
-        user : UserRegisterInput!
-    ) : User
-    updateWasher(id: ID!, in_use: Boolean!): Washer
-    createBooking(room_number: String!, start: String!, end: String!, remark: String) : Booking
-    updateBooking(id: ID!, room_number: String!, start: String!, end: String!, remark: String): Booking
-    deleteBooking(id: ID!): Booking
-    createEvent(title: String!, start: String!, end: String!, venue: String!, image_base64: String!, description: String): Event
-    deleteEvent(id: ID!): Event
-    addEventSubscriber(id: ID!): Event
-    removeEventSubscriber(id: ID!): Event
-    createComment(eventId: ID, content: String!): Comment
-    deleteComment(commentId: ID!): Comment
+  login: LoginResponse
+  register(user: UserRegisterInput!): User
+  updateWasher(id: ID!, in_use: Boolean!): Washer
+  createBooking(
+    room_number: String!
+    start: String!
+    end: String!
+    remark: String
+  ): Booking
+  updateBooking(
+    id: ID!
+    room_number: String!
+    start: String!
+    end: String!
+    remark: String
+  ): Booking
+  deleteBooking(id: ID!): Booking
+  createEvent(
+    title: String!
+    start: String!
+    end: String!
+    venue: String!
+    image_base64: String!
+    description: String
+  ): Event
+  deleteEvent(id: ID!): Event
+  addEventSubscriber(id: ID!): Event
+  removeEventSubscriber(id: ID!): Event
+  createComment(eventId: ID, content: String!): Comment
+  deleteComment(commentId: ID!): Comment
 }
 
 type LoginResponse {
-    token: String
-    login_status: Boolean!
-    register: Boolean
+  token: String
+  login_status: Boolean!
+  register: Boolean
 }

@@ -1,12 +1,12 @@
 import env from "dotenv";
+env.config();
+
 import { Event, User } from "../../generated/prisma-client";
-import { resolveUserUsingJWT } from "../../utils/resolveUser";
 import { uploadToS3, deleteFromS3 } from "../../utils/S3";
 import { S3UploadResponse, S3DeleteResponse } from "../../utils/S3/types";
 import assert from "assert";
 import { isImageValid } from "../../utils/validateImage";
 
-env.config();
 const bucket_suffix =
   process.env.NODE_ENV === "development" ? "dev" : "production";
 const bucket_name = `rctechclub-raven/${bucket_suffix}`;
@@ -16,7 +16,7 @@ const createEvent = async (
   { title, start, end, venue, image_base64, description },
   ctx
 ): Promise<Event> | null => {
-  const user: User | null = await resolveUserUsingJWT(ctx);
+  const user: User | null = ctx.auth.user;
   assert.notStrictEqual(user, null, "No user login");
 
   start = new Date(start);
@@ -75,7 +75,7 @@ const createEvent = async (
 };
 
 const deleteEvent = async (parent, { id }, ctx): Promise<Event> | null => {
-  const currentUser: User | null = await resolveUserUsingJWT(ctx);
+  const currentUser: User | null = ctx.auth.user;
   assert.notStrictEqual(currentUser.id, null, "");
 
   const eventOrganiser: User = await ctx.prisma.event({ id }).organiser();

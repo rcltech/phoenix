@@ -38,3 +38,9 @@ export const createBooking = (
 export const deleteBookings = (): BatchPayloadPromise => {
   return prisma.deleteManyBookings({});
 };
+
+export const deleteBooking = booking => {
+  return prisma.deleteBooking({
+    id: booking.id,
+  });
+};
