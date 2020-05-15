@@ -3,14 +3,14 @@ import moment from "moment";
 
 export const bookings = (
   parent,
-  { data, start_time },
+  { data, start_limit },
   ctx
 ): FragmentableArray<Booking> => {
-  const start_gte: Date = moment(start_time, moment.defaultFormat).isValid()
-    ? new Date(start_time)
+  const end_gte: Date = moment(start_limit, moment.defaultFormat).isValid()
+    ? new Date(start_limit)
     : new Date();
   return ctx.prisma.bookings({
-    where: { ...data, start_gte },
+    where: { ...data, end_gte },
     orderBy: "start_ASC",
   });
 };
