@@ -44,7 +44,7 @@ router.post("/login", async (req, res) => {
   // Get the user from the email address.
   const user = await prisma.user({ email: payload.email });
   if (user === null) {
-    res.send(200).send({ registered: false, logged_in: false, token: null });
+    res.status(200).send({ registered: false, logged_in: false, token: null });
     return;
   }
 
