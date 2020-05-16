@@ -20,9 +20,9 @@ type Query {
   user(username: String!): User
   me: User
   washers(data: WasherWhereInput): [Washer]
-  bookings(data: BookingWhereInput): [Booking]
+  bookings(data: BookingWhereInput, start_limit: String): [Booking]
   rooms(data: RoomWhereInput): [Room]
-  events(data: EventWhereInput): [Event]
+  events(data: EventWhereInput, start_limit: String): [Event]
 }
 
 type Mutation {
