@@ -73,7 +73,7 @@ describe("event subscriber addition", () => {
   });
 });
 
-describe("event subscriber removal", () => {
+describe("event subscriber removal for subscribed event", () => {
   test("should be able to remove current user from event subscribers list", async () => {
     // Create user in the database
     const testUser: User = await createUser(testUserInfo);
@@ -113,7 +113,7 @@ describe("event subscriber removal", () => {
   });
 });
 
-describe("invalid subscriber removal", () => {
+describe("event subscriber removal for non-subscribed event", () => {
   test("should be able to return corresponding event when user wasn't previously subscribed to the event", async () => {
     // Create user in the database
     const testUser: User = await createUser(testUserInfo);
