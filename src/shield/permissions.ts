@@ -1,5 +1,11 @@
 import { shield, and } from "graphql-shield";
-import { isAuthenticated, isAdmin, isBookingCreator } from "./rules";
+import {
+  isAuthenticated,
+  isAdmin,
+  isBookingCreator,
+  isEventCreator,
+  isCommentCreator,
+} from "./rules";
 
 export const permissions = shield({
   Query: {
@@ -11,10 +17,10 @@ export const permissions = shield({
     updateBooking: and(isAuthenticated, isBookingCreator),
     deleteBooking: and(isAuthenticated, isBookingCreator),
     createEvent: isAuthenticated,
-    deleteEvent: isAuthenticated,
+    deleteEvent: and(isAuthenticated, isEventCreator),
     addEventSubscriber: isAuthenticated,
     removeEventSubscriber: isAuthenticated,
     createComment: isAuthenticated,
-    deleteComment: isAuthenticated,
+    deleteComment: and(isAuthenticated, isCommentCreator),
   },
 });
