@@ -112,3 +112,35 @@ describe("event subscriber removal", () => {
     await deleteUsers();
   });
 });
+
+describe("invalid subscriber removal", () => {
+  test("should be able to return corresponding event when user wasn't previously subscribed to the event", async () => {
+    // Create user in the database
+    const testUser: User = await createUser(testUserInfo);
+    const testServer = await createTestServerWithUserLoggedIn(testUser);
+    // Create a test client connected to the test server
+    const client = createTestClient(testServer);
+    // Create a test event
+    const { id: event_id }: Event = await createEvent(testEventInfo);
+
+    const mutation = gql`
+      mutation($id: ID!) {
+        removeEventSubscriber(id: $id) {
+          id
+        }
+      }
+    `;
+
+    const {
+      data: { removeEventSubscriber },
+    }: GraphQLResponse = await client.mutate({
+      mutation,
+      variables: { id: event_id },
+    });
+
+    expect(removeEventSubscriber).toEqual({ id: event_id });
+
+    await deleteEvents();
+    await deleteUsers();
+  });
+});

@@ -21,6 +21,18 @@ const testUserInfo: User = {
   role: "USER",
 };
 
+const testUserInfo1: User = {
+  id: undefined,
+  username: "test234",
+  email: "test234@connect.hku.hk",
+  image_url: "http://url234",
+  phone: "12345678234",
+  first_name: "Test",
+  last_name: "Test",
+  room_no: "234A",
+  role: "USER",
+};
+
 const testEventInfo: TestEventInfo = {
   title: "test event",
   organiser: testUserInfo.username,
@@ -157,7 +169,7 @@ describe("event creation", () => {
 });
 
 describe("event deletion", () => {
-  test("should be able to delete an event", async () => {
+  test("allow users to delete their own events", async () => {
     // Create user in the database
     const user: User = await createUser(testUserInfo);
     const testServer = await createTestServerWithUserLoggedIn(user);
@@ -182,6 +194,37 @@ describe("event deletion", () => {
         id: event.id,
       },
     });
+
+    await deleteEvents();
+    await deleteUsers();
+  });
+});
+
+describe("invalid event deletion", () => {
+  test("do not allow users to delete other users' events", async () => {
+    // Create the first user in the database
+    const user: User = await createUser(testUserInfo);
+    // Create the second user in the database
+    const user1: User = await createUser(testUserInfo1);
+    // Create a test server with second user logged in
+    const testServer = await createTestServerWithUserLoggedIn(user1);
+    // Create a test client connected to the test server
+    const client = createTestClient(testServer);
+    // Create a test event with the first user as organiser
+    const event: Event = await createEvent(testEventInfo);
+
+    const mutation = gql`
+      mutation($id: ID!) {
+        deleteEvent(id: $id) {
+          id
+        }
+      }
+    `;
+    const response: GraphQLResponse = await client.mutate({
+      mutation,
+      variables: { id: event.id },
+    });
+    expect(response.errors[0].message).toEqual("Not Authorised!");
 
     await deleteEvents();
     await deleteUsers();
