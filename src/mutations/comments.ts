@@ -26,9 +26,9 @@ const createComment = async (parent, data, ctx): Promise<Comment> => {
   } else throw new Error("No id of a particular data type is provided");
 };
 
-const deleteComment = async (parent, { commentId }, ctx): Promise<Comment> => {
+const deleteComment = async (parent, { id }, ctx): Promise<Comment> => {
   return ctx.prisma.deleteComment({
-    id: commentId,
+    id,
   });
 };
 

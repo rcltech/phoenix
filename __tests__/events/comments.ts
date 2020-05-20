@@ -111,8 +111,8 @@ describe("event comment deletion", () => {
     const testComment: Comment = await createEventComment(eventCommentInfo);
 
     const mutation = gql`
-      mutation($commentId: ID!) {
-        deleteComment(commentId: $commentId) {
+      mutation($id: ID!) {
+        deleteComment(id: $id) {
           id
         }
       }
@@ -122,7 +122,7 @@ describe("event comment deletion", () => {
       data: { deleteComment },
     }: GraphQLResponse = await client.mutate({
       mutation,
-      variables: { commentId: testComment.id },
+      variables: { id: testComment.id },
     });
 
     const eventInfo: RetrieveEventCommentsInfo = { event_id: testEvent.id };
@@ -155,8 +155,8 @@ describe("invalid event comment deletion", () => {
     const testComment: Comment = await createEventComment(eventCommentInfo);
 
     const mutation = gql`
-      mutation($commentId: ID!) {
-        deleteComment(commentId: $commentId) {
+      mutation($id: ID!) {
+        deleteComment(id: $id) {
           id
         }
       }
@@ -164,7 +164,7 @@ describe("invalid event comment deletion", () => {
 
     const response: GraphQLResponse = await client.mutate({
       mutation,
-      variables: { commentId: testComment.id },
+      variables: { id: testComment.id },
     });
 
     expect(response.errors[0].message).toEqual("Not Authorised!");

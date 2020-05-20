@@ -36,7 +36,7 @@ export const isCommentAuthor = rule({ cache: "contextual" })(
   async (parent, args, ctx: AppContext) => {
     const currentUser: User = ctx.auth.user;
     const commentCreator: User = await ctx.prisma
-      .comment({ id: args.commentId })
+      .comment({ id: args.id })
       .user();
     return currentUser.id === commentCreator.id;
   }
