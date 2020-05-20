@@ -3,8 +3,8 @@ import {
   isAuthenticated,
   isAdmin,
   isBookingCreator,
-  isEventCreator,
-  isCommentCreator,
+  isEventOrganiser,
+  isCommentAuthor,
 } from "./rules";
 
 export const permissions = shield({
@@ -17,10 +17,10 @@ export const permissions = shield({
     updateBooking: and(isAuthenticated, isBookingCreator),
     deleteBooking: and(isAuthenticated, isBookingCreator),
     createEvent: isAuthenticated,
-    deleteEvent: and(isAuthenticated, isEventCreator),
+    deleteEvent: and(isAuthenticated, isEventOrganiser),
     addEventSubscriber: isAuthenticated,
     removeEventSubscriber: isAuthenticated,
     createComment: isAuthenticated,
-    deleteComment: and(isAuthenticated, isCommentCreator),
+    deleteComment: and(isAuthenticated, isCommentAuthor),
   },
 });

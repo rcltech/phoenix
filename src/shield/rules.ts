@@ -22,7 +22,7 @@ export const isBookingCreator = rule({ cache: "contextual" })(
   }
 );
 
-export const isEventCreator = rule({ cache: "contextual" })(
+export const isEventOrganiser = rule({ cache: "contextual" })(
   async (parent, args, ctx: AppContext) => {
     const currentUser: User = ctx.auth.user;
     const eventOrganiser: User = await ctx.prisma
@@ -32,7 +32,7 @@ export const isEventCreator = rule({ cache: "contextual" })(
   }
 );
 
-export const isCommentCreator = rule({ cache: "contextual" })(
+export const isCommentAuthor = rule({ cache: "contextual" })(
   async (parent, args, ctx: AppContext) => {
     const currentUser: User = ctx.auth.user;
     const commentCreator: User = await ctx.prisma
