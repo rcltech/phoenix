@@ -16,9 +16,7 @@ const createEvent = async (
   { title, start, end, venue, image_base64, description },
   ctx
 ): Promise<Event> | null => {
-  const user: User | null = ctx.auth.user;
-  assert.notStrictEqual(user, null, "No user login");
-
+  const user: User = ctx.auth.user;
   start = new Date(start);
   end = new Date(end);
 
@@ -75,12 +73,6 @@ const createEvent = async (
 };
 
 const deleteEvent = async (parent, { id }, ctx): Promise<Event> | null => {
-  const currentUser: User | null = ctx.auth.user;
-  assert.notStrictEqual(currentUser.id, null, "");
-
-  const eventOrganiser: User = await ctx.prisma.event({ id }).organiser();
-  assert.strictEqual(currentUser.id, eventOrganiser.id, "User is not allowed");
-
   const s3DeleteResponse: S3DeleteResponse = await deleteFromS3({
     file_name: id,
     bucket_name,

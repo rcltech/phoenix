@@ -2,9 +2,7 @@ import assert from "assert";
 import { Event, User } from "../../generated/prisma-client";
 
 const addEventSubscriber = async (parent, { id }, ctx): Promise<Event> => {
-  const currentUser: User | null = ctx.auth.user;
-  assert.notStrictEqual(currentUser, null, "No user login");
-
+  const currentUser: User = ctx.auth.user;
   const { id: user_id } = currentUser;
 
   return ctx.prisma.updateEvent({
@@ -20,9 +18,7 @@ const addEventSubscriber = async (parent, { id }, ctx): Promise<Event> => {
 };
 
 const removeEventSubscriber = async (parent, { id }, ctx): Promise<Event> => {
-  const currentUser: User | null = ctx.auth.user;
-  assert.notStrictEqual(currentUser, null, "No user login");
-
+  const currentUser: User = ctx.auth.user;
   const { id: user_id } = currentUser;
 
   const subscribers: [User] = await ctx.prisma.event({ id }).subscribers();
