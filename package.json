@@ -5,6 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
+    "postbuild": "node postbuild.js",
     "start": "node dist/index.js",
     "test": "jest --runInBand --testPathIgnorePatterns utils",
     "dev": "nodemon",
