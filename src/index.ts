@@ -13,6 +13,7 @@ const corsOptions: CorsOptions = {
     "https://ladybird.rctech.club",
     "https://owl.rctech.club",
     "https://events.rctech.club",
+    "https://sls.rctech.club",
     "http://localhost:3000",
     "http://localhost:3001",
   ],
