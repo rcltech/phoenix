@@ -19,6 +19,10 @@
         {
           "name": "PRISMA_SECRET",
           "value": "${prisma_secret}"
+        },
+        {
+          "name": "SLS_SECRET",
+          "value": "${sls_secret}"
         }
      ],
     "memory": ${fargate_memory},

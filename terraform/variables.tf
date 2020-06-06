@@ -48,3 +48,4 @@ variable "NODEMAILER_PASSWORD" {}
 variable "PRISMA_HOST" {}
 variable "PRISMA_SECRET" {}
 variable "PRISMA_CONFIG" {}
+variable "SLS_SECRET" {}

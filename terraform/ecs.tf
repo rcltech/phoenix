@@ -15,6 +15,7 @@ data "template_file" "phoenix" {
     prisma_host         = "http://${aws_alb.main.dns_name}:60000"
     prisma_secret       = var.PRISMA_SECRET
     nodemailer_password = var.NODEMAILER_PASSWORD
+    sls_secret          = var.SLS_SECRET
   }
 }
 
