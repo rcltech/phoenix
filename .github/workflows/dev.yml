@@ -4,7 +4,7 @@ on:
   push:
     branches-ignore:
       - master
-  pull-request:
+  pull_request:
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
