@@ -1,0 +1,51 @@
+name: Run tests for Phoenix
+
+on:
+  push:
+    branches-ignore:
+      - master
+  pull-request:
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+  NODEMAILER_PASSWORD: ${{ secrets.NODEMAILER_PASSWORD }}
+  SLS_SECRET: ${{ secrets.SLS_SECRET }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: prisma
+
+    env:
+      PRISMA_MANAGEMENT_API_SECRET: secret123
+      PRISMA_HOST: http://localhost:4466/prisma
+      PRISMA_SECRET: secret123
+      DB_HOST: postgres
+      DB_USER: prisma
+      DB_PASSWORD: prisma
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Use NodeJS stable
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install
+        run: |
+          docker-compose -f docker-compose.yml up -d
+          npm install
+          npm install -g prisma
+          npm install
+
+      - name: Test
+        run: |
+          prisma generate
+          prisma deploy
+          npm run test
