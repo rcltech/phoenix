@@ -13,8 +13,6 @@ env:
   DB_HOST: ${{ secrets.DB_HOST }}
   DB_USER: ${{ secrets.DB_USER }}
   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
   NODEMAILER_PASSWORD: ${{ secrets.NODEMAILER_PASSWORD }}
   SLS_SECRET: ${{ secrets.SLS_SECRET }}
@@ -47,7 +45,15 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Push to Docker Hub
+      - name: Push prod to Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: rctechclub/phoenix:prod
+
+      - name: Push latest to Docker Hub
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -55,32 +61,17 @@ jobs:
           push: true
           tags: rctechclub/phoenix:latest
 
-  terraform:
+  aws:
     needs: dockerimage
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: terraform
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          # terraform_version: 0.13.0:
-          cli_config_credentials_token: ${{ secrets.TERRAFORM_API_TOKEN }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
 
-      - name: Terraform Format
-        id: fmt
-        run: terraform fmt -check
-
-      - name: Terraform Init
-        id: init
-        run: terraform init
-
-      - name: Terraform Plan
-        id: plan
-        if: github.event_name == 'pull_request'
-        run: terraform plan -no-color
-        continue-on-error: true
+      - name: Update phoenix ECS service
+        run: |
+          aws ecs update-service --cluster phoenix --service phoenix --force-new-deployment --region us-east-2
