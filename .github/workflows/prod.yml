@@ -1,10 +1,9 @@
 name: Deploy Phoenix
 
-on: [push]
-# on:
-# push:
-#   branches:
-#     - master
+on:
+ push:
+   branches:
+     - master
 
 env:
   PRISMA_HOST: ${{ secrets.PRISMA_HOST }}
