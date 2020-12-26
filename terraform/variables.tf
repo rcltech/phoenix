@@ -45,6 +45,6 @@ variable "ecs_task_execution_role_name" {
 
 variable "GOOGLE_CLIENT_ID" {}
 variable "NODEMAILER_PASSWORD" {}
-variable "PRISMA_HOST" {}
 variable "PRISMA_SECRET" {}
 variable "PRISMA_CONFIG" {}
+variable "SLS_SECRET" {}

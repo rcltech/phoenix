@@ -80,7 +80,7 @@
     }
   },
   "lint-staged": {
-    "*.{js,ts,css,json,md}": [
+    "*.{js,ts,css,json}": [
       "prettier --write",
       "npm run lint"
     ]
