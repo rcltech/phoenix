@@ -35,9 +35,9 @@ jobs:
       - name: Install
         run: |
           docker-compose -f prisma/docker-compose.yml up -d
-          npm install -g prisma
+          npm install -g prisma1
           npm install
-          cd prisma && prisma generate && prisma deploy
+          cd prisma && prisma1 generate && prisma1 deploy
 
       - name: Test
         run: npm run test
