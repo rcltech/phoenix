@@ -17,4 +17,3 @@ prisma/.env.prod
 dist/
 
 src/generated
-src/prisma.graphql

@@ -4,7 +4,7 @@ env.config();
 import server from "./server";
 import express from "express";
 import cors, { CorsOptions } from "cors";
-import { auth, adminAuth } from "./auth";
+// import { auth, adminAuth } from "./auth";
 import * as bodyParser from "body-parser";
 import { context } from "./context";
 
@@ -42,8 +42,8 @@ app.get("/", (req, res) => {
 
 app.use(bodyParser.json({ type: "application/json" }));
 
-app.use("/oauth/user", auth);
-app.use("/oauth/admin", adminAuth);
+// app.use("/oauth/user", auth);
+// app.use("/oauth/admin", adminAuth);
 
 app.listen({ port: PORT }, () => {
   console.log(`Server started at port ${PORT}`);

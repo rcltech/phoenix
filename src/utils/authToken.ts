@@ -1,6 +1,6 @@
 import * as env from "dotenv";
 import * as jwt from "jsonwebtoken";
-import { UserSession } from "../generated/prisma-client";
+import { UserSession } from "@prisma/client";
 
 env.config();
 

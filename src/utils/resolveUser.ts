@@ -1,8 +1,8 @@
 import * as jwt from "jsonwebtoken";
-import { Prisma, User, UserSession } from "../generated/prisma-client";
+import { PrismaClient, User, UserSession } from "@prisma/client";
 
 export const resolveUserUsingJWT = async (
-  prisma: Prisma,
+  prisma: PrismaClient,
   token: string
 ): Promise<User> => {
   try {
@@ -11,7 +11,10 @@ export const resolveUserUsingJWT = async (
       process.env.PRISMA_SECRET
     ) as UserSession;
     const sessionId = userSession.id;
-    return prisma.userSession({ id: sessionId }).user();
+    const foundUserSession = await prisma.userSession.findUnique({
+      where: { id: sessionId },
+    });
+    return prisma.user.findUnique({ where: { id: foundUserSession.userId } });
   } catch (e) {
     return null;
   }
