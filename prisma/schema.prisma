@@ -9,11 +9,11 @@ generator client {
 
 model User {
   id         String  @id @default(uuid())
-  username   String
+  username   String  @unique
   password   String?
-  email      String
+  email      String  @unique
   image_url  String
-  phone      String
+  phone      String  @unique
   first_name String
   last_name  String
   room_no    String
@@ -25,8 +25,6 @@ model User {
   userComments     Comment[]     @relation("UserComments")
 
   role Role @default(USER)
-
-  @@unique([username, email, phone, room_no])
 }
 
 enum Role {
@@ -49,11 +47,9 @@ model Washer {
 
 model Room {
   id       String    @id @default(uuid())
-  number   String
+  number   String    @unique
   name     String
   bookings Booking[] @relation("RoomBookings")
-
-  @@unique([number])
 }
 
 model Booking {
