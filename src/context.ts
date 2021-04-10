@@ -1,8 +1,7 @@
 import { PrismaClient, User } from "@prisma/client";
 import Cookies from "universal-cookie";
 import { resolveUserUsingJWT } from "./utils/resolveUser";
-
-const prisma = new PrismaClient();
+import { prisma } from "./utils/prisma";
 
 export type AppContext = {
   prisma: PrismaClient;

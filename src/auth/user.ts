@@ -2,16 +2,14 @@ import * as env from "dotenv";
 env.config();
 
 import express from "express";
-import { PrismaClient } from "@prisma/client";
 import { OAuth2Client } from "google-auth-library";
 import { generateToken } from "../utils/authToken";
+import { prisma } from "../utils/prisma";
 import { TokenPayload } from "google-auth-library/build/src/auth/loginticket";
 
 const client: OAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const router = express.Router();
-
-const prisma = new PrismaClient();
 
 async function getPayloadFromGoogle(
   token: string

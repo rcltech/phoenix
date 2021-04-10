@@ -2,13 +2,12 @@ import * as env from "dotenv";
 env.config();
 
 import express from "express";
-import { PrismaClient, Role } from "@prisma/client";
+import { Role } from "@prisma/client";
 import * as bcrypt from "bcrypt";
-import * as jwt from "jsonwebtoken";
+import { prisma } from "../utils/prisma";
 import { generateToken } from "../utils/authToken";
-const router = express.Router();
 
-const prisma = new PrismaClient();
+const router = express.Router();
 
 const saltRounds = 10;
 
