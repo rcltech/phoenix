@@ -4,9 +4,11 @@ node_modules/
 .DS_Store
 
 .env
+.env.legacy
 .env.prod
 prisma/.env
-env.db
+prisma/.env.legacy
+prisma/.env.prod
 *.tfvars
 .terraform/
 *.tfstate
