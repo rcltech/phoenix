@@ -3,12 +3,13 @@ env.config();
 
 import gql from "graphql-tag";
 import jwt from "jsonwebtoken";
-import { PrismaClient, Washer } from "@prisma/client";
+import { Washer } from "@prisma/client";
 import { GraphQLResponse } from "apollo-server-types";
 import { createTestClient } from "apollo-server-testing";
 import { createTestServerWithToken } from "./utils/server";
+import { setupPrismaForTesting } from "./utils/setupPrismaForTesting";
 
-const prisma = new PrismaClient();
+const prisma = setupPrismaForTesting();
 
 const createTestWasher = (washer: {
   id: string;
@@ -29,6 +30,11 @@ beforeAll(async () => {
 });
 
 afterEach(async () => await deleteTestWashers());
+
+afterAll(async done => {
+  await prisma.$disconnect();
+  done();
+});
 
 describe("the graphql washers api", () => {
   test("returns the status of the washing machines", async () => {

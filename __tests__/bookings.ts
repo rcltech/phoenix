@@ -6,21 +6,10 @@ import moment from "moment";
 import { createTestServerWithUserLoggedIn } from "./utils/server";
 import { User } from "@prisma/client";
 import { createTestClient } from "apollo-server-testing";
-import {
-  createUser,
-  deleteUser,
-  deleteUsers,
-  TestUserInfo,
-} from "./utils/users";
-import {
-  createRoom,
-  deleteRoom,
-  deleteRooms,
-  TestRoomInfo,
-} from "./utils/rooms";
+import { createUser, deleteUsers, TestUserInfo } from "./utils/users";
+import { createRoom, deleteRooms, TestRoomInfo } from "./utils/rooms";
 import {
   createBooking,
-  deleteBooking,
   deleteBookings,
   TestBookingInfo,
 } from "./utils/bookings";

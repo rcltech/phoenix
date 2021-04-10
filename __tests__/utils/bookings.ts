@@ -1,7 +1,8 @@
 import * as env from "dotenv";
-import { PrismaClient, Booking } from "@prisma/client";
+import { Booking } from "@prisma/client";
+import { setupPrismaForTesting } from "./setupPrismaForTesting";
 
-const prisma = new PrismaClient();
+const prisma = setupPrismaForTesting();
 
 env.config();
 

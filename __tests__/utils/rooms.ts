@@ -1,9 +1,10 @@
 import * as env from "dotenv";
-import { PrismaClient, Room } from "@prisma/client";
+import { Room } from "@prisma/client";
+import { setupPrismaForTesting } from "./setupPrismaForTesting";
 
 env.config();
 
-const prisma = new PrismaClient();
+const prisma = setupPrismaForTesting();
 
 export type TestRoomInfo = {
   number: string;

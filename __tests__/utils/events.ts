@@ -1,9 +1,10 @@
 import * as env from "dotenv";
-import { PrismaClient, Event, Comment } from "@prisma/client";
+import { Event, Comment } from "@prisma/client";
+import { setupPrismaForTesting } from "./setupPrismaForTesting";
 
 env.config();
 
-const prisma = new PrismaClient();
+const prisma = setupPrismaForTesting();
 
 export type TestEventInfo = {
   title: string;

@@ -1,6 +1,7 @@
-import { PrismaClient, Comment } from "@prisma/client";
+import { Comment } from "@prisma/client";
+import { setupPrismaForTesting } from "./setupPrismaForTesting";
 
-const prisma = new PrismaClient();
+const prisma = setupPrismaForTesting();
 
 export const deleteComment = (comment_id: string): Promise<Comment> =>
   prisma.comment.delete({ where: { id: comment_id } });

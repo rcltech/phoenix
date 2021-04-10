@@ -1,9 +1,10 @@
 import * as env from "dotenv";
-import { PrismaClient, User, UserSession, Role } from "@prisma/client";
+import { User, UserSession, Role } from "@prisma/client";
+import { setupPrismaForTesting } from "./setupPrismaForTesting";
 
 env.config();
 
-const prisma = new PrismaClient();
+const prisma = setupPrismaForTesting();
 
 export type TestUserInfo = {
   username: string;
