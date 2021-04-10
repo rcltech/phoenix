@@ -22,6 +22,7 @@ const server = (
     ),
     context,
     playground: true,
+    introspection: true,
     debug: process.env.NODE_ENV !== "production",
   });
 
