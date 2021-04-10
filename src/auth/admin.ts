@@ -2,10 +2,13 @@ import * as env from "dotenv";
 env.config();
 
 import express from "express";
-import { prisma } from "../generated/prisma-client";
+import { PrismaClient, Role } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
+import { generateToken } from "../utils/authToken";
 const router = express.Router();
+
+const prisma = new PrismaClient();
 
 const saltRounds = 10;
 
@@ -16,18 +19,20 @@ router.post("/login", async (req, res) => {
   }
   const username: string = req.body.username;
   const password: string = req.body.password;
-  const adminUser = await prisma.user({ username: username });
+  const adminUser = await prisma.user.findUnique({ where: { username } });
   if (adminUser.role === "ADMIN") {
     const hashedPassword = adminUser.password;
     if (await bcrypt.compare(password, hashedPassword)) {
-      const adminSession = await prisma.createUserSession({
-        user: {
-          connect: {
-            id: adminUser.id,
+      const adminSession = await prisma.userSession.create({
+        data: {
+          user: {
+            connect: {
+              id: adminUser.id,
+            },
           },
         },
       });
-      const token = jwt.sign(adminSession, process.env.PRISMA_SECRET);
+      const token = generateToken(adminSession);
       res.status(200).send(token);
       return;
     } else {
@@ -52,16 +57,18 @@ router.post("/register", async (req, res) => {
   const phone = req.body.phone;
 
   bcrypt.hash(password, saltRounds).then(async hash => {
-    await prisma.createUser({
-      username: username,
-      password: hash,
-      email: username,
-      first_name: first_name,
-      last_name: last_name,
-      room_no: room_no,
-      image_url: image_url,
-      phone: phone,
-      role: "ADMIN",
+    await prisma.user.create({
+      data: {
+        username: username,
+        password: hash,
+        email: username,
+        first_name: first_name,
+        last_name: last_name,
+        room_no: room_no,
+        image_url: image_url,
+        phone: phone,
+        role: Role.ADMIN,
+      },
     });
     res.status(200).send(`User: ${username} is registered`);
   });

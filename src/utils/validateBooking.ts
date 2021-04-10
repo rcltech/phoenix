@@ -1,5 +1,7 @@
 import moment from "moment";
-import { Booking, Prisma } from "../generated/prisma-client";
+import { Booking } from "@prisma/client";
+
+import { AppContext } from "../context";
 
 type BookingData = {
   start: Date;
@@ -21,21 +23,24 @@ const getTimeSlots = (start: Date, end: Date): Date[] => {
 export const validateBooking = async (
   roomNumber: string,
   booking: BookingData,
-  { prisma }: { prisma: Prisma }
+  { prisma }: AppContext
 ): Promise<boolean> => {
-  const existingBookings: Booking[] = await prisma
-    .room({ number: roomNumber })
-    .bookings({
-      where: {
-        start_gte: moment(booking.start)
+  const existingBookings: Booking[] = await prisma.booking.findMany({
+    where: {
+      room: { number: { equals: roomNumber } },
+      start: {
+        gte: moment(booking.start)
           .startOf("date")
           .toDate(),
-        end_lte: moment(booking.end)
+      },
+      end: {
+        lte: moment(booking.end)
           .endOf("date")
           .toDate(),
       },
-      orderBy: "start_ASC",
-    });
+    },
+    orderBy: { start: "asc" },
+  });
 
   const bookedTimeSlots: Date[] = [];
   for (const existingBooking of existingBookings) {

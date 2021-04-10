@@ -1,11 +1,15 @@
 import { Event, User } from "@prisma/client";
 import { AppContext } from "../../context";
 
-const addEventSubscriber = async (parent, { id }, ctx): Promise<Event> => {
+const addEventSubscriber = async (
+  parent,
+  { id },
+  ctx: AppContext
+): Promise<Event> => {
   const currentUser: User = ctx.auth.user;
   const { id: user_id } = currentUser;
 
-  return ctx.prisma.updateEvent({
+  return ctx.prisma.event.update({
     data: {
       subscribers: {
         connect: { id: user_id },

@@ -2,7 +2,7 @@ import * as env from "dotenv";
 env.config();
 
 import express from "express";
-import { prisma } from "../generated/prisma-client";
+import { PrismaClient } from "@prisma/client";
 import { OAuth2Client } from "google-auth-library";
 import { generateToken } from "../utils/authToken";
 import { TokenPayload } from "google-auth-library/build/src/auth/loginticket";
@@ -10,6 +10,8 @@ import { TokenPayload } from "google-auth-library/build/src/auth/loginticket";
 const client: OAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const router = express.Router();
+
+const prisma = new PrismaClient();
 
 async function getPayloadFromGoogle(
   token: string
@@ -42,17 +44,21 @@ router.post("/login", async (req, res) => {
   }
 
   // Get the user from the email address.
-  const user = await prisma.user({ email: payload.email });
+  const user = await prisma.user.findUnique({
+    where: { email: payload.email },
+  });
   if (user === null) {
     res.status(200).send({ registered: false, logged_in: false, token: null });
     return;
   }
 
   // Create a user session for the user
-  const userSession = await prisma.createUserSession({
-    user: {
-      connect: {
-        id: user.id,
+  const userSession = await prisma.userSession.create({
+    data: {
+      user: {
+        connect: {
+          id: user.id,
+        },
       },
     },
   });

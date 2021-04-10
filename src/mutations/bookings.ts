@@ -1,4 +1,5 @@
-import { Booking, Room, User } from "../generated/prisma-client";
+import { Booking, Room, User } from "@prisma/client";
+
 import { sendEmail } from "../utils/email/sendEmail";
 import { validateBooking } from "../utils/validateBooking";
 import { AppContext } from "../context";
@@ -12,8 +13,8 @@ const createBooking = async (
   const start: Date = new Date(data.start);
   const end: Date = new Date(data.end);
   const remark: string = data.remark;
-  const room: Room = await ctx.prisma.room({
-    number: data.room_number,
+  const room: Room = await ctx.prisma.room.findUnique({
+    where: { number: data.room_number },
   });
 
   const validity: boolean = await validateBooking(
@@ -23,18 +24,20 @@ const createBooking = async (
   );
   if (!validity) return null;
 
-  const booking: Booking = await ctx.prisma.createBooking({
-    user: {
-      connect: {
-        username: user.username,
+  const booking: Booking = await ctx.prisma.booking.create({
+    data: {
+      user: {
+        connect: {
+          username: user.username,
+        },
       },
-    },
-    start,
-    end,
-    remark,
-    room: {
-      connect: {
-        number: room.number,
+      start,
+      end,
+      remark,
+      room: {
+        connect: {
+          number: room.number,
+        },
       },
     },
   });
@@ -50,19 +53,19 @@ const updateBooking = async (
   const start: Date = new Date(data.start);
   const end: Date = new Date(data.end);
   const remark: string = data.remark;
-  const room: Room = await ctx.prisma.room({
-    number: data.room_number,
+  const room: Room = await ctx.prisma.room.findUnique({
+    where: { number: data.room_number },
   });
   const id = data.id;
 
-  return ctx.prisma.updateBooking({
+  return ctx.prisma.booking.update({
     data: {
       start,
       end,
       remark,
       room: {
-        update: {
-          number: room.number,
+        connect: {
+          number: data.room_number,
         },
       },
     },
@@ -77,7 +80,7 @@ const deleteBooking = async (
   { id },
   ctx: AppContext
 ): Promise<Booking> => {
-  return ctx.prisma.deleteBooking({ id });
+  return ctx.prisma.booking.delete({ where: { id } });
 };
 
 export { createBooking, updateBooking, deleteBooking };

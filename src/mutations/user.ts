@@ -1,6 +1,6 @@
 import * as env from "dotenv";
 import { OAuth2Client } from "google-auth-library";
-import { User, UserSession } from "../generated/prisma-client";
+import { User, UserSession, Role } from "@prisma/client";
 import { TokenPayload } from "google-auth-library/build/src/auth/loginticket";
 import { generateToken } from "../utils/authToken";
 import { AppContext } from "../context";
@@ -27,15 +27,19 @@ const login = async (parent, args, ctx: AppContext): Promise<LoginResponse> => {
     // Check if the user email is an HKU email address
     if (payload && payload.hd !== "connect.hku.hk")
       return { token: null, login_status: false, register: false };
-    const user: User = await ctx.prisma.user({ email: payload.email });
+    const user: User = await ctx.prisma.user.findUnique({
+      where: { email: payload.email },
+    });
     // If the user does not exist, return that the user needs to be registered
     if (user === null)
       return { token: null, login_status: false, register: true };
     // If the user is valid, then register a user session and return a to
-    const userSession: UserSession = await ctx.prisma.createUserSession({
-      user: {
-        connect: {
-          id: user.id,
+    const userSession: UserSession = await ctx.prisma.userSession.create({
+      data: {
+        user: {
+          connect: {
+            id: user.id,
+          },
         },
       },
     });
@@ -47,7 +51,11 @@ const login = async (parent, args, ctx: AppContext): Promise<LoginResponse> => {
   }
 };
 
-const register = async (parent, { user }, ctx): Promise<User> | null => {
+const register = async (
+  parent,
+  { user },
+  ctx: AppContext
+): Promise<User> | null => {
   try {
     await client.verifyIdToken({
       idToken: ctx.token,
@@ -63,15 +71,17 @@ const register = async (parent, { user }, ctx): Promise<User> | null => {
   });
   const payload: TokenPayload = ticket.getPayload();
   if (payload && payload.hd !== "connect.hku.hk") return null;
-  return ctx.prisma.createUser({
-    username: user.username,
-    email: payload.email,
-    image_url: payload.picture,
-    phone: user.phone,
-    first_name: payload.given_name,
-    last_name: payload.family_name,
-    room_no: user.room_no,
-    role: "USER",
+  return ctx.prisma.user.create({
+    data: {
+      username: user.username,
+      email: payload.email,
+      image_url: payload.picture,
+      phone: user.phone,
+      first_name: payload.given_name,
+      last_name: payload.family_name,
+      room_no: user.room_no,
+      role: Role.USER,
+    },
   });
 };
 

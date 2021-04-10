@@ -1,10 +1,12 @@
 import env from "dotenv";
 env.config();
 
-import { Event, User } from "../../generated/prisma-client";
+import { Event, User } from "@prisma/client";
+
+import { AppContext } from "../../context";
+
 import { uploadToS3, deleteFromS3 } from "../../utils/S3";
 import { S3UploadResponse, S3DeleteResponse } from "../../utils/S3/types";
-import assert from "assert";
 import { isImageValid } from "../../utils/validateImage";
 
 const bucket_suffix =
@@ -14,22 +16,24 @@ const bucket_name = `rctechclub-raven/${bucket_suffix}`;
 const createEvent = async (
   parent,
   { title, start, end, venue, image_base64, description },
-  ctx
+  ctx: AppContext
 ): Promise<Event> | null => {
   const user: User = ctx.auth.user;
   start = new Date(start);
   end = new Date(end);
 
-  const event: Event = await ctx.prisma.createEvent({
-    title,
-    start,
-    end,
-    venue,
-    description,
-    image_url: "",
-    organiser: {
-      connect: {
-        id: user.id,
+  const event: Event = await ctx.prisma.event.create({
+    data: {
+      title,
+      start,
+      end,
+      venue,
+      description,
+      image_url: "",
+      organiser: {
+        connect: {
+          id: user.id,
+        },
       },
     },
   });
@@ -40,7 +44,7 @@ const createEvent = async (
   const sizeLimit = 10 * 1000000;
   const imageValidity = isImageValid(image_base64, sizeLimit);
   if (!imageValidity) {
-    await ctx.prisma.deleteEvent({ id });
+    await ctx.prisma.event.delete({ where: { id } });
     return null;
   }
 
@@ -62,17 +66,21 @@ const createEvent = async (
   //if there's an error in uploading image to S3
   //then delete pre-created event and return null
   if (!isSuccessful) {
-    await ctx.prisma.deleteEvent({ id });
+    await ctx.prisma.event.delete({ where: { id } });
     return null;
   }
 
-  return ctx.prisma.updateEvent({
+  return ctx.prisma.event.update({
     data: { image_url },
     where: { id },
   });
 };
 
-const deleteEvent = async (parent, { id }, ctx): Promise<Event> | null => {
+const deleteEvent = async (
+  parent,
+  { id },
+  ctx: AppContext
+): Promise<Event> | null => {
   const s3DeleteResponse: S3DeleteResponse = await deleteFromS3({
     file_name: id,
     bucket_name,
@@ -82,7 +90,7 @@ const deleteEvent = async (parent, { id }, ctx): Promise<Event> | null => {
   //return null if unable to delete image from S3
   if (!isSuccessful) return null;
 
-  return ctx.prisma.deleteEvent({ id });
+  return ctx.prisma.event.delete({ where: { id } });
 };
 
 export { createEvent, deleteEvent };
