@@ -8,7 +8,7 @@ export const resolveUserUsingJWT = async (
   try {
     const userSession: UserSession = jwt.verify(
       token,
-      process.env.PRISMA_SECRET
+      process.env.PHOENIX_SECRET
     ) as UserSession;
     const sessionId = userSession.id;
     const foundUserSession = await prisma.userSession.findUnique({
