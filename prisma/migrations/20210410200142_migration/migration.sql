@@ -89,7 +89,13 @@ CREATE TABLE "_EventSubscribers" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User.username_email_phone_room_no_unique" ON "User"("username", "email", "phone", "room_no");
+CREATE UNIQUE INDEX "User.username_unique" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User.email_unique" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User.phone_unique" ON "User"("phone");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Room.number_unique" ON "Room"("number");

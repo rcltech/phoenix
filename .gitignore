@@ -6,9 +6,9 @@ node_modules/
 .env
 .env.legacy
 .env.prod
-prisma/.env
+.env.prod.legacy
 prisma/.env.legacy
-prisma/.env.prod
+prisma/.env.prod.legacy
 *.tfvars
 .terraform/
 *.tfstate
