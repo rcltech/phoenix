@@ -4,19 +4,29 @@ env.config();
 import gql from "graphql-tag";
 import moment from "moment";
 import { createTestServerWithUserLoggedIn } from "./utils/server";
-import { Room, User } from "../src/generated/prisma-client";
+import { User } from "@prisma/client";
 import { createTestClient } from "apollo-server-testing";
-import { createUser, deleteUser, deleteUsers } from "./utils/users";
-import { createRoom, deleteRoom } from "./utils/rooms";
+import {
+  createUser,
+  deleteUser,
+  deleteUsers,
+  TestUserInfo,
+} from "./utils/users";
+import {
+  createRoom,
+  deleteRoom,
+  deleteRooms,
+  TestRoomInfo,
+} from "./utils/rooms";
 import {
   createBooking,
   deleteBooking,
+  deleteBookings,
   TestBookingInfo,
 } from "./utils/bookings";
 import { GraphQLResponse } from "apollo-server-types";
 
-const testUserInfo: User = {
-  id: undefined,
+const testUserInfo: TestUserInfo = {
   username: "test123",
   email: "test@connect.hku.hk",
   image_url: "http://url",
@@ -27,8 +37,7 @@ const testUserInfo: User = {
   role: "USER",
 };
 
-const testUserInfo1: User = {
-  id: undefined,
+const testUserInfo1: TestUserInfo = {
   username: "test234",
   email: "test234@connect.hku.hk",
   image_url: "http://url234",
@@ -39,8 +48,7 @@ const testUserInfo1: User = {
   role: "USER",
 };
 
-const testRoomInfo: Room = {
-  id: "",
+const testRoomInfo: TestRoomInfo = {
   number: "123",
   name: "test",
 };
@@ -71,6 +79,18 @@ const testInvalidBookingVariables = {
     .toISOString(),
   remark: "Hi",
 };
+
+beforeAll(async () => {
+  await deleteBookings();
+  await deleteRooms();
+  await deleteUsers();
+});
+
+afterEach(async () => {
+  await deleteBookings();
+  await deleteRooms();
+  await deleteUsers();
+});
 
 describe("Booking queries", () => {
   test("can query all bookings", async () => {
@@ -110,17 +130,12 @@ describe("Booking queries", () => {
           room: {
             number: testRoomInfo.number,
           },
-          start: testBookingInfo.start.toISOString(),
-          end: testBookingInfo.end.toISOString(),
+          start: testBookingInfo.start,
+          end: testBookingInfo.end,
           remark: testBookingInfo.remark,
         },
       ],
     });
-
-    // Cleanup after test
-    await deleteBooking(booking);
-    await deleteRoom(room);
-    await deleteUser(user);
   });
 });
 
@@ -160,10 +175,6 @@ describe("Booking validation", () => {
     });
 
     expect(response.data).toEqual({ createBooking: null });
-
-    await deleteBooking(booking);
-    await deleteRoom(room);
-    await deleteUser(user);
   });
 });
 
@@ -198,8 +209,8 @@ describe("Booking mutations", () => {
     const testUpdatedBookingInfo = {
       id: booking.id,
       room: testBookingInfo.room,
-      start: booking.start,
-      end: booking.end,
+      start: booking.start.toISOString(),
+      end: booking.end.toISOString(),
       remark: "HelloWorld",
     };
     const result: GraphQLResponse = await client.mutate({
@@ -212,10 +223,6 @@ describe("Booking mutations", () => {
         remark: testUpdatedBookingInfo.remark,
       },
     });
-
-    await deleteBooking(booking);
-    await deleteRoom(room);
-    await deleteUser(user);
   });
 
   test("do not allow to change other user's bookings", async () => {
@@ -249,8 +256,8 @@ describe("Booking mutations", () => {
     const testUpdatedBookingInfo = {
       id: booking.id,
       room: "123",
-      start: booking.start,
-      end: booking.end,
+      start: booking.start.toISOString(),
+      end: booking.end.toString(),
       remark: "HelloWorld",
     };
 
@@ -259,9 +266,6 @@ describe("Booking mutations", () => {
       variables: testUpdatedBookingInfo,
     });
     expect(result.errors[0].message).toEqual("Not Authorised!");
-    await deleteBooking(booking);
-    await deleteRoom(room);
-    await deleteUsers(user, user1);
   });
 
   test("allow users to delete their own bookings", async () => {
@@ -287,8 +291,6 @@ describe("Booking mutations", () => {
         id: booking.id,
       },
     });
-    await deleteRoom(room);
-    await deleteUser(user);
   });
 
   test("do not allow users to delete other user's own bookings", async () => {
@@ -311,8 +313,5 @@ describe("Booking mutations", () => {
       variables: { id: booking.id },
     });
     expect(result.errors[0].message).toEqual("Not Authorised!");
-    await deleteBooking(booking);
-    await deleteRoom(room);
-    await deleteUsers(user, user1);
   });
 });

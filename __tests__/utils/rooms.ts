@@ -1,24 +1,32 @@
 import * as env from "dotenv";
-import {
-  BatchPayloadPromise,
-  prisma,
-  Room,
-} from "../../src/generated/prisma-client";
+import { PrismaClient, Room } from "@prisma/client";
 
 env.config();
-export const createRoom = (room: Room): Promise<Room> => {
-  return prisma.createRoom({
-    name: room.name,
-    number: room.number,
+
+const prisma = new PrismaClient();
+
+export type TestRoomInfo = {
+  number: string;
+  name: string;
+};
+
+export const createRoom = (room: TestRoomInfo): Promise<Room> => {
+  return prisma.room.create({
+    data: {
+      name: room.name,
+      number: room.number,
+    },
   });
 };
 
-export const deleteRooms = (): BatchPayloadPromise => {
-  return prisma.deleteManyRooms({});
+export const deleteRooms = async (): Promise<void> => {
+  await prisma.room.deleteMany({});
 };
 
-export const deleteRoom = (room: Room) => {
-  return prisma.deleteRoom({
-    number: room.number,
+export const deleteRoom = (room: Room): Promise<Room> => {
+  return prisma.room.delete({
+    where: {
+      number: room.number,
+    },
   });
 };

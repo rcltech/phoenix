@@ -1,17 +1,17 @@
 import * as env from "dotenv";
 env.config();
 
-import { User } from "../src/generated/prisma-client";
+import { User } from "@prisma/client";
 import { createTestClient } from "apollo-server-testing";
 import {
   createTestServerWithUserLoggedIn,
   createTestServerWithToken,
 } from "./utils/server";
 import { GraphQLResponse } from "apollo-server-types";
-import { createUser, deleteUser } from "./utils/users";
+import { createUser, deleteUser, TestUserInfo } from "./utils/users";
 import gql from "graphql-tag";
 
-const testUserInfo = {
+const testUserInfo: TestUserInfo = {
   username: "test123",
   email: "test@connect.hku.hk",
   image_url: "http://url",

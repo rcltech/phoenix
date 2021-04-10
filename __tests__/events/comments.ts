@@ -4,9 +4,9 @@ env.config();
 import gql from "graphql-tag";
 import { GraphQLResponse } from "apollo-server-types";
 import { createTestServerWithUserLoggedIn } from "../utils/server";
-import { Event, User, Comment } from "../../src/generated/prisma-client";
+import { Event, User, Comment } from "@prisma/client";
 import { createTestClient } from "apollo-server-testing";
-import { createUser, deleteUsers } from "../utils/users";
+import { createUser, deleteUsers, TestUserInfo } from "../utils/users";
 import {
   createEvent,
   deleteEvents,
@@ -16,9 +16,9 @@ import {
   retrieveEventComments,
   RetrieveEventCommentsInfo,
 } from "../utils/events";
+import { deleteComments } from "../utils/comments";
 
-const testUserInfo: User = {
-  id: undefined,
+const testUserInfo: TestUserInfo = {
   username: "test123",
   email: "test@connect.hku.hk",
   image_url: "http://url",
@@ -29,8 +29,7 @@ const testUserInfo: User = {
   role: "USER",
 };
 
-const testUserInfo1: User = {
-  id: undefined,
+const testUserInfo1: TestUserInfo = {
   username: "test234",
   email: "test234@connect.hku.hk",
   image_url: "http://url234",
@@ -52,6 +51,12 @@ const testEventInfo: TestEventInfo = {
 };
 
 beforeAll(async () => await deleteUsers());
+
+afterEach(async () => {
+  await deleteEvents();
+  await deleteComments();
+  await deleteUsers();
+});
 
 describe("event comment creation", () => {
   test("should be able to create a new comment for an event", async () => {
@@ -88,8 +93,6 @@ describe("event comment creation", () => {
       user: { id: testUser.id },
       event: { id: testEvent.id },
     });
-    await deleteEvents();
-    await deleteUsers();
   });
 });
 
@@ -125,12 +128,11 @@ describe("event comment deletion", () => {
       variables: { id: testComment.id },
     });
 
+    expect(deleteComment.id).toEqual(testComment.id);
+
     const eventInfo: RetrieveEventCommentsInfo = { event_id: testEvent.id };
     const testEventComments: Comment[] = await retrieveEventComments(eventInfo);
     expect(testEventComments).toEqual([]);
-
-    await deleteEvents();
-    await deleteUsers();
   });
 });
 
@@ -168,8 +170,5 @@ describe("invalid event comment deletion", () => {
     });
 
     expect(response.errors[0].message).toEqual("Not Authorised!");
-
-    await deleteEvents();
-    await deleteUsers();
   });
 });

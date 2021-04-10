@@ -3,8 +3,9 @@ import * as env from "dotenv";
 import { createUserSession } from "./users";
 import { generateToken } from "../../src/utils/authToken";
 import server from "../../src/server";
-import { context, AppContext } from "../../src/context";
-import { User } from "../../src/generated/prisma-client";
+import { AppContext, context } from "../../src/context";
+import { User } from "@prisma/client";
+
 env.config();
 
 export const createTestServerWithToken = (token: string): ApolloServer => {
@@ -14,12 +15,10 @@ export const createTestServerWithToken = (token: string): ApolloServer => {
     },
   };
   const testServerContext = async ({ req }): Promise<AppContext> => {
-    const appContext: AppContext = await context({ req: testReq });
-    return appContext;
+    return await context({ req: testReq });
   };
 
-  const testServer = server(testServerContext);
-  return testServer;
+  return server(testServerContext);
 };
 
 export const createTestServerWithUserLoggedIn = async (
