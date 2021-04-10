@@ -1,5 +1,25 @@
 # Terraform code for Phoenix
 
+## Install `terraform` using `tfenv`
+
+```shell script
+brew install tfenv
+```
+
+Check if your `terraform` matches the version in `.terraform-version`.
+
+```shell script
+cat .terraform-version
+terraform version
+```
+
+If not, install and use the right version with `tfenv`.
+
+```shell script
+tfenv install [version]
+tfenv use [version]
+```
+
 ## Apply
 
 To run locally, make sure you have the right environment variables in `secrets.tfvars`.
