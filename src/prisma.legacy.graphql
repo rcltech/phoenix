@@ -1,0 +1,2228 @@
+type AggregateBooking {
+  count: Int!
+}
+
+type AggregateComment {
+  count: Int!
+}
+
+type AggregateEvent {
+  count: Int!
+}
+
+type AggregateRoom {
+  count: Int!
+}
+
+type AggregateUser {
+  count: Int!
+}
+
+type AggregateUserSession {
+  count: Int!
+}
+
+type AggregateWasher {
+  count: Int!
+}
+
+type BatchPayload {
+  count: Long!
+}
+
+type Booking {
+  id: ID!
+  user: User!
+  room: Room!
+  start: DateTime!
+  end: DateTime!
+  remark: String
+  createdAt: DateTime!
+}
+
+type BookingConnection {
+  pageInfo: PageInfo!
+  edges: [BookingEdge]!
+  aggregate: AggregateBooking!
+}
+
+input BookingCreateInput {
+  id: ID
+  user: UserCreateOneWithoutRoomBookingsInput!
+  room: RoomCreateOneWithoutBookingsInput!
+  start: DateTime!
+  end: DateTime!
+  remark: String
+}
+
+input BookingCreateManyWithoutRoomInput {
+  create: [BookingCreateWithoutRoomInput!]
+  connect: [BookingWhereUniqueInput!]
+}
+
+input BookingCreateManyWithoutUserInput {
+  create: [BookingCreateWithoutUserInput!]
+  connect: [BookingWhereUniqueInput!]
+}
+
+input BookingCreateWithoutRoomInput {
+  id: ID
+  user: UserCreateOneWithoutRoomBookingsInput!
+  start: DateTime!
+  end: DateTime!
+  remark: String
+}
+
+input BookingCreateWithoutUserInput {
+  id: ID
+  room: RoomCreateOneWithoutBookingsInput!
+  start: DateTime!
+  end: DateTime!
+  remark: String
+}
+
+type BookingEdge {
+  node: Booking!
+  cursor: String!
+}
+
+enum BookingOrderByInput {
+  id_ASC
+  id_DESC
+  start_ASC
+  start_DESC
+  end_ASC
+  end_DESC
+  remark_ASC
+  remark_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type BookingPreviousValues {
+  id: ID!
+  start: DateTime!
+  end: DateTime!
+  remark: String
+  createdAt: DateTime!
+}
+
+input BookingScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  start: DateTime
+  start_not: DateTime
+  start_in: [DateTime!]
+  start_not_in: [DateTime!]
+  start_lt: DateTime
+  start_lte: DateTime
+  start_gt: DateTime
+  start_gte: DateTime
+  end: DateTime
+  end_not: DateTime
+  end_in: [DateTime!]
+  end_not_in: [DateTime!]
+  end_lt: DateTime
+  end_lte: DateTime
+  end_gt: DateTime
+  end_gte: DateTime
+  remark: String
+  remark_not: String
+  remark_in: [String!]
+  remark_not_in: [String!]
+  remark_lt: String
+  remark_lte: String
+  remark_gt: String
+  remark_gte: String
+  remark_contains: String
+  remark_not_contains: String
+  remark_starts_with: String
+  remark_not_starts_with: String
+  remark_ends_with: String
+  remark_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  AND: [BookingScalarWhereInput!]
+  OR: [BookingScalarWhereInput!]
+  NOT: [BookingScalarWhereInput!]
+}
+
+type BookingSubscriptionPayload {
+  mutation: MutationType!
+  node: Booking
+  updatedFields: [String!]
+  previousValues: BookingPreviousValues
+}
+
+input BookingSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: BookingWhereInput
+  AND: [BookingSubscriptionWhereInput!]
+  OR: [BookingSubscriptionWhereInput!]
+  NOT: [BookingSubscriptionWhereInput!]
+}
+
+input BookingUpdateInput {
+  user: UserUpdateOneRequiredWithoutRoomBookingsInput
+  room: RoomUpdateOneRequiredWithoutBookingsInput
+  start: DateTime
+  end: DateTime
+  remark: String
+}
+
+input BookingUpdateManyDataInput {
+  start: DateTime
+  end: DateTime
+  remark: String
+}
+
+input BookingUpdateManyMutationInput {
+  start: DateTime
+  end: DateTime
+  remark: String
+}
+
+input BookingUpdateManyWithoutRoomInput {
+  create: [BookingCreateWithoutRoomInput!]
+  delete: [BookingWhereUniqueInput!]
+  connect: [BookingWhereUniqueInput!]
+  set: [BookingWhereUniqueInput!]
+  disconnect: [BookingWhereUniqueInput!]
+  update: [BookingUpdateWithWhereUniqueWithoutRoomInput!]
+  upsert: [BookingUpsertWithWhereUniqueWithoutRoomInput!]
+  deleteMany: [BookingScalarWhereInput!]
+  updateMany: [BookingUpdateManyWithWhereNestedInput!]
+}
+
+input BookingUpdateManyWithoutUserInput {
+  create: [BookingCreateWithoutUserInput!]
+  delete: [BookingWhereUniqueInput!]
+  connect: [BookingWhereUniqueInput!]
+  set: [BookingWhereUniqueInput!]
+  disconnect: [BookingWhereUniqueInput!]
+  update: [BookingUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [BookingUpsertWithWhereUniqueWithoutUserInput!]
+  deleteMany: [BookingScalarWhereInput!]
+  updateMany: [BookingUpdateManyWithWhereNestedInput!]
+}
+
+input BookingUpdateManyWithWhereNestedInput {
+  where: BookingScalarWhereInput!
+  data: BookingUpdateManyDataInput!
+}
+
+input BookingUpdateWithoutRoomDataInput {
+  user: UserUpdateOneRequiredWithoutRoomBookingsInput
+  start: DateTime
+  end: DateTime
+  remark: String
+}
+
+input BookingUpdateWithoutUserDataInput {
+  room: RoomUpdateOneRequiredWithoutBookingsInput
+  start: DateTime
+  end: DateTime
+  remark: String
+}
+
+input BookingUpdateWithWhereUniqueWithoutRoomInput {
+  where: BookingWhereUniqueInput!
+  data: BookingUpdateWithoutRoomDataInput!
+}
+
+input BookingUpdateWithWhereUniqueWithoutUserInput {
+  where: BookingWhereUniqueInput!
+  data: BookingUpdateWithoutUserDataInput!
+}
+
+input BookingUpsertWithWhereUniqueWithoutRoomInput {
+  where: BookingWhereUniqueInput!
+  update: BookingUpdateWithoutRoomDataInput!
+  create: BookingCreateWithoutRoomInput!
+}
+
+input BookingUpsertWithWhereUniqueWithoutUserInput {
+  where: BookingWhereUniqueInput!
+  update: BookingUpdateWithoutUserDataInput!
+  create: BookingCreateWithoutUserInput!
+}
+
+input BookingWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  user: UserWhereInput
+  room: RoomWhereInput
+  start: DateTime
+  start_not: DateTime
+  start_in: [DateTime!]
+  start_not_in: [DateTime!]
+  start_lt: DateTime
+  start_lte: DateTime
+  start_gt: DateTime
+  start_gte: DateTime
+  end: DateTime
+  end_not: DateTime
+  end_in: [DateTime!]
+  end_not_in: [DateTime!]
+  end_lt: DateTime
+  end_lte: DateTime
+  end_gt: DateTime
+  end_gte: DateTime
+  remark: String
+  remark_not: String
+  remark_in: [String!]
+  remark_not_in: [String!]
+  remark_lt: String
+  remark_lte: String
+  remark_gt: String
+  remark_gte: String
+  remark_contains: String
+  remark_not_contains: String
+  remark_starts_with: String
+  remark_not_starts_with: String
+  remark_ends_with: String
+  remark_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  AND: [BookingWhereInput!]
+  OR: [BookingWhereInput!]
+  NOT: [BookingWhereInput!]
+}
+
+input BookingWhereUniqueInput {
+  id: ID
+}
+
+type Comment {
+  id: ID!
+  content: String!
+  user: User!
+  event: Event
+  createdAt: DateTime!
+}
+
+type CommentConnection {
+  pageInfo: PageInfo!
+  edges: [CommentEdge]!
+  aggregate: AggregateComment!
+}
+
+input CommentCreateInput {
+  id: ID
+  content: String!
+  user: UserCreateOneWithoutUserCommentsInput!
+  event: EventCreateOneWithoutCommentsInput
+}
+
+input CommentCreateManyWithoutEventInput {
+  create: [CommentCreateWithoutEventInput!]
+  connect: [CommentWhereUniqueInput!]
+}
+
+input CommentCreateManyWithoutUserInput {
+  create: [CommentCreateWithoutUserInput!]
+  connect: [CommentWhereUniqueInput!]
+}
+
+input CommentCreateWithoutEventInput {
+  id: ID
+  content: String!
+  user: UserCreateOneWithoutUserCommentsInput!
+}
+
+input CommentCreateWithoutUserInput {
+  id: ID
+  content: String!
+  event: EventCreateOneWithoutCommentsInput
+}
+
+type CommentEdge {
+  node: Comment!
+  cursor: String!
+}
+
+enum CommentOrderByInput {
+  id_ASC
+  id_DESC
+  content_ASC
+  content_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type CommentPreviousValues {
+  id: ID!
+  content: String!
+  createdAt: DateTime!
+}
+
+input CommentScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  content: String
+  content_not: String
+  content_in: [String!]
+  content_not_in: [String!]
+  content_lt: String
+  content_lte: String
+  content_gt: String
+  content_gte: String
+  content_contains: String
+  content_not_contains: String
+  content_starts_with: String
+  content_not_starts_with: String
+  content_ends_with: String
+  content_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  AND: [CommentScalarWhereInput!]
+  OR: [CommentScalarWhereInput!]
+  NOT: [CommentScalarWhereInput!]
+}
+
+type CommentSubscriptionPayload {
+  mutation: MutationType!
+  node: Comment
+  updatedFields: [String!]
+  previousValues: CommentPreviousValues
+}
+
+input CommentSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: CommentWhereInput
+  AND: [CommentSubscriptionWhereInput!]
+  OR: [CommentSubscriptionWhereInput!]
+  NOT: [CommentSubscriptionWhereInput!]
+}
+
+input CommentUpdateInput {
+  content: String
+  user: UserUpdateOneRequiredWithoutUserCommentsInput
+  event: EventUpdateOneWithoutCommentsInput
+}
+
+input CommentUpdateManyDataInput {
+  content: String
+}
+
+input CommentUpdateManyMutationInput {
+  content: String
+}
+
+input CommentUpdateManyWithoutEventInput {
+  create: [CommentCreateWithoutEventInput!]
+  delete: [CommentWhereUniqueInput!]
+  connect: [CommentWhereUniqueInput!]
+  set: [CommentWhereUniqueInput!]
+  disconnect: [CommentWhereUniqueInput!]
+  update: [CommentUpdateWithWhereUniqueWithoutEventInput!]
+  upsert: [CommentUpsertWithWhereUniqueWithoutEventInput!]
+  deleteMany: [CommentScalarWhereInput!]
+  updateMany: [CommentUpdateManyWithWhereNestedInput!]
+}
+
+input CommentUpdateManyWithoutUserInput {
+  create: [CommentCreateWithoutUserInput!]
+  delete: [CommentWhereUniqueInput!]
+  connect: [CommentWhereUniqueInput!]
+  set: [CommentWhereUniqueInput!]
+  disconnect: [CommentWhereUniqueInput!]
+  update: [CommentUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [CommentUpsertWithWhereUniqueWithoutUserInput!]
+  deleteMany: [CommentScalarWhereInput!]
+  updateMany: [CommentUpdateManyWithWhereNestedInput!]
+}
+
+input CommentUpdateManyWithWhereNestedInput {
+  where: CommentScalarWhereInput!
+  data: CommentUpdateManyDataInput!
+}
+
+input CommentUpdateWithoutEventDataInput {
+  content: String
+  user: UserUpdateOneRequiredWithoutUserCommentsInput
+}
+
+input CommentUpdateWithoutUserDataInput {
+  content: String
+  event: EventUpdateOneWithoutCommentsInput
+}
+
+input CommentUpdateWithWhereUniqueWithoutEventInput {
+  where: CommentWhereUniqueInput!
+  data: CommentUpdateWithoutEventDataInput!
+}
+
+input CommentUpdateWithWhereUniqueWithoutUserInput {
+  where: CommentWhereUniqueInput!
+  data: CommentUpdateWithoutUserDataInput!
+}
+
+input CommentUpsertWithWhereUniqueWithoutEventInput {
+  where: CommentWhereUniqueInput!
+  update: CommentUpdateWithoutEventDataInput!
+  create: CommentCreateWithoutEventInput!
+}
+
+input CommentUpsertWithWhereUniqueWithoutUserInput {
+  where: CommentWhereUniqueInput!
+  update: CommentUpdateWithoutUserDataInput!
+  create: CommentCreateWithoutUserInput!
+}
+
+input CommentWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  content: String
+  content_not: String
+  content_in: [String!]
+  content_not_in: [String!]
+  content_lt: String
+  content_lte: String
+  content_gt: String
+  content_gte: String
+  content_contains: String
+  content_not_contains: String
+  content_starts_with: String
+  content_not_starts_with: String
+  content_ends_with: String
+  content_not_ends_with: String
+  user: UserWhereInput
+  event: EventWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  AND: [CommentWhereInput!]
+  OR: [CommentWhereInput!]
+  NOT: [CommentWhereInput!]
+}
+
+input CommentWhereUniqueInput {
+  id: ID
+}
+
+scalar DateTime
+
+type Event {
+  id: ID!
+  organiser: User!
+  title: String!
+  start: DateTime!
+  end: DateTime!
+  venue: String!
+  image_url: String!
+  description: String
+  subscribers(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
+}
+
+type EventConnection {
+  pageInfo: PageInfo!
+  edges: [EventEdge]!
+  aggregate: AggregateEvent!
+}
+
+input EventCreateInput {
+  id: ID
+  organiser: UserCreateOneWithoutEventsOrganisedInput!
+  title: String!
+  start: DateTime!
+  end: DateTime!
+  venue: String!
+  image_url: String!
+  description: String
+  subscribers: UserCreateManyWithoutEventsSubscribedInput
+  comments: CommentCreateManyWithoutEventInput
+}
+
+input EventCreateManyWithoutOrganiserInput {
+  create: [EventCreateWithoutOrganiserInput!]
+  connect: [EventWhereUniqueInput!]
+}
+
+input EventCreateManyWithoutSubscribersInput {
+  create: [EventCreateWithoutSubscribersInput!]
+  connect: [EventWhereUniqueInput!]
+}
+
+input EventCreateOneWithoutCommentsInput {
+  create: EventCreateWithoutCommentsInput
+  connect: EventWhereUniqueInput
+}
+
+input EventCreateWithoutCommentsInput {
+  id: ID
+  organiser: UserCreateOneWithoutEventsOrganisedInput!
+  title: String!
+  start: DateTime!
+  end: DateTime!
+  venue: String!
+  image_url: String!
+  description: String
+  subscribers: UserCreateManyWithoutEventsSubscribedInput
+}
+
+input EventCreateWithoutOrganiserInput {
+  id: ID
+  title: String!
+  start: DateTime!
+  end: DateTime!
+  venue: String!
+  image_url: String!
+  description: String
+  subscribers: UserCreateManyWithoutEventsSubscribedInput
+  comments: CommentCreateManyWithoutEventInput
+}
+
+input EventCreateWithoutSubscribersInput {
+  id: ID
+  organiser: UserCreateOneWithoutEventsOrganisedInput!
+  title: String!
+  start: DateTime!
+  end: DateTime!
+  venue: String!
+  image_url: String!
+  description: String
+  comments: CommentCreateManyWithoutEventInput
+}
+
+type EventEdge {
+  node: Event!
+  cursor: String!
+}
+
+enum EventOrderByInput {
+  id_ASC
+  id_DESC
+  title_ASC
+  title_DESC
+  start_ASC
+  start_DESC
+  end_ASC
+  end_DESC
+  venue_ASC
+  venue_DESC
+  image_url_ASC
+  image_url_DESC
+  description_ASC
+  description_DESC
+}
+
+type EventPreviousValues {
+  id: ID!
+  title: String!
+  start: DateTime!
+  end: DateTime!
+  venue: String!
+  image_url: String!
+  description: String
+}
+
+input EventScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  start: DateTime
+  start_not: DateTime
+  start_in: [DateTime!]
+  start_not_in: [DateTime!]
+  start_lt: DateTime
+  start_lte: DateTime
+  start_gt: DateTime
+  start_gte: DateTime
+  end: DateTime
+  end_not: DateTime
+  end_in: [DateTime!]
+  end_not_in: [DateTime!]
+  end_lt: DateTime
+  end_lte: DateTime
+  end_gt: DateTime
+  end_gte: DateTime
+  venue: String
+  venue_not: String
+  venue_in: [String!]
+  venue_not_in: [String!]
+  venue_lt: String
+  venue_lte: String
+  venue_gt: String
+  venue_gte: String
+  venue_contains: String
+  venue_not_contains: String
+  venue_starts_with: String
+  venue_not_starts_with: String
+  venue_ends_with: String
+  venue_not_ends_with: String
+  image_url: String
+  image_url_not: String
+  image_url_in: [String!]
+  image_url_not_in: [String!]
+  image_url_lt: String
+  image_url_lte: String
+  image_url_gt: String
+  image_url_gte: String
+  image_url_contains: String
+  image_url_not_contains: String
+  image_url_starts_with: String
+  image_url_not_starts_with: String
+  image_url_ends_with: String
+  image_url_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_gt: String
+  description_gte: String
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+  AND: [EventScalarWhereInput!]
+  OR: [EventScalarWhereInput!]
+  NOT: [EventScalarWhereInput!]
+}
+
+type EventSubscriptionPayload {
+  mutation: MutationType!
+  node: Event
+  updatedFields: [String!]
+  previousValues: EventPreviousValues
+}
+
+input EventSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: EventWhereInput
+  AND: [EventSubscriptionWhereInput!]
+  OR: [EventSubscriptionWhereInput!]
+  NOT: [EventSubscriptionWhereInput!]
+}
+
+input EventUpdateInput {
+  organiser: UserUpdateOneRequiredWithoutEventsOrganisedInput
+  title: String
+  start: DateTime
+  end: DateTime
+  venue: String
+  image_url: String
+  description: String
+  subscribers: UserUpdateManyWithoutEventsSubscribedInput
+  comments: CommentUpdateManyWithoutEventInput
+}
+
+input EventUpdateManyDataInput {
+  title: String
+  start: DateTime
+  end: DateTime
+  venue: String
+  image_url: String
+  description: String
+}
+
+input EventUpdateManyMutationInput {
+  title: String
+  start: DateTime
+  end: DateTime
+  venue: String
+  image_url: String
+  description: String
+}
+
+input EventUpdateManyWithoutOrganiserInput {
+  create: [EventCreateWithoutOrganiserInput!]
+  delete: [EventWhereUniqueInput!]
+  connect: [EventWhereUniqueInput!]
+  set: [EventWhereUniqueInput!]
+  disconnect: [EventWhereUniqueInput!]
+  update: [EventUpdateWithWhereUniqueWithoutOrganiserInput!]
+  upsert: [EventUpsertWithWhereUniqueWithoutOrganiserInput!]
+  deleteMany: [EventScalarWhereInput!]
+  updateMany: [EventUpdateManyWithWhereNestedInput!]
+}
+
+input EventUpdateManyWithoutSubscribersInput {
+  create: [EventCreateWithoutSubscribersInput!]
+  delete: [EventWhereUniqueInput!]
+  connect: [EventWhereUniqueInput!]
+  set: [EventWhereUniqueInput!]
+  disconnect: [EventWhereUniqueInput!]
+  update: [EventUpdateWithWhereUniqueWithoutSubscribersInput!]
+  upsert: [EventUpsertWithWhereUniqueWithoutSubscribersInput!]
+  deleteMany: [EventScalarWhereInput!]
+  updateMany: [EventUpdateManyWithWhereNestedInput!]
+}
+
+input EventUpdateManyWithWhereNestedInput {
+  where: EventScalarWhereInput!
+  data: EventUpdateManyDataInput!
+}
+
+input EventUpdateOneWithoutCommentsInput {
+  create: EventCreateWithoutCommentsInput
+  update: EventUpdateWithoutCommentsDataInput
+  upsert: EventUpsertWithoutCommentsInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: EventWhereUniqueInput
+}
+
+input EventUpdateWithoutCommentsDataInput {
+  organiser: UserUpdateOneRequiredWithoutEventsOrganisedInput
+  title: String
+  start: DateTime
+  end: DateTime
+  venue: String
+  image_url: String
+  description: String
+  subscribers: UserUpdateManyWithoutEventsSubscribedInput
+}
+
+input EventUpdateWithoutOrganiserDataInput {
+  title: String
+  start: DateTime
+  end: DateTime
+  venue: String
+  image_url: String
+  description: String
+  subscribers: UserUpdateManyWithoutEventsSubscribedInput
+  comments: CommentUpdateManyWithoutEventInput
+}
+
+input EventUpdateWithoutSubscribersDataInput {
+  organiser: UserUpdateOneRequiredWithoutEventsOrganisedInput
+  title: String
+  start: DateTime
+  end: DateTime
+  venue: String
+  image_url: String
+  description: String
+  comments: CommentUpdateManyWithoutEventInput
+}
+
+input EventUpdateWithWhereUniqueWithoutOrganiserInput {
+  where: EventWhereUniqueInput!
+  data: EventUpdateWithoutOrganiserDataInput!
+}
+
+input EventUpdateWithWhereUniqueWithoutSubscribersInput {
+  where: EventWhereUniqueInput!
+  data: EventUpdateWithoutSubscribersDataInput!
+}
+
+input EventUpsertWithoutCommentsInput {
+  update: EventUpdateWithoutCommentsDataInput!
+  create: EventCreateWithoutCommentsInput!
+}
+
+input EventUpsertWithWhereUniqueWithoutOrganiserInput {
+  where: EventWhereUniqueInput!
+  update: EventUpdateWithoutOrganiserDataInput!
+  create: EventCreateWithoutOrganiserInput!
+}
+
+input EventUpsertWithWhereUniqueWithoutSubscribersInput {
+  where: EventWhereUniqueInput!
+  update: EventUpdateWithoutSubscribersDataInput!
+  create: EventCreateWithoutSubscribersInput!
+}
+
+input EventWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  organiser: UserWhereInput
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  start: DateTime
+  start_not: DateTime
+  start_in: [DateTime!]
+  start_not_in: [DateTime!]
+  start_lt: DateTime
+  start_lte: DateTime
+  start_gt: DateTime
+  start_gte: DateTime
+  end: DateTime
+  end_not: DateTime
+  end_in: [DateTime!]
+  end_not_in: [DateTime!]
+  end_lt: DateTime
+  end_lte: DateTime
+  end_gt: DateTime
+  end_gte: DateTime
+  venue: String
+  venue_not: String
+  venue_in: [String!]
+  venue_not_in: [String!]
+  venue_lt: String
+  venue_lte: String
+  venue_gt: String
+  venue_gte: String
+  venue_contains: String
+  venue_not_contains: String
+  venue_starts_with: String
+  venue_not_starts_with: String
+  venue_ends_with: String
+  venue_not_ends_with: String
+  image_url: String
+  image_url_not: String
+  image_url_in: [String!]
+  image_url_not_in: [String!]
+  image_url_lt: String
+  image_url_lte: String
+  image_url_gt: String
+  image_url_gte: String
+  image_url_contains: String
+  image_url_not_contains: String
+  image_url_starts_with: String
+  image_url_not_starts_with: String
+  image_url_ends_with: String
+  image_url_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_gt: String
+  description_gte: String
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+  subscribers_every: UserWhereInput
+  subscribers_some: UserWhereInput
+  subscribers_none: UserWhereInput
+  comments_every: CommentWhereInput
+  comments_some: CommentWhereInput
+  comments_none: CommentWhereInput
+  AND: [EventWhereInput!]
+  OR: [EventWhereInput!]
+  NOT: [EventWhereInput!]
+}
+
+input EventWhereUniqueInput {
+  id: ID
+}
+
+scalar Long
+
+type Mutation {
+  createBooking(data: BookingCreateInput!): Booking!
+  updateBooking(data: BookingUpdateInput!, where: BookingWhereUniqueInput!): Booking
+  updateManyBookings(data: BookingUpdateManyMutationInput!, where: BookingWhereInput): BatchPayload!
+  upsertBooking(where: BookingWhereUniqueInput!, create: BookingCreateInput!, update: BookingUpdateInput!): Booking!
+  deleteBooking(where: BookingWhereUniqueInput!): Booking
+  deleteManyBookings(where: BookingWhereInput): BatchPayload!
+  createComment(data: CommentCreateInput!): Comment!
+  updateComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
+  updateManyComments(data: CommentUpdateManyMutationInput!, where: CommentWhereInput): BatchPayload!
+  upsertComment(where: CommentWhereUniqueInput!, create: CommentCreateInput!, update: CommentUpdateInput!): Comment!
+  deleteComment(where: CommentWhereUniqueInput!): Comment
+  deleteManyComments(where: CommentWhereInput): BatchPayload!
+  createEvent(data: EventCreateInput!): Event!
+  updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
+  updateManyEvents(data: EventUpdateManyMutationInput!, where: EventWhereInput): BatchPayload!
+  upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
+  deleteEvent(where: EventWhereUniqueInput!): Event
+  deleteManyEvents(where: EventWhereInput): BatchPayload!
+  createRoom(data: RoomCreateInput!): Room!
+  updateRoom(data: RoomUpdateInput!, where: RoomWhereUniqueInput!): Room
+  updateManyRooms(data: RoomUpdateManyMutationInput!, where: RoomWhereInput): BatchPayload!
+  upsertRoom(where: RoomWhereUniqueInput!, create: RoomCreateInput!, update: RoomUpdateInput!): Room!
+  deleteRoom(where: RoomWhereUniqueInput!): Room
+  deleteManyRooms(where: RoomWhereInput): BatchPayload!
+  createUser(data: UserCreateInput!): User!
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  deleteUser(where: UserWhereUniqueInput!): User
+  deleteManyUsers(where: UserWhereInput): BatchPayload!
+  createUserSession(data: UserSessionCreateInput!): UserSession!
+  updateUserSession(data: UserSessionUpdateInput!, where: UserSessionWhereUniqueInput!): UserSession
+  upsertUserSession(where: UserSessionWhereUniqueInput!, create: UserSessionCreateInput!, update: UserSessionUpdateInput!): UserSession!
+  deleteUserSession(where: UserSessionWhereUniqueInput!): UserSession
+  deleteManyUserSessions(where: UserSessionWhereInput): BatchPayload!
+  createWasher(data: WasherCreateInput!): Washer!
+  updateWasher(data: WasherUpdateInput!, where: WasherWhereUniqueInput!): Washer
+  updateManyWashers(data: WasherUpdateManyMutationInput!, where: WasherWhereInput): BatchPayload!
+  upsertWasher(where: WasherWhereUniqueInput!, create: WasherCreateInput!, update: WasherUpdateInput!): Washer!
+  deleteWasher(where: WasherWhereUniqueInput!): Washer
+  deleteManyWashers(where: WasherWhereInput): BatchPayload!
+}
+
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+interface Node {
+  id: ID!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type Query {
+  booking(where: BookingWhereUniqueInput!): Booking
+  bookings(where: BookingWhereInput, orderBy: BookingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Booking]!
+  bookingsConnection(where: BookingWhereInput, orderBy: BookingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BookingConnection!
+  comment(where: CommentWhereUniqueInput!): Comment
+  comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment]!
+  commentsConnection(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection!
+  event(where: EventWhereUniqueInput!): Event
+  events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
+  eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
+  room(where: RoomWhereUniqueInput!): Room
+  rooms(where: RoomWhereInput, orderBy: RoomOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Room]!
+  roomsConnection(where: RoomWhereInput, orderBy: RoomOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoomConnection!
+  user(where: UserWhereUniqueInput!): User
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  userSession(where: UserSessionWhereUniqueInput!): UserSession
+  userSessions(where: UserSessionWhereInput, orderBy: UserSessionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserSession]!
+  userSessionsConnection(where: UserSessionWhereInput, orderBy: UserSessionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserSessionConnection!
+  washer(where: WasherWhereUniqueInput!): Washer
+  washers(where: WasherWhereInput, orderBy: WasherOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Washer]!
+  washersConnection(where: WasherWhereInput, orderBy: WasherOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WasherConnection!
+  node(id: ID!): Node
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+type Room {
+  id: ID!
+  number: String!
+  name: String!
+  bookings(where: BookingWhereInput, orderBy: BookingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Booking!]
+}
+
+type RoomConnection {
+  pageInfo: PageInfo!
+  edges: [RoomEdge]!
+  aggregate: AggregateRoom!
+}
+
+input RoomCreateInput {
+  id: ID
+  number: String!
+  name: String!
+  bookings: BookingCreateManyWithoutRoomInput
+}
+
+input RoomCreateOneWithoutBookingsInput {
+  create: RoomCreateWithoutBookingsInput
+  connect: RoomWhereUniqueInput
+}
+
+input RoomCreateWithoutBookingsInput {
+  id: ID
+  number: String!
+  name: String!
+}
+
+type RoomEdge {
+  node: Room!
+  cursor: String!
+}
+
+enum RoomOrderByInput {
+  id_ASC
+  id_DESC
+  number_ASC
+  number_DESC
+  name_ASC
+  name_DESC
+}
+
+type RoomPreviousValues {
+  id: ID!
+  number: String!
+  name: String!
+}
+
+type RoomSubscriptionPayload {
+  mutation: MutationType!
+  node: Room
+  updatedFields: [String!]
+  previousValues: RoomPreviousValues
+}
+
+input RoomSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: RoomWhereInput
+  AND: [RoomSubscriptionWhereInput!]
+  OR: [RoomSubscriptionWhereInput!]
+  NOT: [RoomSubscriptionWhereInput!]
+}
+
+input RoomUpdateInput {
+  number: String
+  name: String
+  bookings: BookingUpdateManyWithoutRoomInput
+}
+
+input RoomUpdateManyMutationInput {
+  number: String
+  name: String
+}
+
+input RoomUpdateOneRequiredWithoutBookingsInput {
+  create: RoomCreateWithoutBookingsInput
+  update: RoomUpdateWithoutBookingsDataInput
+  upsert: RoomUpsertWithoutBookingsInput
+  connect: RoomWhereUniqueInput
+}
+
+input RoomUpdateWithoutBookingsDataInput {
+  number: String
+  name: String
+}
+
+input RoomUpsertWithoutBookingsInput {
+  update: RoomUpdateWithoutBookingsDataInput!
+  create: RoomCreateWithoutBookingsInput!
+}
+
+input RoomWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  number: String
+  number_not: String
+  number_in: [String!]
+  number_not_in: [String!]
+  number_lt: String
+  number_lte: String
+  number_gt: String
+  number_gte: String
+  number_contains: String
+  number_not_contains: String
+  number_starts_with: String
+  number_not_starts_with: String
+  number_ends_with: String
+  number_not_ends_with: String
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  bookings_every: BookingWhereInput
+  bookings_some: BookingWhereInput
+  bookings_none: BookingWhereInput
+  AND: [RoomWhereInput!]
+  OR: [RoomWhereInput!]
+  NOT: [RoomWhereInput!]
+}
+
+input RoomWhereUniqueInput {
+  id: ID
+  number: String
+}
+
+type Subscription {
+  booking(where: BookingSubscriptionWhereInput): BookingSubscriptionPayload
+  comment(where: CommentSubscriptionWhereInput): CommentSubscriptionPayload
+  event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
+  room(where: RoomSubscriptionWhereInput): RoomSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  userSession(where: UserSessionSubscriptionWhereInput): UserSessionSubscriptionPayload
+  washer(where: WasherSubscriptionWhereInput): WasherSubscriptionPayload
+}
+
+type User {
+  id: ID!
+  username: String!
+  password: String
+  email: String!
+  image_url: String!
+  phone: String!
+  first_name: String!
+  last_name: String!
+  room_no: String!
+  roomBookings(where: BookingWhereInput, orderBy: BookingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Booking!]
+  sessions(where: UserSessionWhereInput, orderBy: UserSessionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserSession!]
+  eventsOrganised(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
+  eventsSubscribed(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
+  userComments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
+  role: Role!
+}
+
+type UserConnection {
+  pageInfo: PageInfo!
+  edges: [UserEdge]!
+  aggregate: AggregateUser!
+}
+
+input UserCreateInput {
+  id: ID
+  username: String!
+  password: String
+  email: String!
+  image_url: String!
+  phone: String!
+  first_name: String!
+  last_name: String!
+  room_no: String!
+  roomBookings: BookingCreateManyWithoutUserInput
+  sessions: UserSessionCreateManyWithoutUserInput
+  eventsOrganised: EventCreateManyWithoutOrganiserInput
+  eventsSubscribed: EventCreateManyWithoutSubscribersInput
+  userComments: CommentCreateManyWithoutUserInput
+  role: Role
+}
+
+input UserCreateManyWithoutEventsSubscribedInput {
+  create: [UserCreateWithoutEventsSubscribedInput!]
+  connect: [UserWhereUniqueInput!]
+}
+
+input UserCreateOneWithoutEventsOrganisedInput {
+  create: UserCreateWithoutEventsOrganisedInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateOneWithoutRoomBookingsInput {
+  create: UserCreateWithoutRoomBookingsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateOneWithoutSessionsInput {
+  create: UserCreateWithoutSessionsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateOneWithoutUserCommentsInput {
+  create: UserCreateWithoutUserCommentsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutEventsOrganisedInput {
+  id: ID
+  username: String!
+  password: String
+  email: String!
+  image_url: String!
+  phone: String!
+  first_name: String!
+  last_name: String!
+  room_no: String!
+  roomBookings: BookingCreateManyWithoutUserInput
+  sessions: UserSessionCreateManyWithoutUserInput
+  eventsSubscribed: EventCreateManyWithoutSubscribersInput
+  userComments: CommentCreateManyWithoutUserInput
+  role: Role
+}
+
+input UserCreateWithoutEventsSubscribedInput {
+  id: ID
+  username: String!
+  password: String
+  email: String!
+  image_url: String!
+  phone: String!
+  first_name: String!
+  last_name: String!
+  room_no: String!
+  roomBookings: BookingCreateManyWithoutUserInput
+  sessions: UserSessionCreateManyWithoutUserInput
+  eventsOrganised: EventCreateManyWithoutOrganiserInput
+  userComments: CommentCreateManyWithoutUserInput
+  role: Role
+}
+
+input UserCreateWithoutRoomBookingsInput {
+  id: ID
+  username: String!
+  password: String
+  email: String!
+  image_url: String!
+  phone: String!
+  first_name: String!
+  last_name: String!
+  room_no: String!
+  sessions: UserSessionCreateManyWithoutUserInput
+  eventsOrganised: EventCreateManyWithoutOrganiserInput
+  eventsSubscribed: EventCreateManyWithoutSubscribersInput
+  userComments: CommentCreateManyWithoutUserInput
+  role: Role
+}
+
+input UserCreateWithoutSessionsInput {
+  id: ID
+  username: String!
+  password: String
+  email: String!
+  image_url: String!
+  phone: String!
+  first_name: String!
+  last_name: String!
+  room_no: String!
+  roomBookings: BookingCreateManyWithoutUserInput
+  eventsOrganised: EventCreateManyWithoutOrganiserInput
+  eventsSubscribed: EventCreateManyWithoutSubscribersInput
+  userComments: CommentCreateManyWithoutUserInput
+  role: Role
+}
+
+input UserCreateWithoutUserCommentsInput {
+  id: ID
+  username: String!
+  password: String
+  email: String!
+  image_url: String!
+  phone: String!
+  first_name: String!
+  last_name: String!
+  room_no: String!
+  roomBookings: BookingCreateManyWithoutUserInput
+  sessions: UserSessionCreateManyWithoutUserInput
+  eventsOrganised: EventCreateManyWithoutOrganiserInput
+  eventsSubscribed: EventCreateManyWithoutSubscribersInput
+  role: Role
+}
+
+type UserEdge {
+  node: User!
+  cursor: String!
+}
+
+enum UserOrderByInput {
+  id_ASC
+  id_DESC
+  username_ASC
+  username_DESC
+  password_ASC
+  password_DESC
+  email_ASC
+  email_DESC
+  image_url_ASC
+  image_url_DESC
+  phone_ASC
+  phone_DESC
+  first_name_ASC
+  first_name_DESC
+  last_name_ASC
+  last_name_DESC
+  room_no_ASC
+  room_no_DESC
+  role_ASC
+  role_DESC
+}
+
+type UserPreviousValues {
+  id: ID!
+  username: String!
+  password: String
+  email: String!
+  image_url: String!
+  phone: String!
+  first_name: String!
+  last_name: String!
+  room_no: String!
+  role: Role!
+}
+
+input UserScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  username: String
+  username_not: String
+  username_in: [String!]
+  username_not_in: [String!]
+  username_lt: String
+  username_lte: String
+  username_gt: String
+  username_gte: String
+  username_contains: String
+  username_not_contains: String
+  username_starts_with: String
+  username_not_starts_with: String
+  username_ends_with: String
+  username_not_ends_with: String
+  password: String
+  password_not: String
+  password_in: [String!]
+  password_not_in: [String!]
+  password_lt: String
+  password_lte: String
+  password_gt: String
+  password_gte: String
+  password_contains: String
+  password_not_contains: String
+  password_starts_with: String
+  password_not_starts_with: String
+  password_ends_with: String
+  password_not_ends_with: String
+  email: String
+  email_not: String
+  email_in: [String!]
+  email_not_in: [String!]
+  email_lt: String
+  email_lte: String
+  email_gt: String
+  email_gte: String
+  email_contains: String
+  email_not_contains: String
+  email_starts_with: String
+  email_not_starts_with: String
+  email_ends_with: String
+  email_not_ends_with: String
+  image_url: String
+  image_url_not: String
+  image_url_in: [String!]
+  image_url_not_in: [String!]
+  image_url_lt: String
+  image_url_lte: String
+  image_url_gt: String
+  image_url_gte: String
+  image_url_contains: String
+  image_url_not_contains: String
+  image_url_starts_with: String
+  image_url_not_starts_with: String
+  image_url_ends_with: String
+  image_url_not_ends_with: String
+  phone: String
+  phone_not: String
+  phone_in: [String!]
+  phone_not_in: [String!]
+  phone_lt: String
+  phone_lte: String
+  phone_gt: String
+  phone_gte: String
+  phone_contains: String
+  phone_not_contains: String
+  phone_starts_with: String
+  phone_not_starts_with: String
+  phone_ends_with: String
+  phone_not_ends_with: String
+  first_name: String
+  first_name_not: String
+  first_name_in: [String!]
+  first_name_not_in: [String!]
+  first_name_lt: String
+  first_name_lte: String
+  first_name_gt: String
+  first_name_gte: String
+  first_name_contains: String
+  first_name_not_contains: String
+  first_name_starts_with: String
+  first_name_not_starts_with: String
+  first_name_ends_with: String
+  first_name_not_ends_with: String
+  last_name: String
+  last_name_not: String
+  last_name_in: [String!]
+  last_name_not_in: [String!]
+  last_name_lt: String
+  last_name_lte: String
+  last_name_gt: String
+  last_name_gte: String
+  last_name_contains: String
+  last_name_not_contains: String
+  last_name_starts_with: String
+  last_name_not_starts_with: String
+  last_name_ends_with: String
+  last_name_not_ends_with: String
+  room_no: String
+  room_no_not: String
+  room_no_in: [String!]
+  room_no_not_in: [String!]
+  room_no_lt: String
+  room_no_lte: String
+  room_no_gt: String
+  room_no_gte: String
+  room_no_contains: String
+  room_no_not_contains: String
+  room_no_starts_with: String
+  room_no_not_starts_with: String
+  room_no_ends_with: String
+  room_no_not_ends_with: String
+  role: Role
+  role_not: Role
+  role_in: [Role!]
+  role_not_in: [Role!]
+  AND: [UserScalarWhereInput!]
+  OR: [UserScalarWhereInput!]
+  NOT: [UserScalarWhereInput!]
+}
+
+type UserSession {
+  id: ID!
+  user: User!
+  createdAt: DateTime!
+}
+
+type UserSessionConnection {
+  pageInfo: PageInfo!
+  edges: [UserSessionEdge]!
+  aggregate: AggregateUserSession!
+}
+
+input UserSessionCreateInput {
+  id: ID
+  user: UserCreateOneWithoutSessionsInput!
+}
+
+input UserSessionCreateManyWithoutUserInput {
+  create: [UserSessionCreateWithoutUserInput!]
+  connect: [UserSessionWhereUniqueInput!]
+}
+
+input UserSessionCreateWithoutUserInput {
+  id: ID
+}
+
+type UserSessionEdge {
+  node: UserSession!
+  cursor: String!
+}
+
+enum UserSessionOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type UserSessionPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+}
+
+input UserSessionScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  AND: [UserSessionScalarWhereInput!]
+  OR: [UserSessionScalarWhereInput!]
+  NOT: [UserSessionScalarWhereInput!]
+}
+
+type UserSessionSubscriptionPayload {
+  mutation: MutationType!
+  node: UserSession
+  updatedFields: [String!]
+  previousValues: UserSessionPreviousValues
+}
+
+input UserSessionSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: UserSessionWhereInput
+  AND: [UserSessionSubscriptionWhereInput!]
+  OR: [UserSessionSubscriptionWhereInput!]
+  NOT: [UserSessionSubscriptionWhereInput!]
+}
+
+input UserSessionUpdateInput {
+  user: UserUpdateOneRequiredWithoutSessionsInput
+}
+
+input UserSessionUpdateManyWithoutUserInput {
+  create: [UserSessionCreateWithoutUserInput!]
+  delete: [UserSessionWhereUniqueInput!]
+  connect: [UserSessionWhereUniqueInput!]
+  set: [UserSessionWhereUniqueInput!]
+  disconnect: [UserSessionWhereUniqueInput!]
+  deleteMany: [UserSessionScalarWhereInput!]
+}
+
+input UserSessionWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  user: UserWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  AND: [UserSessionWhereInput!]
+  OR: [UserSessionWhereInput!]
+  NOT: [UserSessionWhereInput!]
+}
+
+input UserSessionWhereUniqueInput {
+  id: ID
+}
+
+type UserSubscriptionPayload {
+  mutation: MutationType!
+  node: User
+  updatedFields: [String!]
+  previousValues: UserPreviousValues
+}
+
+input UserSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: UserWhereInput
+  AND: [UserSubscriptionWhereInput!]
+  OR: [UserSubscriptionWhereInput!]
+  NOT: [UserSubscriptionWhereInput!]
+}
+
+input UserUpdateInput {
+  username: String
+  password: String
+  email: String
+  image_url: String
+  phone: String
+  first_name: String
+  last_name: String
+  room_no: String
+  roomBookings: BookingUpdateManyWithoutUserInput
+  sessions: UserSessionUpdateManyWithoutUserInput
+  eventsOrganised: EventUpdateManyWithoutOrganiserInput
+  eventsSubscribed: EventUpdateManyWithoutSubscribersInput
+  userComments: CommentUpdateManyWithoutUserInput
+  role: Role
+}
+
+input UserUpdateManyDataInput {
+  username: String
+  password: String
+  email: String
+  image_url: String
+  phone: String
+  first_name: String
+  last_name: String
+  room_no: String
+  role: Role
+}
+
+input UserUpdateManyMutationInput {
+  username: String
+  password: String
+  email: String
+  image_url: String
+  phone: String
+  first_name: String
+  last_name: String
+  room_no: String
+  role: Role
+}
+
+input UserUpdateManyWithoutEventsSubscribedInput {
+  create: [UserCreateWithoutEventsSubscribedInput!]
+  delete: [UserWhereUniqueInput!]
+  connect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  update: [UserUpdateWithWhereUniqueWithoutEventsSubscribedInput!]
+  upsert: [UserUpsertWithWhereUniqueWithoutEventsSubscribedInput!]
+  deleteMany: [UserScalarWhereInput!]
+  updateMany: [UserUpdateManyWithWhereNestedInput!]
+}
+
+input UserUpdateManyWithWhereNestedInput {
+  where: UserScalarWhereInput!
+  data: UserUpdateManyDataInput!
+}
+
+input UserUpdateOneRequiredWithoutEventsOrganisedInput {
+  create: UserCreateWithoutEventsOrganisedInput
+  update: UserUpdateWithoutEventsOrganisedDataInput
+  upsert: UserUpsertWithoutEventsOrganisedInput
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateOneRequiredWithoutRoomBookingsInput {
+  create: UserCreateWithoutRoomBookingsInput
+  update: UserUpdateWithoutRoomBookingsDataInput
+  upsert: UserUpsertWithoutRoomBookingsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateOneRequiredWithoutSessionsInput {
+  create: UserCreateWithoutSessionsInput
+  update: UserUpdateWithoutSessionsDataInput
+  upsert: UserUpsertWithoutSessionsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateOneRequiredWithoutUserCommentsInput {
+  create: UserCreateWithoutUserCommentsInput
+  update: UserUpdateWithoutUserCommentsDataInput
+  upsert: UserUpsertWithoutUserCommentsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateWithoutEventsOrganisedDataInput {
+  username: String
+  password: String
+  email: String
+  image_url: String
+  phone: String
+  first_name: String
+  last_name: String
+  room_no: String
+  roomBookings: BookingUpdateManyWithoutUserInput
+  sessions: UserSessionUpdateManyWithoutUserInput
+  eventsSubscribed: EventUpdateManyWithoutSubscribersInput
+  userComments: CommentUpdateManyWithoutUserInput
+  role: Role
+}
+
+input UserUpdateWithoutEventsSubscribedDataInput {
+  username: String
+  password: String
+  email: String
+  image_url: String
+  phone: String
+  first_name: String
+  last_name: String
+  room_no: String
+  roomBookings: BookingUpdateManyWithoutUserInput
+  sessions: UserSessionUpdateManyWithoutUserInput
+  eventsOrganised: EventUpdateManyWithoutOrganiserInput
+  userComments: CommentUpdateManyWithoutUserInput
+  role: Role
+}
+
+input UserUpdateWithoutRoomBookingsDataInput {
+  username: String
+  password: String
+  email: String
+  image_url: String
+  phone: String
+  first_name: String
+  last_name: String
+  room_no: String
+  sessions: UserSessionUpdateManyWithoutUserInput
+  eventsOrganised: EventUpdateManyWithoutOrganiserInput
+  eventsSubscribed: EventUpdateManyWithoutSubscribersInput
+  userComments: CommentUpdateManyWithoutUserInput
+  role: Role
+}
+
+input UserUpdateWithoutSessionsDataInput {
+  username: String
+  password: String
+  email: String
+  image_url: String
+  phone: String
+  first_name: String
+  last_name: String
+  room_no: String
+  roomBookings: BookingUpdateManyWithoutUserInput
+  eventsOrganised: EventUpdateManyWithoutOrganiserInput
+  eventsSubscribed: EventUpdateManyWithoutSubscribersInput
+  userComments: CommentUpdateManyWithoutUserInput
+  role: Role
+}
+
+input UserUpdateWithoutUserCommentsDataInput {
+  username: String
+  password: String
+  email: String
+  image_url: String
+  phone: String
+  first_name: String
+  last_name: String
+  room_no: String
+  roomBookings: BookingUpdateManyWithoutUserInput
+  sessions: UserSessionUpdateManyWithoutUserInput
+  eventsOrganised: EventUpdateManyWithoutOrganiserInput
+  eventsSubscribed: EventUpdateManyWithoutSubscribersInput
+  role: Role
+}
+
+input UserUpdateWithWhereUniqueWithoutEventsSubscribedInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateWithoutEventsSubscribedDataInput!
+}
+
+input UserUpsertWithoutEventsOrganisedInput {
+  update: UserUpdateWithoutEventsOrganisedDataInput!
+  create: UserCreateWithoutEventsOrganisedInput!
+}
+
+input UserUpsertWithoutRoomBookingsInput {
+  update: UserUpdateWithoutRoomBookingsDataInput!
+  create: UserCreateWithoutRoomBookingsInput!
+}
+
+input UserUpsertWithoutSessionsInput {
+  update: UserUpdateWithoutSessionsDataInput!
+  create: UserCreateWithoutSessionsInput!
+}
+
+input UserUpsertWithoutUserCommentsInput {
+  update: UserUpdateWithoutUserCommentsDataInput!
+  create: UserCreateWithoutUserCommentsInput!
+}
+
+input UserUpsertWithWhereUniqueWithoutEventsSubscribedInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateWithoutEventsSubscribedDataInput!
+  create: UserCreateWithoutEventsSubscribedInput!
+}
+
+input UserWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  username: String
+  username_not: String
+  username_in: [String!]
+  username_not_in: [String!]
+  username_lt: String
+  username_lte: String
+  username_gt: String
+  username_gte: String
+  username_contains: String
+  username_not_contains: String
+  username_starts_with: String
+  username_not_starts_with: String
+  username_ends_with: String
+  username_not_ends_with: String
+  password: String
+  password_not: String
+  password_in: [String!]
+  password_not_in: [String!]
+  password_lt: String
+  password_lte: String
+  password_gt: String
+  password_gte: String
+  password_contains: String
+  password_not_contains: String
+  password_starts_with: String
+  password_not_starts_with: String
+  password_ends_with: String
+  password_not_ends_with: String
+  email: String
+  email_not: String
+  email_in: [String!]
+  email_not_in: [String!]
+  email_lt: String
+  email_lte: String
+  email_gt: String
+  email_gte: String
+  email_contains: String
+  email_not_contains: String
+  email_starts_with: String
+  email_not_starts_with: String
+  email_ends_with: String
+  email_not_ends_with: String
+  image_url: String
+  image_url_not: String
+  image_url_in: [String!]
+  image_url_not_in: [String!]
+  image_url_lt: String
+  image_url_lte: String
+  image_url_gt: String
+  image_url_gte: String
+  image_url_contains: String
+  image_url_not_contains: String
+  image_url_starts_with: String
+  image_url_not_starts_with: String
+  image_url_ends_with: String
+  image_url_not_ends_with: String
+  phone: String
+  phone_not: String
+  phone_in: [String!]
+  phone_not_in: [String!]
+  phone_lt: String
+  phone_lte: String
+  phone_gt: String
+  phone_gte: String
+  phone_contains: String
+  phone_not_contains: String
+  phone_starts_with: String
+  phone_not_starts_with: String
+  phone_ends_with: String
+  phone_not_ends_with: String
+  first_name: String
+  first_name_not: String
+  first_name_in: [String!]
+  first_name_not_in: [String!]
+  first_name_lt: String
+  first_name_lte: String
+  first_name_gt: String
+  first_name_gte: String
+  first_name_contains: String
+  first_name_not_contains: String
+  first_name_starts_with: String
+  first_name_not_starts_with: String
+  first_name_ends_with: String
+  first_name_not_ends_with: String
+  last_name: String
+  last_name_not: String
+  last_name_in: [String!]
+  last_name_not_in: [String!]
+  last_name_lt: String
+  last_name_lte: String
+  last_name_gt: String
+  last_name_gte: String
+  last_name_contains: String
+  last_name_not_contains: String
+  last_name_starts_with: String
+  last_name_not_starts_with: String
+  last_name_ends_with: String
+  last_name_not_ends_with: String
+  room_no: String
+  room_no_not: String
+  room_no_in: [String!]
+  room_no_not_in: [String!]
+  room_no_lt: String
+  room_no_lte: String
+  room_no_gt: String
+  room_no_gte: String
+  room_no_contains: String
+  room_no_not_contains: String
+  room_no_starts_with: String
+  room_no_not_starts_with: String
+  room_no_ends_with: String
+  room_no_not_ends_with: String
+  roomBookings_every: BookingWhereInput
+  roomBookings_some: BookingWhereInput
+  roomBookings_none: BookingWhereInput
+  sessions_every: UserSessionWhereInput
+  sessions_some: UserSessionWhereInput
+  sessions_none: UserSessionWhereInput
+  eventsOrganised_every: EventWhereInput
+  eventsOrganised_some: EventWhereInput
+  eventsOrganised_none: EventWhereInput
+  eventsSubscribed_every: EventWhereInput
+  eventsSubscribed_some: EventWhereInput
+  eventsSubscribed_none: EventWhereInput
+  userComments_every: CommentWhereInput
+  userComments_some: CommentWhereInput
+  userComments_none: CommentWhereInput
+  role: Role
+  role_not: Role
+  role_in: [Role!]
+  role_not_in: [Role!]
+  AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  NOT: [UserWhereInput!]
+}
+
+input UserWhereUniqueInput {
+  id: ID
+  username: String
+  email: String
+  phone: String
+  room_no: String
+}
+
+type Washer {
+  id: ID!
+  in_use: Boolean!
+  updatedAt: DateTime!
+}
+
+type WasherConnection {
+  pageInfo: PageInfo!
+  edges: [WasherEdge]!
+  aggregate: AggregateWasher!
+}
+
+input WasherCreateInput {
+  id: ID
+  in_use: Boolean!
+}
+
+type WasherEdge {
+  node: Washer!
+  cursor: String!
+}
+
+enum WasherOrderByInput {
+  id_ASC
+  id_DESC
+  in_use_ASC
+  in_use_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type WasherPreviousValues {
+  id: ID!
+  in_use: Boolean!
+  updatedAt: DateTime!
+}
+
+type WasherSubscriptionPayload {
+  mutation: MutationType!
+  node: Washer
+  updatedFields: [String!]
+  previousValues: WasherPreviousValues
+}
+
+input WasherSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: WasherWhereInput
+  AND: [WasherSubscriptionWhereInput!]
+  OR: [WasherSubscriptionWhereInput!]
+  NOT: [WasherSubscriptionWhereInput!]
+}
+
+input WasherUpdateInput {
+  in_use: Boolean
+}
+
+input WasherUpdateManyMutationInput {
+  in_use: Boolean
+}
+
+input WasherWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  in_use: Boolean
+  in_use_not: Boolean
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  AND: [WasherWhereInput!]
+  OR: [WasherWhereInput!]
+  NOT: [WasherWhereInput!]
+}
+
+input WasherWhereUniqueInput {
+  id: ID
+}
