@@ -7,10 +7,12 @@
     "build": "npm run prisma:generate && tsc",
     "postbuild": "node postbuild.js",
     "start": "node dist/index.js",
+    "start:docker-local": "npm run prisma:migrate:deploy && npm run prisma:generate && npm start",
     "test": "jest --runInBand --testPathIgnorePatterns utils",
     "dev": "nodemon",
     "lint": "eslint . --ext .ts",
-    "prisma:migrate": "npx prisma migrate dev --name migration --preview-feature",
+    "prisma:migrate:dev": "npx prisma migrate dev --name migration",
+    "prisma:migrate:deploy": "npx prisma migrate deploy",
     "prisma:generate": "npx prisma generate"
   },
   "author": "",

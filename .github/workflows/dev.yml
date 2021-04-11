@@ -34,7 +34,7 @@ jobs:
         run: |
           docker-compose -f docker-compose.yml up -d
           npm install
-          npm run prisma:migrate
+          npm run prisma:migrate:dev
 
       - name: Test
         run: npm run test
@@ -55,6 +55,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile
+          file: ./dev.Dockerfile
           push: true
           tags: rctechclub/phoenix:dev
