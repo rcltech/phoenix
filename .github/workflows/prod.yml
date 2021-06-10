@@ -57,17 +57,18 @@ jobs:
           push: true
           tags: rctechclub/phoenix:latest
 
-#  aws:
-#    needs: dockerimage
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Configure AWS credentials
-#        uses: aws-actions/configure-aws-credentials@v1
-#        with:
-#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws-region: us-east-2
-#
-#      - name: Update phoenix ECS service
-#        run: |
-#          aws ecs update-service --cluster phoenix --service phoenix --force-new-deployment --region us-east-2
+  heroku:
+    needs: dockerimage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "rctech-phoenix" #Must be unique in Heroku
+          heroku_email: "technology@rctech.club"
+          dontautocreate: true
+          healthcheck: "https://phoenix.rctech.club"
