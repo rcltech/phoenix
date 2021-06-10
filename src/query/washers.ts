@@ -1,4 +1,5 @@
-import { FragmentableArray, Washer } from "../generated/prisma-client";
+import { Washer } from "@prisma/client";
+import { AppContext } from "../context";
 
-export const washers = (parent, { data }, ctx): FragmentableArray<Washer> =>
-  ctx.prisma.washers({ where: data, orderBy: "id_ASC" });
+export const washers = (parent, { data }, ctx: AppContext): Promise<Washer[]> =>
+  ctx.prisma.washer.findMany({ where: data, orderBy: { id: "asc" } });

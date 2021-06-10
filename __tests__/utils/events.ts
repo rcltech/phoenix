@@ -1,13 +1,10 @@
 import * as env from "dotenv";
-import {
-  BatchPayloadPromise,
-  Event,
-  Comment,
-  FragmentableArray,
-  prisma,
-} from "../../src/generated/prisma-client";
+import { Event, Comment } from "@prisma/client";
+import { setupPrismaForTesting } from "./setupPrismaForTesting";
 
 env.config();
+
+const prisma = setupPrismaForTesting();
 
 export type TestEventInfo = {
   title: string;
@@ -43,30 +40,32 @@ export const createEvent = ({
   image_url,
   description,
 }: TestEventInfo): Promise<Event> => {
-  return prisma.createEvent({
-    title,
-    start: new Date(start),
-    end: new Date(end),
-    venue,
-    image_url,
-    description,
-    organiser: {
-      connect: {
-        username: organiser,
+  return prisma.event.create({
+    data: {
+      title,
+      start: new Date(start),
+      end: new Date(end),
+      venue,
+      image_url,
+      description,
+      organiser: {
+        connect: {
+          username: organiser,
+        },
       },
     },
   });
 };
 
-export const deleteEvents = (): BatchPayloadPromise => {
-  return prisma.deleteManyEvents({});
+export const deleteEvents = async (): Promise<void> => {
+  await prisma.event.deleteMany({});
 };
 
 export const addEventSubscriber = ({
   event_id,
   user_id,
 }: AddEventSubscriberInfo): Promise<Event> => {
-  return prisma.updateEvent({
+  return prisma.event.update({
     where: { id: event_id },
     data: {
       subscribers: {
@@ -81,19 +80,21 @@ export const createEventComment = ({
   user_id,
   content,
 }: CreateEventCommentInfo): Promise<Comment> => {
-  return prisma.createComment({
-    content,
-    user: {
-      connect: { id: user_id },
-    },
-    event: {
-      connect: { id: event_id },
+  return prisma.comment.create({
+    data: {
+      content,
+      user: {
+        connect: { id: user_id },
+      },
+      event: {
+        connect: { id: event_id },
+      },
     },
   });
 };
 
 export const retrieveEventComments = ({
   event_id,
-}: RetrieveEventCommentsInfo): Promise<FragmentableArray<Comment>> => {
-  return prisma.event({ id: event_id }).comments();
+}: RetrieveEventCommentsInfo): Promise<Comment[]> => {
+  return prisma.event.findUnique({ where: { id: event_id } }).comments();
 };

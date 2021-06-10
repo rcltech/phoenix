@@ -1,8 +1,9 @@
-import { FragmentableArray, User } from "../generated/prisma-client";
+import { User } from "@prisma/client";
+import { AppContext } from "../context";
 
-export const user = (parent, { username }, ctx): FragmentableArray<User> => {
-  return ctx.prisma.user({
-    username,
+export const user = (parent, { username }, ctx: AppContext): Promise<User> => {
+  return ctx.prisma.user.findUnique({
+    where: { username },
   });
 };
 

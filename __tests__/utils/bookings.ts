@@ -1,9 +1,8 @@
 import * as env from "dotenv";
-import {
-  BatchPayloadPromise,
-  Booking,
-  prisma,
-} from "../../src/generated/prisma-client";
+import { Booking } from "@prisma/client";
+import { setupPrismaForTesting } from "./setupPrismaForTesting";
+
+const prisma = setupPrismaForTesting();
 
 env.config();
 
@@ -18,29 +17,31 @@ export interface TestBookingInfo {
 export const createBooking = (
   testBookingInfo: TestBookingInfo
 ): Promise<Booking> => {
-  return prisma.createBooking({
-    start: testBookingInfo.start,
-    end: testBookingInfo.end,
-    room: {
-      connect: {
-        number: testBookingInfo.room,
+  return prisma.booking.create({
+    data: {
+      start: testBookingInfo.start,
+      end: testBookingInfo.end,
+      room: {
+        connect: {
+          number: testBookingInfo.room,
+        },
       },
-    },
-    user: {
-      connect: {
-        username: testBookingInfo.user,
+      user: {
+        connect: {
+          username: testBookingInfo.user,
+        },
       },
+      remark: testBookingInfo.remark,
     },
-    remark: testBookingInfo.remark,
   });
 };
 
-export const deleteBookings = (): BatchPayloadPromise => {
-  return prisma.deleteManyBookings({});
+export const deleteBookings = async (): Promise<void> => {
+  await prisma.booking.deleteMany({});
 };
 
-export const deleteBooking = booking => {
-  return prisma.deleteBooking({
-    id: booking.id,
+export const deleteBooking = async booking => {
+  return prisma.booking.delete({
+    where: { id: booking.id },
   });
 };

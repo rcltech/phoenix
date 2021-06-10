@@ -1,8 +1,11 @@
-import assert from "assert";
-import { User, Event, Comment } from "../generated/prisma-client";
-import { resolveUserUsingJWT } from "../utils/resolveUser";
+import { User, Comment } from "@prisma/client";
+import { AppContext } from "../context";
 
-const createComment = async (parent, data, ctx): Promise<Comment> => {
+const createComment = async (
+  parent,
+  data,
+  ctx: AppContext
+): Promise<Comment> => {
   const currentUser: User = ctx.auth.user;
 
   const userId: string = currentUser.id;
@@ -10,25 +13,31 @@ const createComment = async (parent, data, ctx): Promise<Comment> => {
   const eventId: string | null = data.eventId;
 
   if (eventId) {
-    return ctx.prisma.createComment({
-      content,
-      user: {
-        connect: {
-          id: userId,
+    return ctx.prisma.comment.create({
+      data: {
+        content,
+        user: {
+          connect: {
+            id: userId,
+          },
         },
-      },
-      event: {
-        connect: {
-          id: eventId,
+        event: {
+          connect: {
+            id: eventId,
+          },
         },
       },
     });
   } else throw new Error("No id of a particular data type is provided");
 };
 
-const deleteComment = async (parent, { id }, ctx): Promise<Comment> => {
-  return ctx.prisma.deleteComment({
-    id,
+const deleteComment = async (
+  parent,
+  { id },
+  ctx: AppContext
+): Promise<Comment> => {
+  return ctx.prisma.comment.delete({
+    where: { id },
   });
 };
 

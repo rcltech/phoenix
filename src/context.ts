@@ -1,12 +1,13 @@
-import { prisma, Prisma, User } from "./generated/prisma-client";
+import { PrismaClient, User } from "@prisma/client";
 import Cookies from "universal-cookie";
 import { resolveUserUsingJWT } from "./utils/resolveUser";
+import { prisma } from "./utils/prisma";
 
 export type AppContext = {
-  prisma: Prisma;
+  prisma: PrismaClient;
   token: string;
   auth: {
-    user: User;
+    user: User | undefined;
     isAuthenticated: boolean;
   };
 };
@@ -21,7 +22,7 @@ export const context = async ({ req }): Promise<AppContext> => {
     prisma,
     token,
     auth: {
-      user: user,
+      user: user ?? undefined,
       isAuthenticated: user !== null,
     },
   };

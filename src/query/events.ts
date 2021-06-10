@@ -1,16 +1,17 @@
-import { Event, FragmentableArray } from "../generated/prisma-client";
+import { Event } from "@prisma/client";
 import moment from "moment";
+import { AppContext } from "../context";
 
-export const events = (
+export const events = async (
   parent,
   { data, start_limit },
-  ctx
-): FragmentableArray<Event> => {
+  ctx: AppContext
+): Promise<Event[]> => {
   const end_gte: Date = moment(start_limit, moment.defaultFormat).isValid()
     ? new Date(start_limit)
     : new Date();
-  return ctx.prisma.events({
-    where: { ...data, end_gte },
-    orderBy: "start_ASC",
+  return ctx.prisma.event.findMany({
+    where: { ...data, end: { gte: end_gte } },
+    orderBy: { start: "asc" },
   });
 };

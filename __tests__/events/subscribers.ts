@@ -4,9 +4,9 @@ env.config();
 import gql from "graphql-tag";
 import { GraphQLResponse } from "apollo-server-types";
 import { createTestServerWithUserLoggedIn } from "../utils/server";
-import { Event, User } from "../../src/generated/prisma-client";
+import { Event, User } from "@prisma/client";
 import { createTestClient } from "apollo-server-testing";
-import { createUser, deleteUsers } from "../utils/users";
+import { createUser, deleteUsers, TestUserInfo } from "../utils/users";
 import {
   createEvent,
   deleteEvents,
@@ -15,8 +15,7 @@ import {
   AddEventSubscriberInfo,
 } from "../utils/events";
 
-const testUserInfo: User = {
-  id: undefined,
+const testUserInfo: TestUserInfo = {
   username: "test123",
   email: "test@connect.hku.hk",
   image_url: "http://url",
@@ -38,6 +37,11 @@ const testEventInfo: TestEventInfo = {
 };
 
 beforeAll(async () => await deleteUsers());
+
+afterEach(async () => {
+  await deleteEvents();
+  await deleteUsers();
+});
 
 describe("event subscriber addition", () => {
   test("should be able to add current user to event subscribers list", async () => {
@@ -67,9 +71,6 @@ describe("event subscriber addition", () => {
     });
     const { subscribers } = addEventSubscriber;
     expect(subscribers).toEqual(expect.arrayContaining([{ id: testUser.id }]));
-
-    await deleteEvents();
-    await deleteUsers();
   });
 });
 
@@ -107,9 +108,6 @@ describe("event subscriber removal for subscribed event", () => {
     });
     const { subscribers } = removeEventSubscriber;
     expect(subscribers).toEqual([]);
-
-    await deleteEvents();
-    await deleteUsers();
   });
 });
 
@@ -139,8 +137,5 @@ describe("event subscriber removal for non-subscribed event", () => {
     });
 
     expect(removeEventSubscriber).toEqual({ id: event_id });
-
-    await deleteEvents();
-    await deleteUsers();
   });
 });

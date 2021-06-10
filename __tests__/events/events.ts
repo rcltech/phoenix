@@ -4,13 +4,12 @@ import gql from "graphql-tag";
 import moment from "moment";
 import { GraphQLResponse } from "apollo-server-types";
 import { createTestServerWithUserLoggedIn } from "../utils/server";
-import { Event, User } from "../../src/generated/prisma-client";
+import { Event, User } from "@prisma/client";
 import { createTestClient } from "apollo-server-testing";
-import { createUser, deleteUsers } from "../utils/users";
+import { createUser, deleteUsers, TestUserInfo } from "../utils/users";
 import { createEvent, deleteEvents, TestEventInfo } from "../utils/events";
 
-const testUserInfo: User = {
-  id: undefined,
+const testUserInfo: TestUserInfo = {
   username: "test123",
   email: "test@connect.hku.hk",
   image_url: "http://url",
@@ -21,8 +20,7 @@ const testUserInfo: User = {
   role: "USER",
 };
 
-const testUserInfo1: User = {
-  id: undefined,
+const testUserInfo1: TestUserInfo = {
   username: "test234",
   email: "test234@connect.hku.hk",
   image_url: "http://url234",
@@ -50,6 +48,11 @@ const testEventInfo: TestEventInfo = {
 };
 
 beforeAll(async () => await deleteUsers());
+
+afterEach(async () => {
+  await deleteEvents();
+  await deleteUsers();
+});
 
 describe("event queries", () => {
   test("should return a list of events", async () => {
@@ -85,17 +88,14 @@ describe("event queries", () => {
           organiser: {
             username: testUserInfo.username,
           },
-          start: testEventInfo.start.toISOString(),
-          end: testEventInfo.end.toISOString(),
+          start: testEventInfo.start,
+          end: testEventInfo.end,
           venue: testEventInfo.venue,
           image_url: testEventInfo.image_url,
           description: testEventInfo.description,
         },
       ],
     });
-
-    await deleteEvents();
-    await deleteUsers();
   });
 });
 
@@ -155,16 +155,13 @@ describe("event creation", () => {
         organiser: {
           username: testUserInfo.username,
         },
-        start: testEventInfo.start.toISOString(),
-        end: testEventInfo.end.toISOString(),
+        start: testEventInfo.start,
+        end: testEventInfo.end,
         venue: testEventInfo.venue,
         image_url: "",
         description: testEventInfo.description,
       },
     });
-
-    await deleteEvents();
-    await deleteUsers();
   });
 });
 
@@ -194,9 +191,6 @@ describe("event deletion", () => {
         id: event.id,
       },
     });
-
-    await deleteEvents();
-    await deleteUsers();
   });
 });
 
@@ -225,8 +219,5 @@ describe("invalid event deletion", () => {
       variables: { id: event.id },
     });
     expect(response.errors[0].message).toEqual("Not Authorised!");
-
-    await deleteEvents();
-    await deleteUsers();
   });
 });

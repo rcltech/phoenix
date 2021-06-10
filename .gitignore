@@ -4,9 +4,11 @@ node_modules/
 .DS_Store
 
 .env
+.env.legacy
 .env.prod
-prisma/.env
-env.db
+.env.prod.legacy
+prisma/.env.legacy
+prisma/.env.prod.legacy
 *.tfvars
 .terraform/
 *.tfstate
@@ -15,4 +17,3 @@ env.db
 dist/
 
 src/generated
-src/prisma.graphql

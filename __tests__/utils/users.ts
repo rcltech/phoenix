@@ -1,42 +1,52 @@
 import * as env from "dotenv";
-import {
-  BatchPayload,
-  prisma,
-  User,
-  UserSession,
-} from "../../src/generated/prisma-client";
+import { User, UserSession, Role } from "@prisma/client";
+import { setupPrismaForTesting } from "./setupPrismaForTesting";
 
 env.config();
 
+const prisma = setupPrismaForTesting();
+
+export type TestUserInfo = {
+  username: string;
+  email: string;
+  image_url: string;
+  phone: string;
+  first_name: string;
+  last_name: string;
+  room_no: string;
+  role: Role;
+};
+
 export const createUser = (user): Promise<User> => {
-  return prisma.createUser(user);
+  return prisma.user.create({ data: user });
 };
 
-export const deleteUser = (user: User) => {
-  return prisma.deleteUser({
-    username: user.username,
-  });
+export const deleteUser = async (user: User): Promise<User> => {
+  await prisma.userSession.deleteMany({});
+  return prisma.user.delete({ where: { username: user.username } });
 };
 
-export const deleteUsers = async (
-  ...users: User[]
-): Promise<User[] | BatchPayload> => {
+export const deleteUsers = async (...users: User[]): Promise<User[]> => {
   if (users.length === 0) {
-    return prisma.deleteManyUsers({});
+    const allUsers = await prisma.user.findMany({});
+    await prisma.userSession.deleteMany({});
+    await prisma.user.deleteMany({});
+    return allUsers;
   }
-  const deletedUsers = Promise.all(
+  return Promise.all(
     users.map(async user => {
       return deleteUser(user);
     })
   );
-  return deletedUsers;
 };
 
 export const createUserSession = (user: User): Promise<UserSession> => {
-  return prisma.createUserSession({
-    user: {
-      connect: {
-        id: user.id,
+  return prisma.userSession.create({
+    data: {
+      user: {
+        connect: {
+          id: user.id,
+        },
       },
     },
   });

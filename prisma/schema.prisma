@@ -1,0 +1,96 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id         String  @id @default(uuid())
+  username   String  @unique
+  password   String?
+  email      String  @unique
+  image_url  String
+  phone      String  @unique
+  first_name String
+  last_name  String
+  room_no    String
+
+  sessions         UserSession[] @relation("UserLoginSessions")
+  roomBookings     Booking[]     @relation("UserBookings")
+  eventsOrganised  Event[]       @relation("UserEvents")
+  eventsSubscribed Event[]       @relation("EventSubscribers")
+  userComments     Comment[]     @relation("UserComments")
+
+  role Role @default(USER)
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model UserSession {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(name: "UserLoginSessions", fields: [userId], references: [id])
+}
+
+model Washer {
+  id        String   @id @default(uuid())
+  in_use    Boolean
+  updatedAt DateTime @updatedAt
+}
+
+model Room {
+  id       String    @id @default(uuid())
+  number   String    @unique
+  name     String
+  bookings Booking[] @relation("RoomBookings")
+}
+
+model Booking {
+  id        String   @id @default(uuid())
+  start     DateTime
+  end       DateTime
+  createdAt DateTime @default(now())
+  remark    String?
+
+  userId String
+  user   User   @relation(name: "UserBookings", fields: [userId], references: [id])
+
+  roomId String
+  room   Room   @relation(name: "RoomBookings", fields: [roomId], references: [id])
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  title       String
+  start       DateTime
+  end         DateTime
+  venue       String
+  image_url   String
+  description String?
+
+  organiserId String
+  organiser   User   @relation(name: "UserEvents", fields: [organiserId], references: [id])
+
+  subscribers User[] @relation("EventSubscribers")
+
+  comments Comment[] @relation("EventComments")
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+
+  eventId String?
+  event   Event?  @relation(name: "EventComments", fields: [eventId], references: [id])
+
+  userId String
+  user   User   @relation(name: "UserComments", fields: [userId], references: [id])
+}
