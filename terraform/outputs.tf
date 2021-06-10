@@ -1,3 +1,7 @@
-output "alb_hostname" {
-  value = aws_alb.main.dns_name
+output "hostname" {
+  value = heroku_app.main.heroku_hostname
+}
+
+output "domain_dns_cname" {
+  value = heroku_domain.main.cname
 }
