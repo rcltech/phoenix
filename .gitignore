@@ -17,3 +17,5 @@ prisma/.env.prod.legacy
 dist/
 
 src/generated
+
+*.sql
