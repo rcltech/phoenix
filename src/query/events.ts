@@ -9,7 +9,7 @@ export const events = async (
 ): Promise<Event[]> => {
   const end_gte: Date = moment(start_limit, moment.defaultFormat).isValid()
     ? new Date(start_limit)
-    : new Date();
+    : undefined;
   return ctx.prisma.event.findMany({
     where: { ...data, end: { gte: end_gte } },
     orderBy: { start: "asc" },
