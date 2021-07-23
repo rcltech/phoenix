@@ -26,7 +26,6 @@ type Query {
 }
 
 type Mutation {
-  login: LoginResponse
   register(user: UserRegisterInput!): User
   updateWasher(id: ID!, in_use: Boolean!): Washer
   createBooking(
@@ -56,10 +55,4 @@ type Mutation {
   removeEventSubscriber(id: ID!): Event
   createComment(eventId: ID, content: String!): Comment
   deleteComment(id: ID!): Comment
-}
-
-type LoginResponse {
-  token: String
-  login_status: Boolean!
-  register: Boolean
 }
