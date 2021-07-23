@@ -15,42 +15,6 @@ type LoginResponse = {
   token?: string;
 };
 
-// TODO: Deprecate this function in the GraphQL API.
-// User login will be handled in the future using REST API in express.
-const login = async (parent, args, ctx: AppContext): Promise<LoginResponse> => {
-  try {
-    const ticket = await client.verifyIdToken({
-      idToken: ctx.token,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-    const payload: TokenPayload = ticket.getPayload();
-    // Check if the user email is an HKU email address
-    if (payload && payload.hd !== "connect.hku.hk")
-      return { token: null, login_status: false, register: false };
-    const user: User = await ctx.prisma.user.findUnique({
-      where: { email: payload.email },
-    });
-    // If the user does not exist, return that the user needs to be registered
-    if (user === null)
-      return { token: null, login_status: false, register: true };
-    // If the user is valid, then register a user session and return a to
-    const userSession: UserSession = await ctx.prisma.userSession.create({
-      data: {
-        user: {
-          connect: {
-            id: user.id,
-          },
-        },
-      },
-    });
-    const jwtToken = generateToken(userSession);
-    return { token: jwtToken, login_status: true, register: false };
-  } catch (e) {
-    console.log(e);
-    return { token: null, login_status: false, register: false };
-  }
-};
-
 const register = async (
   parent,
   { user },
@@ -85,4 +49,4 @@ const register = async (
   });
 };
 
-export { login, register };
+export { register };

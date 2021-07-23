@@ -1,4 +1,4 @@
-import { login, register } from "./mutations/user";
+import { register } from "./mutations/user";
 import { user, me } from "./query/user";
 import { washers } from "./query/washers";
 import { bookings, rooms } from "./query/bookings";
@@ -30,7 +30,6 @@ export const resolvers: IResolvers = {
     events,
   },
   Mutation: {
-    login,
     register,
     updateWasher,
     createBooking,
