@@ -30,7 +30,7 @@ terraform apply
 
 ### State Files
 
-As of this writing, the terraform state files are hosted in the [rctech-phoenix-terraform-state S3 bucket](https://s3.console.aws.amazon.com/s3/buckets/rctech-phoenix-terraform-state?region=us-east-2&tab=objects).
+State fils are stored on terraform cloud.
 
 ## Destroy
 
@@ -40,6 +40,6 @@ Run the command:
 terraform destroy
 ```
 
-## CI/CD for Terraform
+## CI/CD using Terraform Cloud
 
-The backend for Terraform is also moving to the cloud via github actions, making deployment independent of the developer machine.
+The remote `backend` has been set to [Terraform Cloud](https://app.terraform.io/app/rctech/workspaces/phoenix), which listens to VCS changes in this github repository. Also `terraform apply` has been set to run whenever this `/terraform` directory has changes.
