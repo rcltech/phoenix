@@ -18,4 +18,5 @@ dist/
 
 src/generated
 
+schema.gql
 *.sql

@@ -31,11 +31,6 @@ beforeAll(async () => {
 
 afterEach(async () => await deleteTestWashers());
 
-afterAll(async done => {
-  await prisma.$disconnect();
-  done();
-});
-
 describe("the graphql washers api", () => {
   test("returns the status of the washing machines", async () => {
     // create a test server with token
@@ -72,7 +67,7 @@ describe("the graphql washers api", () => {
 
     // update and check response
     const mutation = gql`
-      mutation($id: ID!, $in_use: Boolean!) {
+      mutation ($id: ID!, $in_use: Boolean!) {
         updateWasher(id: $id, in_use: $in_use) {
           id
           in_use

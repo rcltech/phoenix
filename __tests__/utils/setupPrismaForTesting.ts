@@ -2,7 +2,8 @@ import { PrismaClient } from "@prisma/client";
 import { prisma } from "../../src/utils/prisma";
 
 export const setupPrismaForTesting = (): PrismaClient => {
-  afterAll(async done => {
+  // eslint-disable-next-line jest/no-done-callback
+  afterAll(async (done) => {
     await prisma.$disconnect();
     done();
   });

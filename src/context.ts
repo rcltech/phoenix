@@ -1,5 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
 import Cookies from "universal-cookie";
+
 import { resolveUserUsingJWT } from "./utils/resolveUser";
 import { prisma } from "./utils/prisma";
 

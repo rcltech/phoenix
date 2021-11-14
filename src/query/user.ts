@@ -1,12 +1,21 @@
-import { User } from "@prisma/client";
+import { Arg, Ctx, Query, Resolver } from "type-graphql";
+import { User } from "@generated/type-graphql";
 import { AppContext } from "../context";
 
-export const user = (parent, { username }, ctx: AppContext): Promise<User> => {
-  return ctx.prisma.user.findUnique({
-    where: { username },
-  });
-};
+@Resolver()
+export class UserQueryResolvers {
+  @Query(() => User)
+  me(@Ctx() ctx: AppContext): User {
+    return ctx.auth.user;
+  }
 
-export const me = async (parent, args, ctx): Promise<User> => {
-  return ctx.auth.user;
-};
+  @Query(() => User)
+  user(
+    @Ctx() ctx: AppContext,
+    @Arg("username") username: string
+  ): Promise<User> {
+    return ctx.prisma.user.findUnique({
+      where: { username },
+    });
+  }
+}
