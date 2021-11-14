@@ -1,5 +1,5 @@
 import { Arg, Ctx, Query, Resolver } from "type-graphql";
-import { User } from "@generated/type-graphql";
+import { User } from "../generated/typegraphql-prisma";
 import { AppContext } from "../context";
 
 @Resolver()

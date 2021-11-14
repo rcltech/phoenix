@@ -1,86 +1,101 @@
-import { Booking, Room, User } from "@prisma/client";
-
-import { sendEmail } from "../utils/email/sendEmail";
-import { validateBooking } from "../utils/validateBooking";
+import { Arg, Ctx, Mutation, Resolver, ID } from "type-graphql";
+import { Booking, Room, User } from "../generated/typegraphql-prisma";
 import { AppContext } from "../context";
 
-const createBooking = async (
-  parent,
-  data,
-  ctx: AppContext
-): Promise<Booking> => {
-  const user: User = ctx.auth.user;
-  const start: Date = new Date(data.start);
-  const end: Date = new Date(data.end);
-  const remark: string = data.remark;
-  const room: Room = await ctx.prisma.room.findUnique({
-    where: { number: data.room_number },
-  });
+import { validateBooking } from "../utils/validateBooking";
+import { sendEmail } from "../utils/email/sendEmail";
 
-  const validity: boolean = await validateBooking(
-    room.number,
-    { start, end },
-    ctx
-  );
-  if (!validity) return null;
+@Resolver()
+export class BookingMutationResolvers {
+  @Mutation(() => Booking)
+  async createBooking(
+    @Arg("room_number") room_number: string,
+    @Arg("start") start: string,
+    @Arg("end") end: string,
+    @Arg("remark", { nullable: true }) remark: string,
+    @Ctx() ctx: AppContext
+  ): Promise<Booking> {
+    const user: User = ctx.auth.user;
+    const room: Room = await ctx.prisma.room.findUnique({
+      where: { number: room_number },
+    });
 
-  const booking: Booking = await ctx.prisma.booking.create({
-    data: {
-      user: {
-        connect: {
-          username: user.username,
+    if (!room) throw new Error("Room to be booked not found");
+
+    const validity: boolean = await validateBooking(
+      room.number,
+      { start: new Date(start), end: new Date(end) },
+      ctx
+    );
+    if (!validity) throw new Error("Booking time is not valid");
+
+    const booking: Booking = await ctx.prisma.booking.create({
+      data: {
+        user: {
+          connect: {
+            username: user.username,
+          },
+        },
+        start: new Date(start),
+        end: new Date(end),
+        remark,
+        room: {
+          connect: {
+            number: room.number,
+          },
         },
       },
-      start,
-      end,
-      remark,
-      room: {
-        connect: {
-          number: room.number,
+    });
+
+    await sendEmail({ user, booking, room });
+
+    return booking;
+  }
+
+  @Mutation(() => Booking)
+  async updateBooking(
+    @Arg("id", () => ID) id: string,
+    @Arg("room_number") room_number: string,
+    @Arg("start") start: string,
+    @Arg("end") end: string,
+    @Arg("remark", { nullable: true }) remark: string,
+    @Ctx() ctx: AppContext
+  ): Promise<Booking> {
+    const room: Room = await ctx.prisma.room.findUnique({
+      where: { number: room_number },
+    });
+
+    if (!room) throw new Error("Room to be booked not found");
+
+    const validity: boolean = await validateBooking(
+      room.number,
+      { start: new Date(start), end: new Date(end) },
+      ctx
+    );
+    if (!validity) throw new Error("Booking time is not valid");
+
+    return ctx.prisma.booking.update({
+      data: {
+        start: new Date(start),
+        end: new Date(end),
+        remark,
+        room: {
+          connect: {
+            number: room.number,
+          },
         },
       },
-    },
-  });
-  sendEmail({ user, booking, room });
-  return booking;
-};
-
-const updateBooking = async (
-  parent,
-  data,
-  ctx: AppContext
-): Promise<Booking> => {
-  const start: Date = new Date(data.start);
-  const end: Date = new Date(data.end);
-  const remark: string = data.remark;
-  const room: Room = await ctx.prisma.room.findUnique({
-    where: { number: data.room_number },
-  });
-  const id = data.id;
-
-  return ctx.prisma.booking.update({
-    data: {
-      start,
-      end,
-      remark,
-      room: {
-        connect: {
-          number: data.room_number,
-        },
+      where: {
+        id,
       },
-    },
-    where: {
-      id,
-    },
-  });
-};
+    });
+  }
 
-const deleteBooking = async (
-  parent,
-  { id },
-  ctx: AppContext
-): Promise<Booking> => {
-  return ctx.prisma.booking.delete({ where: { id } });
-};
-
-export { createBooking, updateBooking, deleteBooking };
+  @Mutation(() => Booking)
+  async deleteBooking(
+    @Arg("id", () => ID) id: string,
+    @Ctx() ctx: AppContext
+  ): Promise<Booking> {
+    return ctx.prisma.booking.delete({ where: { id } });
+  }
+}

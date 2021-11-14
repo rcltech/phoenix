@@ -1,14 +1,9 @@
-import { register } from "./mutations/user";
 import { UserQueryResolvers } from "./query/user";
-import { washers } from "./query/washers";
-import { bookings, rooms } from "./query/bookings";
-import { events } from "./query/events";
-import { updateWasher } from "./mutations/washers";
-import {
-  createBooking,
-  updateBooking,
-  deleteBooking,
-} from "./mutations/bookings";
+import { UserMutationResolvers } from "./mutations/user";
+import { WasherQueryResolvers } from "./query/washers";
+import { BookingQueryResolvers, RoomQueryResolvers } from "./query/bookings";
+import { BookingMutationResolvers } from "./mutations/bookings";
+import { EventQueryResolvers } from "./query/events";
 import {
   createEvent,
   deleteEvent,
@@ -17,9 +12,17 @@ import {
 } from "./mutations/events";
 import { createComment, deleteComment } from "./mutations/comments";
 
-import { relationResolvers } from "@generated/type-graphql";
+import { relationResolvers } from "./generated/typegraphql-prisma";
 
-const customResolvers = [UserQueryResolvers];
+const customResolvers = [
+  UserQueryResolvers,
+  UserMutationResolvers,
+  WasherQueryResolvers,
+  BookingQueryResolvers,
+  RoomQueryResolvers,
+  BookingMutationResolvers,
+  EventQueryResolvers,
+];
 
 const generatedResolvers = [...relationResolvers];
 
