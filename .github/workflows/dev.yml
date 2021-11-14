@@ -2,6 +2,7 @@ name: Run tests for Phoenix
 
 on:
   pull_request:
+  push:
 
 env:
   PHOENIX_SECRET: secret123
