@@ -19,7 +19,7 @@ export class BookingQueryResolvers {
     const end_gte: Date = moment(start_limit, moment.defaultFormat).isValid()
       ? new Date(start_limit)
       : new Date();
-    return ctx.prisma.booking.findMany({
+    return await ctx.prisma.booking.findMany({
       where: { ...data, end: { gte: end_gte } },
       orderBy: { start: "asc" },
     });
