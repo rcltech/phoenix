@@ -7,7 +7,7 @@
     "prebuild": "npx prisma generate",
     "build": "tsc",
     "start": "npx prisma migrate deploy && node dist/index.js",
-    "test": "jest --runInBand --testPathIgnorePatterns utils",
+    "test": "jest --runInBand --detectOpenHandles --testPathIgnorePatterns utils --verbose --forceExit",
     "dev": "tsnd --respawn src/index.ts",
     "lint": "eslint . --ext .ts"
   },
@@ -34,11 +34,11 @@
     "pg": "^7.18.2",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1",
+    "typegraphql-authchecker": "^0.0.3",
     "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
-    "@types/graphql": "^14.5.0",
     "@types/jest": "^27.0.2",
     "@types/jsonwebtoken": "^8.5.1",
     "@types/nodemailer": "^6.4.1",
