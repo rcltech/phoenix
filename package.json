@@ -6,7 +6,6 @@
   "scripts": {
     "prebuild": "npx prisma generate",
     "build": "tsc",
-    "postbuild": "node postbuild.js",
     "start": "npx prisma migrate deploy && node dist/index.js",
     "test": "jest --runInBand --testPathIgnorePatterns utils",
     "dev": "tsnd --respawn src/index.ts",
