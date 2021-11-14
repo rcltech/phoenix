@@ -2,6 +2,7 @@ import * as env from "dotenv";
 import nodemailer from "nodemailer";
 import moment from "moment";
 import { getEmailContent } from "./emailTemplate";
+import { Booking, Room, User } from "../../generated/typegraphql-prisma";
 env.config();
 
 const transporter = nodemailer.createTransport({
@@ -12,7 +13,17 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendEmail = ({ user, booking, room }): void => {
+type EmailArgs = {
+  user: User;
+  booking: Booking;
+  room: Room;
+};
+
+export const sendEmail = async ({
+  user,
+  booking,
+  room,
+}: EmailArgs): Promise<void> => {
   const { email, first_name } = user;
   const { start, end } = booking;
   const { number, name } = room;
@@ -36,12 +47,5 @@ export const sendEmail = ({ user, booking, room }): void => {
     html: getEmailContent(emailTemplateData),
   };
 
-  transporter
-    .sendMail(mailOptions)
-    .then(info => {
-      console.log(info);
-    })
-    .catch(err => {
-      console.log(err);
-    });
+  await transporter.sendMail(mailOptions);
 };

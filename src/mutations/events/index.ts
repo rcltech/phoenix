@@ -1,4 +1,4 @@
-import { createEvent, deleteEvent } from "./events";
-import { addEventSubscriber, removeEventSubscriber } from "./subscribers";
+import { EventMutationResolvers } from "./events";
+import { EventSubscribersMutationResolvers } from "./subscribers";
 
-export { createEvent, deleteEvent, addEventSubscriber, removeEventSubscriber };
+export { EventMutationResolvers, EventSubscribersMutationResolvers };

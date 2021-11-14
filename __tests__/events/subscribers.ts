@@ -1,6 +1,4 @@
-import * as env from "dotenv";
-env.config();
-
+import "reflect-metadata";
 import gql from "graphql-tag";
 import { GraphQLResponse } from "apollo-server-types";
 import { createTestServerWithUserLoggedIn } from "../utils/server";
@@ -54,7 +52,7 @@ describe("event subscriber addition", () => {
     const { id: event_id }: Event = await createEvent(testEventInfo);
 
     const mutation = gql`
-      mutation($id: ID!) {
+      mutation ($id: ID!) {
         addEventSubscriber(id: $id) {
           subscribers {
             id
@@ -91,7 +89,7 @@ describe("event subscriber removal for subscribed event", () => {
     await addEventSubscriber(addEventSubscriberInfo);
 
     const mutation = gql`
-      mutation($id: ID!) {
+      mutation ($id: ID!) {
         removeEventSubscriber(id: $id) {
           subscribers {
             id
@@ -122,7 +120,7 @@ describe("event subscriber removal for non-subscribed event", () => {
     const { id: event_id }: Event = await createEvent(testEventInfo);
 
     const mutation = gql`
-      mutation($id: ID!) {
+      mutation ($id: ID!) {
         removeEventSubscriber(id: $id) {
           id
         }

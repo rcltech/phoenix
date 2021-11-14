@@ -1,24 +1,23 @@
 import { ApolloServer } from "apollo-server-express";
-import * as env from "dotenv";
 import { createUserSession } from "./users";
 import { generateToken } from "../../src/utils/authToken";
-import server from "../../src/server";
+import { initialiseServer } from "../../src/initialiseServer";
 import { AppContext, context } from "../../src/context";
 import { User } from "@prisma/client";
 
-env.config();
-
-export const createTestServerWithToken = (token: string): ApolloServer => {
+export const createTestServerWithToken = async (
+  token: string
+): Promise<ApolloServer> => {
   const testReq = {
     headers: {
       authorization: token,
     },
   };
-  const testServerContext = async ({ req }): Promise<AppContext> => {
+  const testServerContext = async (): Promise<AppContext> => {
     return await context({ req: testReq });
   };
 
-  return server(testServerContext);
+  return await initialiseServer(testServerContext);
 };
 
 export const createTestServerWithUserLoggedIn = async (
