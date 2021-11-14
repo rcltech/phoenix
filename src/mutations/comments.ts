@@ -1,9 +1,11 @@
-import { Arg, Ctx, ID, Mutation, Resolver } from "type-graphql";
+import { Arg, Authorized, Ctx, ID, Mutation, Resolver } from "type-graphql";
 import { User, Comment } from "../generated/typegraphql-prisma";
 import { AppContext } from "../context";
+import { isAuthenticated, isCommentAuthor } from "../authorization/rules";
 
 @Resolver()
 export class CommentMutationResolvers {
+  @Authorized(isAuthenticated)
   @Mutation(() => Comment)
   async createComment(
     @Arg("eventId", () => ID, { nullable: true }) eventId: string,
@@ -32,6 +34,7 @@ export class CommentMutationResolvers {
     } else throw new Error("No id of a particular data type is provided");
   }
 
+  @Authorized([isAuthenticated, isCommentAuthor])
   @Mutation(() => Comment)
   async deleteComment(
     @Arg("id", () => ID) id: string,

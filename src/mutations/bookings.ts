@@ -1,12 +1,14 @@
-import { Arg, Ctx, Mutation, Resolver, ID } from "type-graphql";
+import { Arg, Ctx, Mutation, Resolver, ID, Authorized } from "type-graphql";
 import { Booking, Room, User } from "../generated/typegraphql-prisma";
 import { AppContext } from "../context";
 
 import { validateBooking } from "../utils/validateBooking";
 import { sendEmail } from "../utils/email/sendEmail";
+import { isAuthenticated, isBookingCreator } from "../authorization/rules";
 
 @Resolver()
 export class BookingMutationResolvers {
+  @Authorized(isAuthenticated)
   @Mutation(() => Booking)
   async createBooking(
     @Arg("room_number") room_number: string,
@@ -52,6 +54,7 @@ export class BookingMutationResolvers {
     return booking;
   }
 
+  @Authorized([isAuthenticated, isBookingCreator])
   @Mutation(() => Booking)
   async updateBooking(
     @Arg("id", () => ID) id: string,
@@ -100,6 +103,7 @@ export class BookingMutationResolvers {
     });
   }
 
+  @Authorized([isAuthenticated, isBookingCreator])
   @Mutation(() => Booking)
   async deleteBooking(
     @Arg("id", () => ID) id: string,

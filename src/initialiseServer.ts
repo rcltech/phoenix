@@ -9,6 +9,7 @@ import {
 } from "apollo-server-core";
 import { ExpressContext } from "apollo-server-express/src";
 import { buildSchema, NonEmptyArray } from "type-graphql";
+import authChecker from "typegraphql-authchecker";
 
 import { resolvers } from "./resolvers";
 
@@ -18,6 +19,7 @@ export const initialiseServer = async (
   const schema = await buildSchema({
     resolvers: [...resolvers] as NonEmptyArray<never>,
     emitSchemaFile: true,
+    authChecker,
   });
 
   return new ApolloServer({

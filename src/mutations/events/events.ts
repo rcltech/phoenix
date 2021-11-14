@@ -1,5 +1,5 @@
 import env from "dotenv";
-import { Arg, Ctx, ID, Mutation, Resolver } from "type-graphql";
+import { Arg, Authorized, Ctx, ID, Mutation, Resolver } from "type-graphql";
 import { Event, User } from "../../generated/typegraphql-prisma";
 
 import { AppContext } from "../../context";
@@ -7,6 +7,7 @@ import { AppContext } from "../../context";
 import { uploadToS3, deleteFromS3 } from "../../utils/S3";
 import { S3UploadResponse, S3DeleteResponse } from "../../utils/S3/types";
 import { isImageValid } from "../../utils/validateImage";
+import { isAuthenticated, isEventOrganiser } from "../../authorization/rules";
 
 env.config();
 
@@ -16,6 +17,7 @@ const bucket_name = `rctechclub-raven/${bucket_suffix}`;
 
 @Resolver()
 export class EventMutationResolvers {
+  @Authorized(isAuthenticated)
   @Mutation(() => Event)
   async createEvent(
     @Arg("title") title: string,
@@ -82,6 +84,7 @@ export class EventMutationResolvers {
     });
   }
 
+  @Authorized([isAuthenticated, isEventOrganiser])
   @Mutation(() => Event)
   async deleteEvent(
     @Arg("id", () => ID) id: string,

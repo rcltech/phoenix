@@ -1,9 +1,11 @@
-import { Arg, Ctx, ID, Mutation, Resolver } from "type-graphql";
+import { Arg, Authorized, Ctx, ID, Mutation, Resolver } from "type-graphql";
 import { Event, User } from "../../generated/typegraphql-prisma";
 import { AppContext } from "../../context";
+import { isAuthenticated } from "../../authorization/rules";
 
 @Resolver()
 export class EventSubscribersMutationResolvers {
+  @Authorized(isAuthenticated)
   @Mutation(() => Event)
   async addEventSubscriber(
     @Arg("id", () => ID) id: string,
@@ -23,6 +25,7 @@ export class EventSubscribersMutationResolvers {
     });
   }
 
+  @Authorized(isAuthenticated)
   @Mutation(() => Event)
   async removeEventSubscriber(
     @Arg("id", () => ID) id: string,
