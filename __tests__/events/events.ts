@@ -1,5 +1,4 @@
-import * as env from "dotenv";
-env.config();
+import "reflect-metadata";
 import gql from "graphql-tag";
 import moment from "moment";
 import { GraphQLResponse } from "apollo-server-types";
@@ -34,14 +33,8 @@ const testUserInfo1: TestUserInfo = {
 const testEventInfo: TestEventInfo = {
   title: "test event",
   organiser: testUserInfo.username,
-  start: moment()
-    .startOf("hour")
-    .add(1, "hour")
-    .toDate(),
-  end: moment()
-    .startOf("hour")
-    .add(2, "hour")
-    .toDate(),
+  start: moment().startOf("hour").add(1, "hour").toDate(),
+  end: moment().startOf("hour").add(2, "hour").toDate(),
   venue: "test venue",
   image_url: "http://url",
   description: "test description",
@@ -108,7 +101,7 @@ describe("event creation", () => {
     const client = createTestClient(testServer);
 
     const mutation = gql`
-      mutation(
+      mutation (
         $title: String!
         $start: String!
         $end: String!
@@ -176,7 +169,7 @@ describe("event deletion", () => {
     const event: Event = await createEvent(testEventInfo);
 
     const mutation = gql`
-      mutation($id: ID!) {
+      mutation ($id: ID!) {
         deleteEvent(id: $id) {
           id
         }
@@ -208,7 +201,7 @@ describe("invalid event deletion", () => {
     const event: Event = await createEvent(testEventInfo);
 
     const mutation = gql`
-      mutation($id: ID!) {
+      mutation ($id: ID!) {
         deleteEvent(id: $id) {
           id
         }

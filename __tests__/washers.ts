@@ -1,6 +1,4 @@
-import * as env from "dotenv";
-env.config();
-
+import "reflect-metadata";
 import gql from "graphql-tag";
 import jwt from "jsonwebtoken";
 import { Washer } from "@prisma/client";
@@ -34,7 +32,7 @@ afterEach(async () => await deleteTestWashers());
 describe("the graphql washers api", () => {
   test("returns the status of the washing machines", async () => {
     // create a test server with token
-    const testServer = createTestServerWithToken("some_token");
+    const testServer = await createTestServerWithToken("some_token");
     // create a test client connected to the test server
     const client = createTestClient(testServer);
     // create a test washer
@@ -59,7 +57,7 @@ describe("the graphql washers api", () => {
     // generate a token
     const token = jwt.sign("sls to phoenix", process.env.SLS_SECRET);
     // create a test server with token
-    const testServer = createTestServerWithToken(token);
+    const testServer = await createTestServerWithToken(token);
     // create a test client connected to the test server
     const client = createTestClient(testServer);
 

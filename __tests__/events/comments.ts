@@ -1,6 +1,4 @@
-import * as env from "dotenv";
-env.config();
-
+import "reflect-metadata";
 import gql from "graphql-tag";
 import { GraphQLResponse } from "apollo-server-types";
 import { createTestServerWithUserLoggedIn } from "../utils/server";
@@ -68,7 +66,7 @@ describe("event comment creation", () => {
     const testEvent: Event = await createEvent(testEventInfo);
 
     const mutation = gql`
-      mutation($eventId: ID!, $content: String!) {
+      mutation ($eventId: ID!, $content: String!) {
         createComment(eventId: $eventId, content: $content) {
           content
           user {
@@ -114,7 +112,7 @@ describe("event comment deletion", () => {
     const testComment: Comment = await createEventComment(eventCommentInfo);
 
     const mutation = gql`
-      mutation($id: ID!) {
+      mutation ($id: ID!) {
         deleteComment(id: $id) {
           id
         }
@@ -157,7 +155,7 @@ describe("invalid event comment deletion", () => {
     const testComment: Comment = await createEventComment(eventCommentInfo);
 
     const mutation = gql`
-      mutation($id: ID!) {
+      mutation ($id: ID!) {
         deleteComment(id: $id) {
           id
         }

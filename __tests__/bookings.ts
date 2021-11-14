@@ -1,6 +1,4 @@
-import * as env from "dotenv";
-env.config();
-
+import "reflect-metadata";
 import gql from "graphql-tag";
 import moment from "moment";
 import { createTestServerWithUserLoggedIn } from "./utils/server";
@@ -45,27 +43,15 @@ const testRoomInfo: TestRoomInfo = {
 const testBookingInfo: TestBookingInfo = {
   user: "test123",
   room: "123",
-  start: moment()
-    .startOf("hour")
-    .add(1, "hour")
-    .toDate(),
-  end: moment()
-    .startOf("hour")
-    .add(3, "hour")
-    .toDate(),
+  start: moment().startOf("hour").add(1, "hour").toDate(),
+  end: moment().startOf("hour").add(3, "hour").toDate(),
   remark: "Hello",
 };
 
 const testInvalidBookingVariables = {
   room_number: "123",
-  start: moment()
-    .startOf("hour")
-    .add(2, "hour")
-    .toISOString(),
-  end: moment()
-    .startOf("hour")
-    .add(3, "hour")
-    .toISOString(),
+  start: moment().startOf("hour").add(2, "hour").toISOString(),
+  end: moment().startOf("hour").add(3, "hour").toISOString(),
   remark: "Hi",
 };
 
@@ -142,7 +128,7 @@ describe("Booking validation", () => {
 
     // Attempt to create an invalid booking
     const mutation = gql`
-      mutation(
+      mutation (
         $room_number: String!
         $start: String!
         $end: String!
@@ -176,7 +162,7 @@ describe("Booking mutations", () => {
     const room = await createRoom(testRoomInfo);
     const booking = await createBooking(testBookingInfo);
     const mutation = gql`
-      mutation(
+      mutation (
         $id: ID!
         $room: String!
         $start: String!
@@ -224,7 +210,7 @@ describe("Booking mutations", () => {
     const client1 = createTestClient(testServer1);
 
     const mutation = gql`
-      mutation(
+      mutation (
         $id: ID!
         $room: String!
         $start: String!
@@ -265,7 +251,7 @@ describe("Booking mutations", () => {
     const room = await createRoom(testRoomInfo);
     const booking = await createBooking(testBookingInfo);
     const mutation = gql`
-      mutation($id: ID!) {
+      mutation ($id: ID!) {
         deleteBooking(id: $id) {
           id
         }
@@ -290,7 +276,7 @@ describe("Booking mutations", () => {
     const testServer1 = await createTestServerWithUserLoggedIn(user1);
     const client1 = createTestClient(testServer1);
     const mutation = gql`
-      mutation($id: ID!) {
+      mutation ($id: ID!) {
         deleteBooking(id: $id) {
           id
         }
