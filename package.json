@@ -33,7 +33,7 @@
     "pg": "^7.18.2",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1",
-    "typegraphql-authchecker": "^0.0.3",
+    "typegraphql-authchecker": "^0.1.2",
     "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
