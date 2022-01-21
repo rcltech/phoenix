@@ -3,12 +3,14 @@ env.config();
 
 import express from "express";
 import { OAuth2Client } from "google-auth-library";
-import { generateToken } from "../utils/authToken";
-import { prisma } from "../utils/prisma";
 import { TokenPayload } from "google-auth-library/build/src/auth/loginticket";
 import { generateUsername as getUsername } from "unique-username-generator";
+import Cookies from "universal-cookie";
 
 import { Role, User } from "../generated/typegraphql-prisma";
+import { resolveUserUsingJWT } from "../utils/resolveUser";
+import { generateToken } from "../utils/authToken";
+import { prisma } from "../utils/prisma";
 
 const client: OAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -105,6 +107,17 @@ router.post("/login", async (req, res) => {
       .status(200)
       .send({ registered: user.registered, logged_in: true, token });
   }
+});
+
+router.get("/check", async (req, res) => {
+  const cookies = new Cookies(req && req.headers && req.headers.cookie);
+  const cookieToken: string = cookies.get("RCTC_USER");
+  const fallbackToken = req && req.headers && req.headers.authorization;
+  const token: string = cookieToken || fallbackToken;
+  const user = await resolveUserUsingJWT(prisma, token);
+
+  if (user) res.status(200).send({ registered: user.registered });
+  else res.status(401).end();
 });
 
 export { router as auth };
