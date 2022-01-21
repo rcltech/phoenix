@@ -9,7 +9,7 @@ generator client {
 
 generator typegraphql {
   provider = "typegraphql-prisma"
-  output = "../src/generated/typegraphql-prisma"
+  output   = "../src/generated/typegraphql-prisma"
 }
 
 model User {
@@ -19,10 +19,11 @@ model User {
   password   String?
   email      String  @unique
   image_url  String
-  phone      String  @unique
+  phone      String? @unique
   first_name String
   last_name  String
-  room_no    String
+  room_no    String?
+  registered Boolean @default(false)
 
   sessions         UserSession[] @relation("UserLoginSessions")
   roomBookings     Booking[]     @relation("UserBookings")

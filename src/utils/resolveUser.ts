@@ -1,5 +1,6 @@
 import * as jwt from "jsonwebtoken";
-import { PrismaClient, User, UserSession } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+import { User, UserSession } from "../generated/typegraphql-prisma";
 
 export const resolveUserUsingJWT = async (
   prisma: PrismaClient,

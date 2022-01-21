@@ -1,14 +1,19 @@
 import * as env from "dotenv";
-import { Arg, Ctx, Field, InputType, Mutation, Resolver } from "type-graphql";
-import { User, Role } from "../generated/typegraphql-prisma";
+import {
+  Arg,
+  Authorized,
+  Ctx,
+  Field,
+  InputType,
+  Mutation,
+  Resolver,
+} from "type-graphql";
+import { User } from "../generated/typegraphql-prisma";
 
 import { AppContext } from "../context";
-import { OAuth2Client } from "google-auth-library";
-import { TokenPayload } from "google-auth-library/build/src/auth/loginticket";
+import { isAuthenticated } from "../authorization/rules";
 
 env.config();
-
-const client: OAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 @InputType()
 class UserRegisterInput {
@@ -24,42 +29,21 @@ class UserRegisterInput {
 
 @Resolver()
 export class UserMutationResolvers {
+  @Authorized(isAuthenticated)
   @Mutation(() => User)
   async register(
     @Arg("user") user: UserRegisterInput,
     @Ctx() ctx: AppContext
   ): Promise<User> {
-    try {
-      await client.verifyIdToken({
-        idToken: ctx.token,
-        audience: process.env.GOOGLE_CLIENT_ID,
-      });
-    } catch (e) {
-      console.error(e);
-      throw new Error("Unable to verify user on google auth");
-    }
-
-    const ticket = await client.verifyIdToken({
-      idToken: ctx.token,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-    const payload: TokenPayload = ticket.getPayload();
-
-    if (!payload) throw new Error("Token payload undefined");
-
-    if (payload.hd !== "connect.hku.hk")
-      throw new Error("User's email is not from the connect.hku.hk domain");
-
-    return ctx.prisma.user.create({
+    return ctx.prisma.user.update({
+      where: {
+        id: ctx.auth.user.id,
+      },
       data: {
         username: user.username,
-        email: payload.email,
-        image_url: payload.picture,
         phone: user.phone,
-        first_name: payload.given_name,
-        last_name: payload.family_name,
         room_no: user.room_no,
-        role: Role.USER,
+        registered: true,
       },
     });
   }

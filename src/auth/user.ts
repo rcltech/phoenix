@@ -6,6 +6,9 @@ import { OAuth2Client } from "google-auth-library";
 import { generateToken } from "../utils/authToken";
 import { prisma } from "../utils/prisma";
 import { TokenPayload } from "google-auth-library/build/src/auth/loginticket";
+import { generateUsername as getUsername } from "unique-username-generator";
+
+import { Role, User } from "../generated/typegraphql-prisma";
 
 const client: OAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -26,13 +29,43 @@ async function getPayloadFromGoogle(
   }
 }
 
+async function generateUniqueUsername(username?: string): Promise<string> {
+  if (username) {
+    const user = await prisma.user.findFirst({ where: { username } });
+    if (!user) return username;
+    else {
+      return await generateUniqueUsername(getUsername());
+    }
+  } else {
+    return await generateUniqueUsername(getUsername());
+  }
+}
+
+async function createUserSessionToken(user: User): Promise<string> {
+  // Create a user session for the user
+  const userSession = await prisma.userSession.create({
+    data: {
+      user: {
+        connect: {
+          id: user.id,
+        },
+      },
+    },
+  });
+
+  // Generate a JWT token for the user.
+  return generateToken(userSession);
+}
+
 router.post("/login", async (req, res) => {
   const token: string = req.headers.authorization;
   const payload = await getPayloadFromGoogle(token);
-  if (
-    payload === null ||
-    payload.hd !== (process.env.ORG_DOMAIN || "connect.hku.hk")
-  ) {
+  if (!payload) {
+    res.status(401).send("Invalid google auth token");
+  }
+
+  const orgDomain = process.env.ORG_DOMAIN || "connect.hku.hk";
+  if (payload.hd !== orgDomain) {
     res
       .status(401)
       .send(
@@ -45,35 +78,33 @@ router.post("/login", async (req, res) => {
   const user = await prisma.user.findUnique({
     where: { email: payload.email },
   });
-  if (user === null) {
-    res.status(200).send({ registered: false, logged_in: false, token: null });
-    return;
-  }
+  if (user) {
+    const token = await createUserSessionToken(user);
 
-  // Create a user session for the user
-  const userSession = await prisma.userSession.create({
-    data: {
-      user: {
-        connect: {
-          id: user.id,
-        },
-      },
-    },
-  });
-
-  // If the user session could not be created, return an internal server error.
-  if (userSession === null) {
     res
-      .status(500)
-      .send(
-        "There was an error in the server when resolving the user session."
-      );
+      .status(200)
+      .send({ registered: user.registered, logged_in: true, token });
     return;
-  }
+  } else {
+    const uniqueUsername = await generateUniqueUsername();
 
-  // Generate a JWT token for the user.
-  const jwtToken = generateToken(userSession);
-  res.status(200).send({ registered: true, logged_in: true, token: jwtToken });
+    const newUser = await prisma.user.create({
+      data: {
+        username: uniqueUsername,
+        email: payload.email,
+        image_url: payload.picture,
+        first_name: payload.given_name,
+        last_name: payload.family_name,
+        role: Role.USER,
+      },
+    });
+
+    const token = await createUserSessionToken(newUser);
+
+    res
+      .status(200)
+      .send({ registered: user.registered, logged_in: true, token });
+  }
 });
 
 export { router as auth };
